@@ -1,0 +1,169 @@
+{
+  "identity": {
+    "name": "MOKAMMEL MORSHED",
+  "roles": [
+  {
+    "name": "Student",
+    "prefix": "I’m",
+    "desc": "Currently studying Urban and Regional Planning at KUET"
+  },
+  {
+    "name": "Web Development",
+    "prefix": "I’m expert in",
+    "desc": "Frontend and backend projects"
+  },
+  {
+    "name": "AI Tools",
+    "prefix": "I’m expert in",
+    "desc": "Using AI for planning, coding, design & copywriting"
+  },
+  {
+    "name": "GIS",
+    "prefix": "I’m expert in",
+    "desc": "GIS analysis, mapping & geoprocessing"
+  },
+  {
+    "name": "Web GIS",
+    "prefix": "I’m expert in",
+    "desc": "Building interactive web maps"
+  },
+  {
+    "name": "Designing",
+    "prefix": "I’m learning",
+    "desc": "UI/UX, graphics and visual design"
+  }
+]
+
+,
+    "tagline": "I bring together urban planning and future-focused technology. My work blends spatial thinking with practical skills in AI — including generative tools (ChatGPT, Gemini), computer vision, automation, and data-driven workflows.Alongside this, I have experience in modern Web Development, UI design, SEO, content creation, and productivity systems. I’m also skilled with tools like React, Canva, Photoshop, Word, Excel, and Notion.Through my portfolio, I aim to showcase not just what I’ve learned, but also how I apply technology to solve real-world planning and communication challenges.",
+    "location": "Feni, Bangladesh",
+    "portrait": "assets/Meheran.jpg",
+    "links": {
+      "email": "mdmokammelmorshed@gmail.com",
+      "github": "",
+      "linkedin": "https://www.linkedin.com/in/mokammel-morshed-59108a366/",
+      "facebook": "https://www.facebook.com/Meheran216",
+      "whatsapp": "",
+      "telegram": "",
+      "resume": ""
+    }
+  },
+  "projects": [
+    
+      {
+  "id": "p2",
+  "title": "Responsive Student Portfolio",
+  "summary": "A fully responsive personal portfolio website built using HTML, CSS, and JavaScript. The project showcases student achievements, projects, and contact information with a clean UI and mobile-friendly design.",
+  "tags": ["HTML", "CSS", "JavaScript"],
+  "image": "assets/StudentInformationWebsite.jpg",
+  "icon": "assets/icons/portfolio.png",
+  "link": "https://meheran216.github.io/Kueturp/",
+  "date": "2025-08-03",
+  "featured": true
+},
+ {
+  "id": "p4",
+  "title": "Urban & Planning Cover",
+  "summary": "Designed visually appealing cover pages for Urban & Regional Planning reports using Canva and Adobe Photoshop. Focused on layout, typography, and thematic color balance to make academic work more engaging.",
+  "tags": [ "Canva", "Photoshop"],
+  "image": "assets/URP_Cover_Image.jpg",
+  "icon": "assets/icons/design.png",
+  "link": "assets/URP_Cover_Image.jpg",
+  "date": "2025-01-10",
+  "featured": true
+}
+,
+{
+      "id": "p1",
+      "title": "Urban Heat Map",
+      "summary": "The project uses remote sensing and interactive web maps to analyze urban heat island patterns, visualize temperature distribution, and support climate-resilient, sustainable urban planning with scientific data.",
+      "tags": ["Raster", "JS", "Web Map"],
+      "image": "assets/urp.webp",
+      "icon": "assets/icons/heatmap.png",
+      "link": "#",
+      "date": "2025-07-01",
+      "featured": true
+    }
+  ],
+  "skills": [
+    {"id":"s1","name":"ArcGIS Pro","icon":"","level":72,"status":"running","summary":"Map editing, symbology, geoprocessing.","details":"Buffer/clip, ModelBuilder basics, layout production; tracked maps and feature classes.","certificates":[]},
+    {"id":"s2","name":"QGIS","icon":"","level":60,"status":"running","summary":"Open-source GIS workflows.","details":"Plugins, field calculator, styling and print layouts.","certificates":[]},
+    {"id":"s3","name":"Leaflet","icon":"","level":58,"status":"running","summary":"Lightweight web maps.","details":"Custom markers, popups, tile layers & controls.","certificates":[]},
+    {"id":"s4","name":"Python","icon":"","level":45,"status":"basic","summary":"Scripting & data handling.","details":"Pandas basics, simple automation.","certificates":[]},
+    {"id":"s5","name":"Microsoft Word","icon":"","level":80,"status":"complete","summary":"Document formatting, templates, mail merge.","details":"Styles, TOC, track changes, citations; academic doc workflow.","certificates":[]},
+    {"id":"s6","name":"Microsoft Excel","icon":"","level":75,"status":"running","summary":"Data cleaning, formulas, charts.","details":"VLOOKUP/XLOOKUP, pivot tables, conditional formatting.","certificates":[]},
+    {"id":"s7","name":"PowerPoint","icon":"","level":70,"status":"running","summary":"Clean decks & animations.","details":"Grid layouts, master slides, morph, timings.","certificates":[]},
+    {"id":"s8","name":"Photoshop","icon":"","level":55,"status":"running","summary":"Photo retouch & composites.","details":"Masks, adjustment layers, smart objects.","certificates":[]},
+    {"id":"s9","name":"Illustrator","icon":"","level":50,"status":"running","summary":"Logos & vector graphics.","details":"Pen tool, pathfinder, appearance & expand.","certificates":[]}
+  ],
+  "education": [
+    {"program":"BURP_2417012","org":"Khulna University of Engineering & Technology","start":"2025-08","end":"present","result":null},
+    {"program":"HSC 2024","org":"Bangladesh Chemical Industries Corporation College (BCIC College)","start":"2022-02","end":"2024-06","result":"GPA 5"},
+    {"program":"SSC 2022","org":"Ataturk Govt. Model High School","start":"2017-01","end":"2021-07","result":"GPA 5"},
+    {"program":"JSC 2019","org":"Ataturk Govt. Model High School","start":"2017-01","end":"2019-11","result":"GPA 4.56"}
+  ],
+  "educationHelp": [
+    {
+      "title": "Need Tutor?",
+      "text": "KUET URP undergrad with hands-on GIS/RS & Web-GIS. I help with concept → practice, assignments, and exam prep. Short, focused lessons; notes & datasets included.",
+      "ctaText": "Ping me on Email",
+      "ctaLink": "mailto:mdmokammelmorshed@gmail.com"
+    }
+  ],
+"experience": [
+  {
+    "role": "Skill Development (Self-Learning)",
+    "org": "",
+    "start": "2025-04",
+    "end": "2025-09",
+ "description": "| Category | Skills |\n|----------|--------|\n| Web Development | HTML, CSS, JavaScript — responsive layouts, DOM handling; React — component-based UI, state management basics; SEO — on-page optimization |\n| Design & Creative Tools | Photoshop — image editing, UI mockups; Illustrator — vector graphics, posters |\n| Writing & Productivity | Microsoft Word — structured reports, formatting; Excel — data organization, formulas, charting; PowerPoint — academic and professional presentations |"
+
+
+  },{
+  "role": "Language Learning (IELTS & German A1)",
+  "org": "Self Learning",
+  "start": "2025-05",
+  "end": "2025-09",
+  "description": "| Category | Focus |\n|----------|-------|\n| IELTS Preparation | Focused mainly on test strategies and practice tests; sharpened academic writing formats and speaking under exam conditions |\n| English Skills | Already at advanced level — emphasis on polishing academic tone, time-management in writing tasks, and maintaining fluency in high-pressure speaking situations |\n| German A1 Learning | Alphabet & pronunciation, Basic grammar (nouns, verbs, articles), Everyday phrases & dialogues, Listening & speaking exercises |"
+}
+
+]
+
+,
+  "contact": {
+    "email": "mdmokammelmorshed@gmail.com",
+    "github": "",
+    "linkedin": "https://www.linkedin.com/in/mokammel-morshed-59108a366/",
+    "facebook": "https://www.facebook.com/Meheran216/",
+    "whatsapp": "https://wa.link/rqd8sv",
+    "telegram": ""
+  },
+
+  "footer": {
+  "info": [
+    { "label": "Projects", "link": "#projects" },
+    { "label": "Skills", "link": "#skills" },
+    { "label": "Education", "link": "#education" },
+    { "label": "Experience", "link": "#experience" },
+    { "label": "Contact", "link": "#contact" }
+  ],
+  "resources": [
+    { "label": "Blog", "link": "#" },
+    { "label": "Tools", "link": "#" },
+    { "label": "Docs", "link": "#" }
+  ],
+  "company": [
+    { "label": "About", "link": "#Hero" },
+    { "label": "Privacy", "link": "#" },
+    { "label": "Terms", "link": "#" }
+  ],
+  "socials": {
+    "facebook": "https://facebook.com/Meheran216",
+    "twitter": "https://twitter.com/",
+    "instagram": "https://instagram.com/",
+    "github": "https://github.com/meheran216",
+    "linkedin": "https://linkedin.com/in/mokammel-morshed-59108a366"
+  }
+  }
+
+}

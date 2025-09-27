@@ -1,0 +1,22 @@
+{
+  "colors": {
+    "bg": "#1e1e23",
+    "surface": "rgba(255,255,255,0.05)",
+    "surface2": "rgba(255,255,255,0.08)",
+    "line": "rgba(255,255,255,0.12)",
+    "text": "#EFF4F2",
+    "muted": "#C6D5CF",
+    "primary": "#16C47F",
+    "accent": "#FFD65A",
+    "accent2": "#FF9D23",
+    "alert": "#F93827",
+    "mainname": "#52fa7f",
+    "black": "#000000"
+  },
+  "radius": "18px",
+  "shadow": "0 6px 18px rgba(0,0,0,.28)",
+  "font": {
+    "base": "fantasy,Outfit, system-ui, -apple-system, Segoe UI, Inter, Roboto, Arial, sans-serif",
+    "font001": "Roboto"
+  }
+}
