@@ -2,8 +2,32 @@
 import { useState } from "react";
 import Link from "next/link";
 
+
+type Theme = {
+  colors: {
+    bg: string;
+    surface: string;
+    surface2: string;
+    line: string;
+    text: string;
+    muted: string;
+    primary: string;
+    accent: string;
+    accent2: string;
+    alert: string;
+    mainname: string;
+    black: string;
+  };
+  radius: string;
+  shadow: string;
+  font: {
+    [key: string]: string; // 👉 font এর ভিতরে যতগুলো property আছে সব string ধরা হবে
+  };
+};
+
+
 type NavbarProps = {
-  theme?: string; // 👉 শুধু declare করলাম, ব্যবহার করছেন না
+  theme?: Theme; // 👉 শুধু declare করলাম, ব্যবহার করছেন না
 };
 
 export default function Navbar({ theme }: NavbarProps) {
