@@ -79,8 +79,8 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Person",
               "name": data.identity.name,
-              "url": "https://portfolio-ok6guoutt-mokammel-morsheds-projects.vercel.app/",
-              "image": "https://portfolio-ok6guoutt-mokammel-morsheds-projects.vercel.app/assets/Meheran.jpg",
+              "url": "https://meheran-portfolio.vercel.app/",
+              "image": "https://meheran-portfolio.vercel.app/assets/Meheran.jpg",
               "sameAs": [
                 "https://www.linkedin.com/in/mokammel-morshed-59108a366/",
         "https://github.com/meheran216",

@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: "https://portfolio-ok6guoutt-mokammel-morsheds-projects.vercel.app/", // 👉 এখানে তোমার লাইভ ডোমেইন / vercel URL দাও
+  siteUrl: "https://meheran-portfolio.vercel.app/", // 👉 এখানে তোমার লাইভ ডোমেইন / vercel URL দাও
   generateRobotsTxt: true,
   sitemapSize: 7000,
    robotsTxtOptions: {
