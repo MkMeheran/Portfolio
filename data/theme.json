@@ -1,8 +1,8 @@
 {
   "colors": {
-    "bg": "#1e1e23",
+    "bg": "#000319",
     "surface": "rgba(255,255,255,0.05)",
-    "surface2": "rgba(255,255,255,0.08)",
+    "surface2": "#000319",
     "line": "rgba(255,255,255,0.12)",
     "text": "#EFF4F2",
     "muted": "#C6D5CF",
