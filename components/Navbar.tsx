@@ -3,7 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 
 type NavbarProps = {
-  theme?: any; // 👉 শুধু declare করলাম, ব্যবহার করছেন না
+  theme?: string; // 👉 শুধু declare করলাম, ব্যবহার করছেন না
 };
 
 export default function Navbar({ theme }: NavbarProps) {

@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: "https://yourdomain.com", // 👉 এখানে তোমার আসল ডোমেইন বসাবে
-  generateRobotsTxt: true, // robots.txt ও তৈরি হবে
+  siteUrl: "https://portfolio.vercel.app", // 👉 এখানে তোমার লাইভ ডোমেইন / vercel URL দাও
+  generateRobotsTxt: true,
   sitemapSize: 7000,
 };
