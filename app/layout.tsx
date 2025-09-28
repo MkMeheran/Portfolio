@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     title: "Meheran | GIS & Web GIS Portfolio",
     description:
       "Explore projects on GIS, Web GIS, Urban Planning, and modern web development by Mokammel Morshed.",
-    url: "https://your-domain.com",
+    url: "https://portfolio-ok6guoutt-mokammel-morsheds-projects.vercel.app/",
     siteName: "Meheran Portfolio",
     images: [
       {
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/assets/globe.svg", // 👈 favicon হিসেবে use করতে পারেন
   },
-  metadataBase: new URL("https://your-domain.com"), // 👈 আপনার domain দিন
+  metadataBase: new URL("hhttps://portfolio-ok6guoutt-mokammel-morsheds-projects.vercel.app/"), // 👈 আপনার domain দিন
 };
 
 export default function RootLayout({
@@ -79,8 +79,8 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Person",
               "name": data.identity.name,
-              "url": "https://your-domain.com",
-              "image": "https://your-domain.com/assets/Meheran.jpg",
+              "url": "https://portfolio-ok6guoutt-mokammel-morsheds-projects.vercel.app/",
+              "image": "https://portfolio-ok6guoutt-mokammel-morsheds-projects.vercel.app/assets/Meheran.jpg",
               "sameAs": [
                 "https://www.linkedin.com/in/mokammel-morshed-59108a366/",
         "https://github.com/meheran216",
