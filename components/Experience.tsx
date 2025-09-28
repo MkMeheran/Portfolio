@@ -3,9 +3,11 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import data from "@/data/content.json";
+import theme from "@/data/theme.json"; 
 
 type Props = {
   experience: typeof data.experience;
+   theme: typeof theme; // ✅ theme prop add করা হলো
 };
 
 export default function Experience({ experience }: Props) {

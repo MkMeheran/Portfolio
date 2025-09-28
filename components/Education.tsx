@@ -1,8 +1,10 @@
 "use client";
 import data from "@/data/content.json";
+import theme from "@/data/theme.json"; 
 
 type Props = {
   education: typeof data.education;
+   theme: typeof theme; // ✅ এখন theme prop যোগ হলো
 };
 
 export default function Education({ education }: Props) {
