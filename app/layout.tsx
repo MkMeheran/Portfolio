@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Mokammel Morshed" }],
    verification: {
-    google: "xxxx-your-verification-code-xxxx",
+    google: "yPE4By05HKPLCJixD1j0XOaJac_s8bd2QzyFsspipEA",
   },
   openGraph: {
     title: "Meheran | GIS & Web GIS Portfolio",
