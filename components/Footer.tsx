@@ -26,21 +26,20 @@ export default function Footer({ footer, identity, theme }: Props) {
 
   return (
     <footer
-      className="pt-6"
-      style={{ backgroundColor: "#0a192f", color: theme.colors.text }}
+      className="pt-12 bg-[#0a192f] text-gray-300 border-t border-white/10"
     >
-      <div className="max-w-6xl mx-auto px-6 grid gap-8 grid-cols-2 md:grid-cols-4 text-left md:text-left">
+      <div className="max-w-6xl mx-auto px-6 grid gap-10 grid-cols-2 sm:grid-cols-2 md:grid-cols-4">
         {/* Info */}
         <div>
-          <h4 className="flex items-left gap-2 font-semibold uppercase text-sm mb-3">
+          <h4 className="flex items-center gap-2 font-semibold uppercase text-sm mb-4 text-emerald-400">
             <FaInfoCircle /> Info
           </h4>
-          <ul className="pl-10 md:pl-4 space-y-2 border-l-2  ml-3 text-sm">
+          <ul className="space-y-2 text-sm">
             {footer.info.map((item, i) => (
               <li key={i}>
                 <Link
                   href={item.link}
-                  className="hover:text-[#0ef] transition"
+                  className="hover:text-sky-400 transition-colors"
                 >
                   {item.label}
                 </Link>
@@ -51,15 +50,15 @@ export default function Footer({ footer, identity, theme }: Props) {
 
         {/* Resources */}
         <div>
-          <h4 className="flex items-left gap-2 font-semibold uppercase text-sm mb-3">
+          <h4 className="flex items-center gap-2 font-semibold uppercase text-sm mb-4 text-sky-400">
             <FaBook /> Resources
           </h4>
-          <ul className="pl-10 md:pl-4 space-y-2 border-l-2  ml-3 text-sm">
+          <ul className="space-y-2 text-sm">
             {footer.resources.map((item, i) => (
               <li key={i}>
                 <a
                   href={item.link}
-                  className="hover:text-[#0ef] transition"
+                  className="hover:text-emerald-400 transition-colors"
                 >
                   {item.label}
                 </a>
@@ -70,15 +69,15 @@ export default function Footer({ footer, identity, theme }: Props) {
 
         {/* Company */}
         <div>
-          <h4 className="flex items-left gap-2 font-semibold uppercase text-sm mb-3">
+          <h4 className="flex items-center gap-2 font-semibold uppercase text-sm mb-4 text-amber-400">
             <FaBuilding /> Company
           </h4>
-          <ul className="pl-10 md:pl-4 space-y-2 border-l-2 ml-3 text-sm">
+          <ul className="space-y-2 text-sm">
             {footer.company.map((item, i) => (
               <li key={i}>
                 <a
                   href={item.link}
-                  className="hover:text-[#0ef] transition"
+                  className="hover:text-sky-400 transition-colors"
                 >
                   {item.label}
                 </a>
@@ -89,16 +88,16 @@ export default function Footer({ footer, identity, theme }: Props) {
 
         {/* Socials */}
         <div>
-          <h4 className="flex items-center gap-2 font-semibold uppercase text-sm mb-3">
+          <h4 className="flex items-center gap-2 font-semibold uppercase text-sm mb-4 text-pink-400">
             <FaGlobe /> Follow Us
           </h4>
-          <div className="flex justify-center md:justify-start space-x-4 text-xl">
+          <div className="flex flex-wrap gap-3 text-lg">
             {footer.socials.facebook && (
               <a
                 href={footer.socials.facebook}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-[#0ef]"
+                className="p-2 rounded-full bg-white/5 border border-white/10 hover:border-sky-400 hover:text-sky-400 transition"
               >
                 <FaFacebook />
               </a>
@@ -108,7 +107,7 @@ export default function Footer({ footer, identity, theme }: Props) {
                 href={footer.socials.twitter}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-[#0ef]"
+                className="p-2 rounded-full bg-white/5 border border-white/10 hover:border-sky-400 hover:text-sky-400 transition"
               >
                 <FaTwitter />
               </a>
@@ -118,7 +117,7 @@ export default function Footer({ footer, identity, theme }: Props) {
                 href={footer.socials.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-[#0ef]"
+                className="p-2 rounded-full bg-white/5 border border-white/10 hover:border-pink-400 hover:text-pink-400 transition"
               >
                 <FaInstagram />
               </a>
@@ -128,7 +127,7 @@ export default function Footer({ footer, identity, theme }: Props) {
                 href={footer.socials.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-[#0ef]"
+                className="p-2 rounded-full bg-white/5 border border-white/10 hover:border-emerald-400 hover:text-emerald-400 transition"
               >
                 <FaGithub />
               </a>
@@ -138,7 +137,7 @@ export default function Footer({ footer, identity, theme }: Props) {
                 href={footer.socials.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-[#0ef]"
+                className="p-2 rounded-full bg-white/5 border border-white/10 hover:border-sky-400 hover:text-sky-400 transition"
               >
                 <FaLinkedin />
               </a>
@@ -148,8 +147,8 @@ export default function Footer({ footer, identity, theme }: Props) {
       </div>
 
       {/* Bottom line */}
-      <div className="border-t border-gray-700 mt-10 py-4 text-center text-xs">
-        © {yr} {identity.name}. All rights reserved.
+      <div className="border-t border-white/10 mt-10 py-4 text-center text-xs text-gray-400">
+        © {yr} <span className="text-emerald-400">{identity.name}</span>. All rights reserved.
       </div>
     </footer>
   );

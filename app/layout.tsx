@@ -6,7 +6,12 @@ import data from "@/data/content.json";
 import theme from "@/data/theme.json";
 import type { Metadata } from "next";
 import Script from "next/script";
-
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/inter/700.css";
+import "@fontsource/poppins/400.css";
+import "@fontsource/poppins/600.css";
+import "@fontsource/orbitron/700.css";
 
 export const metadata: Metadata = {
   title: "Meheran | GIS & Web GIS Portfolio",
@@ -67,7 +72,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-    <body className="bg-[var(--bg)] text-[var(--text)]" suppressHydrationWarning>
+    <body className="bg-[#000319] text-[var(--text)]" suppressHydrationWarning>
 
      
         <Script

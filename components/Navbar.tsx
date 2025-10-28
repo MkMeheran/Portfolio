@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-
+import { FaBars, FaTimes } from "react-icons/fa";
 
 type Theme = {
   colors: {
@@ -21,13 +21,12 @@ type Theme = {
   radius: string;
   shadow: string;
   font: {
-    [key: string]: string; // 👉 font এর ভিতরে যতগুলো property আছে সব string ধরা হবে
+    [key: string]: string;
   };
 };
 
-
 type NavbarProps = {
-  theme?: Theme; // 👉 শুধু declare করলাম, ব্যবহার করছেন না
+  theme?: Theme;
 };
 
 export default function Navbar({ theme }: NavbarProps) {
@@ -41,42 +40,59 @@ export default function Navbar({ theme }: NavbarProps) {
   ];
 
   return (
-    <header className="sticky top-0 z-50">
-      <div className="max-w-[1130px] mx-auto flex items-center justify-between px-4 h-10 bg-[#507d80] border-b-2 border-black rounded-sm shadow-custom">
-        <Link href="/" className="font-bold text-2xl">
+    <header className="sticky top-0 z-50 font-sans">
+      <div className="max-w-[1125px] mx-auto flex items-center  justify-between px-6 h-14 
+                      bg-slate-900 border-b border-emerald-500/20 shadow-md">
+        {/* Logo */}
+        <Link
+          href="/"
+          className="text-2xl font-extrabold bg-gradient-to-r from-emerald-400 to-sky-500 
+                     bg-clip-text text-transparent tracking-wide"
+        >
           Portfolio
         </Link>
-        <nav className="hidden md:flex gap-6 text-sm">
+
+        {/* Desktop Menu */}
+        <nav className="hidden md:flex gap-8 text-sm font-medium">
           {links.map((l) => (
-            <a key={l.href} href={l.href} className="hover:text-[var(--accent)]">
+            <a
+              key={l.href}
+              href={l.href}
+              className="relative text-gray-300 hover:text-emerald-400 transition-colors 
+                         after:content-[''] after:absolute after:w-0 after:h-[2px] 
+                         after:left-0 after:-bottom-1 after:bg-emerald-400 
+                         hover:after:w-full after:transition-all after:duration-300"
+            >
               {l.label}
             </a>
           ))}
         </nav>
+
+        {/* Mobile Menu Button */}
         <button
           onClick={() => setOpen(true)}
-          className="md:hidden text-xl font-bold"
+          className="md:hidden text-2xl text-gray-200 hover:text-emerald-400 transition-colors"
         >
-          ☰
+          <FaBars />
         </button>
       </div>
 
       {/* Overlay Sidebar */}
       {open && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm">
-          <div className="fixed top-0 right-0 h-full w-64 bg-[var(--surface)] shadow-custom p-6 flex flex-col">
+          <div className="fixed top-0 right-0 h-full w-64 bg-slate-900 shadow-lg p-6 flex flex-col">
             <button
               onClick={() => setOpen(false)}
-              className="text-right text-2xl mb-6"
+              className="text-right text-2xl mb-6 text-gray-300 hover:text-emerald-400 transition-colors"
             >
-              ✕
+              <FaTimes />
             </button>
             {links.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="py-2 text-lg hover:text-[var(--accent)]"
+                className="py-2 text-lg text-gray-300 hover:text-emerald-400 transition-colors"
               >
                 {l.label}
               </a>

@@ -1,6 +1,12 @@
 "use client";
 import data from "@/data/content.json";
 import theme from "@/data/theme.json";
+import {
+  FaProjectDiagram,
+  FaTags,
+  FaCalendarAlt,
+  FaExternalLinkAlt,
+} from "react-icons/fa";
 
 type Props = {
   projects: typeof data.projects;
@@ -10,72 +16,89 @@ type Props = {
 export default function Projects({ projects, theme }: Props) {
   return (
     <section id="projects" className="py-16">
-      <div className="max-w-[1110px] mx-auto ">
-        <h2 className="text-3xl font-bold text-center mb-8">
+      <div className="max-w-6xl mx-auto px-4">
+        {/* Section Title */}
+        <h2
+          className="text-3xl md:text-4xl font-extrabold font-cyber 
+                     bg-gradient-to-r from-emerald-400 via-sky-400 to-cyan-300 
+                     bg-clip-text text-transparent tracking-wide flex items-center gap-3"
+        >
+          <FaProjectDiagram className="text-emerald-400 min-w-[28px] min-h-[28px]" />
           Featured Projects
         </h2>
 
-        {/* Responsive scrollable container */}
-        <div className="overflow-x-auto scrollbar-thin pl-4 pb-4">
-          <div className="flex gap-6 flex-nowrap justify-left">
-            {projects.map((p) => (
-              <div
-                key={p.id}
-                className="flex-shrink-0 w-[85%] sm:w-[48%] md:w-[45%] max-w-[320px] aspect-[11/14] bg-[#0ef] text-black border-4 border-black rounded-sm overflow-hidden"
-              >
-                {p.image && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={`/${p.image}`}
-                    alt={p.title}
-                    className="w-full aspect-[16/9] object-cover border-b-2 border-black"
-                  />
-                )}
+        {/* Grid Layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
+          {projects.map((p) => (
+            <div
+              key={p.id}
+              className="bg-white/5 backdrop-blur-md rounded-xl shadow-lg 
+                         border border-emerald-500/20 hover:shadow-emerald-400/30 
+                         transition-transform duration-300 hover:scale-[1.02] p-6 flex flex-col space-y-4"
+            >
+              {/* Title */}
+              <h3 className="text-xl font-bold text-white text-center">
+                {p.title}
+              </h3>
 
-                <h3 className="font-bold text-lg text-center py-1 bg-[#0ef] text-black">
-                  {p.title}
-                </h3>
+              {/* Image */}
+              {p.image && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={`/${p.image}`}
+                  alt={p.title}
+                  className="w-full aspect-[16/9] object-cover rounded-md border border-emerald-500/30"
+                />
+              )}
 
-                {/* Tags */}
-                {p.tags && (
-                  <div className="ml-[2%]">
-                    {p.tags.map((t, i) => (
-                      <span
-                        key={i}
-                        className="inline-block px-2 py-0.5 text-sm border border-black bg-[#0ef] text-black max-w-[100px] truncate mr-1"
-                      >
-                        {t}
-                      </span>
-                    ))}
+              {/* Tags */}
+              {p.tags && (
+                <div className="flex flex-wrap items-center gap-2 text-sm text-emerald-400">
+                  <FaTags className="text-emerald-400 min-w-[18px] min-h-[18px] shrink-0" />
+                  {p.tags.map((t, i) => (
+                    <span
+                      key={i}
+                      className="px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-400/30 text-emerald-300 text-xs"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Summary with slim scrollbar */}
+              {p.summary && (
+                <div
+                  className="max-h-32 overflow-y-auto pr-4 "
+
+                >
+                  {p.summary}
+                </div>
+              )}
+
+              {/* Footer: Date + Link */}
+              <div className="flex items-center justify-between mt-auto">
+                {p.date && (
+                  <div className="flex items-center gap-2 text-xs text-gray-400">
+                    <FaCalendarAlt className="text-cyan-400 min-w-[16px] min-h-[16px]" />
+                    {p.date}
                   </div>
                 )}
-
-                {/* Summary */}
-                <p className="line-clamp-5 text-sm leading-relaxed mt-2 ml-[2%] pl-2 text-left border-l border-black bg-[var(--color001)] text-black">
-                  {p.summary}
-                </p>
-
-                {/* Buttons / Date */}
-                <div className="flex flex-wrap items-center gap-2 mt-2 ml-[2%] mb-3">
-                  {p.link && (
-                    <a
-                      href={p.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center font-bold text-sm px-3 py-1 border border-black bg-[var(--color001)] text-black hover:scale-110 transition-transform"
-                    >
-                      Visit
-                    </a>
-                  )}
-                  {p.date && (
-                    <span className="inline-flex items-center font-bold text-sm px-3 py-1 border border-black bg-[var(--color001)] text-black">
-                      {p.date}
-                    </span>
-                  )}
-                </div>
+                {p.link && (
+                  <a
+                    href={p.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-sm font-semibold 
+                               text-sky-300 hover:text-sky-400 transition-colors"
+                  >
+                    Visit{" "}
+                    <FaExternalLinkAlt className="text-sky-400 min-w-[14px] min-h-[14px]" />
+                  </a>
+                )}
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

@@ -85,20 +85,112 @@
       "featured": true
     }
   ],
+ 
   "skills": [
-    {"id":"s1","name":"ArcGIS Pro","icon":"","level":72,"status":"running","summary":"Map editing, symbology, geoprocessing.","details":"Buffer/clip, ModelBuilder basics, layout production; tracked maps and feature classes.","certificates":[]},
-    {"id":"s2","name":"QGIS","icon":"","level":60,"status":"running","summary":"Open-source GIS workflows.","details":"Plugins, field calculator, styling and print layouts.","certificates":[]},
-    {"id":"s3","name":"Leaflet","icon":"","level":58,"status":"running","summary":"Lightweight web maps.","details":"Custom markers, popups, tile layers & controls.","certificates":[]},
-    {"id":"s4","name":"Python","icon":"","level":45,"status":"basic","summary":"Scripting & data handling.","details":"Pandas basics, simple automation.","certificates":[]},
-    {"id":"s5","name":"Microsoft Word","icon":"","level":80,"status":"complete","summary":"Document formatting, templates, mail merge.","details":"Styles, TOC, track changes, citations; academic doc workflow.","certificates":[]},
-    {"id":"s6","name":"Microsoft Excel","icon":"","level":75,"status":"running","summary":"Data cleaning, formulas, charts.","details":"VLOOKUP/XLOOKUP, pivot tables, conditional formatting.","certificates":[]},
-    {"id":"s7","name":"PowerPoint","icon":"","level":70,"status":"running","summary":"Clean decks & animations.","details":"Grid layouts, master slides, morph, timings.","certificates":[]},
-    {"id":"s8","name":"Photoshop","icon":"","level":55,"status":"running","summary":"Photo retouch & composites.","details":"Masks, adjustment layers, smart objects.","certificates":[]},
-    {"id":"s9","name":"Illustrator","icon":"","level":50,"status":"running","summary":"Logos & vector graphics.","details":"Pen tool, pathfinder, appearance & expand.","certificates":[]}
-  ],
+  {
+    "id": "s1",
+    "name": "ArcGIS Pro",
+    "icon": "arcgis",
+    "level": 72,
+    "status": "running",
+    "summary": "Map editing, symbology, geoprocessing.",
+    "details": "Buffer/clip, ModelBuilder basics, layout production; tracked maps and feature classes.",
+    "certificates": [],
+    "category": "GIS Tools"
+  },
+  {
+    "id": "s2",
+    "name": "QGIS",
+    "icon": "qgis",
+    "level": 60,
+    "status": "running",
+    "summary": "Open-source GIS workflows.",
+    "details": "Plugins, field calculator, styling and print layouts.",
+    "certificates": [],
+    "category": "GIS Tools"
+  },
+  {
+    "id": "s3",
+    "name": "Leaflet",
+    "icon": "leaflet",
+    "level": 58,
+    "status": "running",
+    "summary": "Lightweight web maps.",
+    "details": "Custom markers, popups, tile layers & controls.",
+    "certificates": [],
+    "category": "GIS Tools"
+  },
+  {
+    "id": "s4",
+    "name": "Python",
+    "icon": "python",
+    "level": 45,
+    "status": "basic",
+    "summary": "Scripting & data handling.",
+    "details": "Pandas basics, simple automation.",
+    "certificates": [],
+    "category": "Programming"
+  },
+  {
+    "id": "s5",
+    "name": "Microsoft Word",
+    "icon": "word",
+    "level": 80,
+    "status": "complete",
+    "summary": "Document formatting, templates, mail merge.",
+    "details": "Styles, TOC, track changes, citations; academic doc workflow.",
+    "certificates": [],
+    "category": "Office Tools"
+  },
+  {
+    "id": "s6",
+    "name": "Microsoft Excel",
+    "icon": "excel",
+    "level": 75,
+    "status": "running",
+    "summary": "Data cleaning, formulas, charts.",
+    "details": "VLOOKUP/XLOOKUP, pivot tables, conditional formatting.",
+    "certificates": [],
+    "category": "Office Tools"
+  },
+  {
+    "id": "s7",
+    "name": "PowerPoint",
+    "icon": "powerpoint",
+    "level": 70,
+    "status": "running",
+    "summary": "Clean decks & animations.",
+    "details": "Grid layouts, master slides, morph, timings.",
+    "certificates": [],
+    "category": "Office Tools"
+  },
+  {
+    "id": "s8",
+    "name": "Photoshop",
+    "icon": "photoshop",
+    "level": 55,
+    "status": "running",
+    "summary": "Photo retouch & composites.",
+    "details": "Masks, adjustment layers, smart objects.",
+    "certificates": [],
+    "category": "Design Tools"
+  },
+  {
+    "id": "s9",
+    "name": "Illustrator",
+    "icon": "illustrator",
+    "level": 50,
+    "status": "running",
+    "summary": "Logos & vector graphics.",
+    "details": "Pen tool, pathfinder, appearance & expand.",
+    "certificates": [],
+    "category": "Design Tools"
+  }
+]
+,
   "education": [
     {"program":"BURP_2417012","org":"Khulna University of Engineering & Technology","start":"2025-08","end":"present","result":null},
-    {"program":"HSC 2024","org":"Bangladesh Chemical Industries Corporation College (BCIC College)","start":"2022-02","end":"2024-06","result":"GPA 5"},
+    {"program":"HSC 2024","org":"Bangladesh Chemical Industries Corporation College","start":"2022-02","end":"2024-06","result":"GPA 5"},
     {"program":"SSC 2022","org":"Ataturk Govt. Model High School","start":"2017-01","end":"2021-07","result":"GPA 5"},
     {"program":"JSC 2019","org":"Ataturk Govt. Model High School","start":"2017-01","end":"2019-11","result":"GPA 4.56"}
   ],

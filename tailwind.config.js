@@ -5,7 +5,11 @@ module.exports = {
     "./components/**/*.{ts,tsx,js,jsx,mdx}",
   ],
   theme: {
-    extend: {
+    extend: {  fontFamily: {
+      sans: ["Poppins", "ui-sans-serif", "system-ui"],
+      cyber: ["Orbitron", "sans-serif"],
+
+    },
       boxShadow: {
         custom: "0 6px 18px rgba(0,0,0,.28)", // theme.json shadow
       },
@@ -24,5 +28,7 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+  require("tailwind-scrollbar-hide"),
+],
 }
