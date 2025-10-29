@@ -4,7 +4,7 @@
   "roles": [
   {
     "name": "Student",
-    "prefix": "I’m",
+    "prefix": "I’m a",
     "desc": "Currently studying Urban and Regional Planning at KUET"
   },
   {
