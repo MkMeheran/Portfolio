@@ -1,0 +1,37 @@
+# *
+User-agent: *
+Allow: /
+
+# ChatGPT-User
+User-agent: ChatGPT-User
+Allow: /
+
+# OAI-SearchBot
+User-agent: OAI-SearchBot
+Allow: /
+
+# GPTBot
+User-agent: GPTBot
+Allow: /
+
+# ClaudeBot
+User-agent: ClaudeBot
+Allow: /
+
+# Google-Extended
+User-agent: Google-Extended
+Allow: /
+
+# PerplexityBot
+User-agent: PerplexityBot
+Allow: /
+
+# Perplexity-User
+User-agent: Perplexity-User
+Allow: /
+
+# Host
+Host: https://meheran-portfolio.vercel.app/
+
+# Sitemaps
+Sitemap: https://meheran-portfolio.vercel.app/sitemap.xml
