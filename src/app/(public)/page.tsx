@@ -233,9 +233,9 @@ function FeaturedProjects({ projects }: { projects: Project[] }) {
             >
               {/* Image - Small */}
               <div className="relative w-full h-20 sm:h-24 bg-amber-50 border-b-2 border-stone-900 overflow-hidden">
-                {project.image_url ? (
+                {project.thumbnail_url ? (
                   <Image
-                    src={project.image_url}
+                    src={project.thumbnail_url}
                     alt={project.title}
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-300"

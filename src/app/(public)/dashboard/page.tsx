@@ -73,7 +73,7 @@ const streakData = generateStreakData();
 function StatCard({
   stat,
 }: {
-  stat: typeof mockLearningStats[0];
+  stat: typeof placeholderLearningStats[0];
 }) {
   const Icon = iconMap[stat.type] || Code;
   const colors = colorMap[stat.type] || colorMap.leetcode;
