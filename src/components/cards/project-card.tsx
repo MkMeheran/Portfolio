@@ -29,9 +29,9 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
     <Card className={cn("group overflow-hidden transition-all hover:shadow-lg", className)}>
       {/* Image */}
       <div className="relative aspect-video overflow-hidden bg-muted">
-        {project.image_url ? (
+        {project.thumbnail_url ? (
           <Image
-            src={project.image_url}
+            src={project.thumbnail_url}
             alt={project.title}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -43,7 +43,7 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
             </span>
           </div>
         )}
-        {project.featured && (
+        {project.is_featured && (
           <Badge className="absolute left-3 top-3 bg-accent text-accent-foreground">
             Featured
           </Badge>
@@ -52,9 +52,11 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
 
       <CardHeader className="space-y-2">
         {/* Category Badge */}
-        <Badge variant="secondary" className={categoryColors[project.category]}>
-          {categoryLabels[project.category]}
+        {project.category && (project.category in categoryColors) && (
+        <Badge variant="secondary" className={categoryColors[project.category as keyof typeof categoryColors]}>
+          {categoryLabels[project.category as keyof typeof categoryLabels]}
         </Badge>
+        )}
         
         {/* Title */}
         <h3 className="text-xl font-semibold line-clamp-1 group-hover:text-primary transition-colors">
@@ -70,14 +72,14 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
 
         {/* Tech Stack */}
         <div className="flex flex-wrap gap-1.5">
-          {project.tech_stack.slice(0, 4).map((tech) => (
+          {(project.technologies || []).slice(0, 4).map((tech) => (
             <Badge key={tech} variant="outline" className="text-xs">
               {tech}
             </Badge>
           ))}
-          {project.tech_stack.length > 4 && (
+          {(project.technologies || []).length > 4 && (
             <Badge variant="outline" className="text-xs">
-              +{project.tech_stack.length - 4}
+              +{(project.technologies || []).length - 4}
             </Badge>
           )}
         </div>
@@ -91,18 +93,18 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
           </Link>
         </Button>
         
-        {project.demo_link && (
+        {project.live_url && (
           <Button variant="outline" size="icon" asChild>
-            <Link href={project.demo_link} target="_blank" rel="noopener noreferrer">
+            <Link href={project.live_url} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="h-4 w-4" />
               <span className="sr-only">Live Demo</span>
             </Link>
           </Button>
         )}
         
-        {project.repo_link && (
+        {project.github_url && (
           <Button variant="outline" size="icon" asChild>
-            <Link href={project.repo_link} target="_blank" rel="noopener noreferrer">
+            <Link href={project.github_url} target="_blank" rel="noopener noreferrer">
               <Github className="h-4 w-4" />
               <span className="sr-only">Source Code</span>
             </Link>

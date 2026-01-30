@@ -129,12 +129,12 @@ export default function EducationAdminPage() {
       } else {
         // Insert
         const newOrder = educations.length > 0 
-          ? Math.max(...educations.map(e => e.display_order ?? e.order_index ?? 0)) + 1 
+          ? Math.max(...educations.map(e => e.display_order ?? 0)) + 1 
           : 0;
           
         const { data, error } = await supabase
           .from("education")
-          .insert([{ ...payload, order_index: newOrder }])
+          .insert([{ ...payload, display_order: newOrder }])
           .select()
           .single();
 

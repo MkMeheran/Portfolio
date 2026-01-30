@@ -314,9 +314,6 @@ export interface Database {
 // LEGACY TYPES (for mock-data compatibility)
 // ============================================
 
-// Keeping these for backward compatibility with existing code
-export type { Project, Education, Experience, Skill };
-
 export interface Writing {
   id: string;
   title: string;

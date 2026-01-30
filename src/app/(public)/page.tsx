@@ -249,18 +249,20 @@ function FeaturedProjects({ projects }: { projects: Project[] }) {
                   </div>
                 )}
                 {/* Category badge */}
+                {project.category && (
                 <div className={`absolute top-1 left-1 text-[8px] font-bold px-1 py-0.5 border border-stone-900 ${categoryBadges[project.category]?.class || 'bg-stone-200'} font-[family-name:var(--font-space)]`}>
                   {categoryBadges[project.category]?.label || project.category}
                 </div>
+                )}
                 {/* Links on hover */}
                 <div className="absolute top-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-                  {project.demo_url && (
-                    <Link href={project.demo_url} target="_blank" className="p-0.5 bg-white border border-stone-900 text-stone-700 hover:bg-stone-100">
+                  {project.live_url && (
+                    <Link href={project.live_url} target="_blank" className="p-0.5 bg-white border border-stone-900 text-stone-700 hover:bg-stone-100">
                       <ExternalLink className="h-3 w-3" />
                     </Link>
                   )}
-                  {project.repo_url && (
-                    <Link href={project.repo_url} target="_blank" className="p-0.5 bg-white border border-stone-900 text-stone-700 hover:bg-stone-100">
+                  {project.github_url && (
+                    <Link href={project.github_url} target="_blank" className="p-0.5 bg-white border border-stone-900 text-stone-700 hover:bg-stone-100">
                       <Github className="h-3 w-3" />
                     </Link>
                   )}
@@ -273,13 +275,13 @@ function FeaturedProjects({ projects }: { projects: Project[] }) {
                   {project.title}
                 </h3>
                 <div className="flex flex-wrap gap-0.5">
-                  {(project.tech_stack || []).slice(0, 2).map((tech) => (
+                  {(project.technologies || []).slice(0, 2).map((tech) => (
                     <span key={tech} className="text-[9px] sm:text-[10px] md:text-xs font-medium text-stone-600 bg-stone-100 border border-stone-200 px-1 py-0.5 font-[family-name:var(--font-space-mono)]">
                       {tech}
                     </span>
                   ))}
-                  {(project.tech_stack || []).length > 2 && (
-                    <span className="text-[9px] sm:text-[10px] text-muted-foreground font-bold">+{(project.tech_stack || []).length - 2}</span>
+                  {(project.technologies || []).length > 2 && (
+                    <span className="text-[9px] sm:text-[10px] text-muted-foreground font-bold">+{(project.technologies || []).length - 2}</span>
                   )}
                 </div>
               </CardContent>
@@ -319,13 +321,15 @@ function EducationSection({ education }: { education: Education[] }) {
 
         {/* Education Grid - Compact cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-          {education.map((edu) => (
+          {education.map((edu) => {
+            const isCurrent = !edu.end_date;
+            return (
             <Card key={edu.id} className="group bg-card overflow-hidden border-2 border-stone-900 shadow-[2px_2px_0px_0px_#1c1917] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all">
               <CardContent className="p-3">
                 <div className="flex items-start gap-2">
                   {/* Icon */}
                   <div className={`p-2 shrink-0 border-2 border-stone-900 ${
-                    edu.is_current 
+                    isCurrent 
                       ? 'bg-amber-400 text-stone-900' 
                       : 'bg-stone-200 text-stone-600'
                   }`}>
@@ -335,31 +339,35 @@ function EducationSection({ education }: { education: Education[] }) {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 mb-0.5">
                       <h3 className="font-bold text-sm sm:text-base leading-tight truncate font-[family-name:var(--font-space)]">{edu.degree}</h3>
-                      {edu.is_current && (
+                      {isCurrent && (
                         <span className="text-[9px] font-bold bg-emerald-400 text-white px-1.5 py-0.5 border border-stone-900 shrink-0">NOW</span>
                       )}
                     </div>
                     <p className="text-xs sm:text-sm text-amber-700 font-semibold truncate font-[family-name:var(--font-space)]">{edu.institution}</p>
                     
                     <div className="flex flex-wrap items-center gap-2 mt-1.5 text-[10px] sm:text-xs text-muted-foreground">
+                      {edu.start_date && (
                       <span className="inline-flex items-center gap-0.5">
                         <Calendar className="h-3 w-3" />
                         {new Date(edu.start_date).getFullYear()}{edu.end_date ? `–${new Date(edu.end_date).getFullYear()}` : '–Now'}
                       </span>
+                      )}
+                      {edu.location && (
                       <span className="inline-flex items-center gap-0.5">
                         <MapPin className="h-3 w-3" />
                         {edu.location}
                       </span>
-                      {edu.gpa && (
+                      )}
+                      {edu.grade && (
                         <span className="inline-flex items-center gap-0.5 font-bold text-amber-700 bg-amber-100 px-1 py-0.5 border border-amber-300">
                           <Trophy className="h-3 w-3" />
-                          {edu.gpa}
+                          {edu.grade}
                         </span>
                       )}
                     </div>
                     
                     {/* Certificate Icon - shows on hover or always if not current */}
-                    {!edu.is_current && (
+                    {!isCurrent && (
                       <button className="mt-2 flex items-center gap-1 text-[9px] font-bold text-violet-700 bg-violet-100 px-1.5 py-0.5 border border-violet-300 hover:bg-violet-200 transition-colors">
                         <FileText className="h-3 w-3" />
                         View Certificate
@@ -369,7 +377,8 @@ function EducationSection({ education }: { education: Education[] }) {
                 </div>
               </CardContent>
             </Card>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
@@ -394,13 +403,15 @@ function ExperienceSection({ experiences }: { experiences: Experience[] }) {
 
         {/* Experience Grid - Compact cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-          {experiences.map((exp) => (
+          {experiences.map((exp) => {
+            const isCurrent = !exp.end_date;
+            return (
             <Card key={exp.id} className="group bg-card overflow-hidden border-2 border-stone-900 shadow-[2px_2px_0px_0px_#1c1917] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all">
               <CardContent className="p-3">
                 <div className="flex items-start gap-2">
                   {/* Icon */}
                   <div className={`p-2 shrink-0 border-2 border-stone-900 ${
-                    exp.is_current 
+                    isCurrent 
                       ? 'bg-sky-400 text-white' 
                       : 'bg-stone-200 text-stone-600'
                   }`}>
@@ -410,29 +421,34 @@ function ExperienceSection({ experiences }: { experiences: Experience[] }) {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 mb-0.5">
                       <h3 className="font-bold text-sm sm:text-base leading-tight truncate font-[family-name:var(--font-space)]">{exp.title}</h3>
-                      {exp.is_current && (
+                      {isCurrent && (
                         <span className="text-[9px] font-bold bg-emerald-400 text-white px-1.5 py-0.5 border border-stone-900 shrink-0">ACTIVE</span>
                       )}
                     </div>
-                    <p className="text-xs sm:text-sm text-sky-700 font-semibold truncate font-[family-name:var(--font-space)]">{exp.organization}</p>
+                    <p className="text-xs sm:text-sm text-sky-700 font-semibold truncate font-[family-name:var(--font-space)]">{exp.company}</p>
                     <p className="text-[10px] sm:text-xs text-muted-foreground line-clamp-2 mt-1 font-[family-name:var(--font-space)]">{exp.description}</p>
                     
                     <div className="flex flex-wrap items-center gap-2 mt-1.5 text-[10px] sm:text-xs text-muted-foreground">
+                      {exp.start_date && (
                       <span className="inline-flex items-center gap-0.5">
                         <Calendar className="h-3 w-3" />
                         {new Date(exp.start_date).toLocaleDateString('en', { month: 'short', year: 'numeric' })}
                         {exp.end_date ? `–${new Date(exp.end_date).toLocaleDateString('en', { month: 'short', year: 'numeric' })}` : '–Now'}
                       </span>
+                      )}
+                      {exp.location && (
                       <span className="inline-flex items-center gap-0.5">
                         <MapPin className="h-3 w-3" />
                         {exp.location}
                       </span>
+                      )}
                     </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

@@ -94,13 +94,9 @@ export function ImageUploader({
       }
 
       // Try to get public URL
-      const { data: urlData, error: urlError } = await supabase.storage
+      const { data: urlData } = await supabase.storage
         .from(bucket)
         .getPublicUrl(filePath);
-
-      if (urlError) {
-        console.warn('getPublicUrl returned error:', urlError);
-      }
 
       // Prefer returned publicUrl, otherwise construct fallback
       const publicUrl = urlData?.publicUrl ||

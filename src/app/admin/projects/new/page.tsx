@@ -364,8 +364,9 @@ export default function NewProjectPage() {
                       image_url: url,
                     }))
                   }
-                  configKey="projectThumbnail"
-                  altText=""
+                  preset="project"
+                  alt=""
+                  onAltChange={(alt) => setFormData(prev => ({ ...prev, image_alt: alt }))}
                   folder="projects"
                 />
               </CardContent>

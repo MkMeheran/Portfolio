@@ -335,9 +335,9 @@ export default function ToolsAdminPage() {
                       <button
                         key={color.value}
                         type="button"
-                        onClick={() => setEditingItem(prev => ({ ...prev, home_bg_color: color.value }))}
+                        onClick={() => setEditingItem(prev => ({ ...prev, bg_color: color.value }))}
                         className={`h-8 w-8 rounded-full ${color.class} border-2 transition-all ${
-                          editingItem?.home_bg_color === color.value 
+                          editingItem?.bg_color === color.value 
                             ? "border-primary scale-110" 
                             : "border-transparent hover:scale-105"
                         }`}

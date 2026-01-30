@@ -23,7 +23,6 @@ import {
   Search
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 
@@ -156,7 +155,7 @@ export const AdminLayout = memo(function AdminLayout({ children }: AdminLayoutPr
         </div>
 
         {/* Navigation */}
-        <ScrollArea className="h-[calc(100vh-64px-60px)]">
+        <div className="h-[calc(100vh-64px-60px)] overflow-y-auto">
           <nav className="p-3 space-y-1">
             {sidebarLinks.map((link) => (
               <SidebarLink 
@@ -167,7 +166,7 @@ export const AdminLayout = memo(function AdminLayout({ children }: AdminLayoutPr
               />
             ))}
           </nav>
-        </ScrollArea>
+        </div>
 
         {/* Footer */}
         <div className="absolute bottom-0 left-0 right-0 p-3 border-t-2 border-stone-200 bg-stone-50">
