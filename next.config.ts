@@ -6,7 +6,9 @@ const nextConfig: NextConfig = {
   
   // Code splitting & optimization
   experimental: {
-    optimizePackageImports: ['lucide-react', '@icons-pack/react-simple-icons'],
+    optimizePackageImports: ['lucide-react', '@icons-pack/react-simple-icons', 'react-icons'],
+    // Disable image optimization in dev to save memory
+    disableOptimizedLoading: process.env.NODE_ENV === 'development',
   },
   
   // Dev options
@@ -17,7 +19,7 @@ const nextConfig: NextConfig = {
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    unoptimized: process.env.NODE_ENV === 'development', // Skip optimization in dev for speed
+    unoptimized: true, // Disable image optimization to speed up dev server
     remotePatterns: [
       {
         protocol: 'https',

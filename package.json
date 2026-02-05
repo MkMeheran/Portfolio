@@ -4,9 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:low-mem": "NODE_OPTIONS='--max-old-space-size=2048' next dev",
+    "dev:clean": "rm -rf .next && next dev",
     "build": "next build",
+    "build:analyze": "ANALYZE=true next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "clean": "rm -rf .next node_modules/.cache"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

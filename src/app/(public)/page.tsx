@@ -327,14 +327,25 @@ function EducationSection({ education }: { education: Education[] }) {
             <Card key={edu.id} className="group bg-card overflow-hidden border-2 border-stone-900 shadow-[2px_2px_0px_0px_#1c1917] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all">
               <CardContent className="p-3">
                 <div className="flex items-start gap-2">
-                  {/* Icon */}
-                  <div className={`p-2 shrink-0 border-2 border-stone-900 ${
-                    isCurrent 
-                      ? 'bg-amber-400 text-stone-900' 
-                      : 'bg-stone-200 text-stone-600'
-                  }`}>
-                    <GraduationCap className="h-4 w-4" />
-                  </div>
+                  {/* Icon or Logo */}
+                  {edu.logo_url ? (
+                    <div className="relative h-10 w-10 shrink-0 border-2 border-stone-900 bg-white overflow-hidden">
+                      <Image
+                        src={edu.logo_url}
+                        alt={edu.logo_alt || edu.institution}
+                        fill
+                        className="object-contain p-1"
+                      />
+                    </div>
+                  ) : (
+                    <div className={`p-2 shrink-0 border-2 border-stone-900 ${
+                      isCurrent 
+                        ? 'bg-amber-400 text-stone-900' 
+                        : 'bg-stone-200 text-stone-600'
+                    }`}>
+                      <GraduationCap className="h-4 w-4" />
+                    </div>
+                  )}
                   
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 mb-0.5">
@@ -409,14 +420,25 @@ function ExperienceSection({ experiences }: { experiences: Experience[] }) {
             <Card key={exp.id} className="group bg-card overflow-hidden border-2 border-stone-900 shadow-[2px_2px_0px_0px_#1c1917] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all">
               <CardContent className="p-3">
                 <div className="flex items-start gap-2">
-                  {/* Icon */}
-                  <div className={`p-2 shrink-0 border-2 border-stone-900 ${
-                    isCurrent 
-                      ? 'bg-sky-400 text-white' 
-                      : 'bg-stone-200 text-stone-600'
-                  }`}>
-                    <Briefcase className="h-4 w-4" />
-                  </div>
+                  {/* Icon or Logo */}
+                  {exp.logo_url ? (
+                    <div className="relative h-10 w-10 shrink-0 border-2 border-stone-900 bg-white overflow-hidden">
+                      <Image
+                        src={exp.logo_url}
+                        alt={exp.logo_alt || exp.organization}
+                        fill
+                        className="object-contain p-1"
+                      />
+                    </div>
+                  ) : (
+                    <div className={`p-2 shrink-0 border-2 border-stone-900 ${
+                      isCurrent 
+                        ? 'bg-sky-400 text-white' 
+                        : 'bg-stone-200 text-stone-600'
+                    }`}>
+                      <Briefcase className="h-4 w-4" />
+                    </div>
+                  )}
                   
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 mb-0.5">

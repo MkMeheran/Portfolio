@@ -28,24 +28,49 @@ import { createClient } from "@/lib/supabase/client";
 import type { Skill, Certificate, Tool } from "@/types/database.types";
 
 // react-icons imports
-import { SiQgis, SiPython, SiJavascript, SiHtml5, SiCss3, SiCanva, SiReact, SiTypescript, SiTailwindcss, SiNextdotjs } from "react-icons/si";
-import { FaDatabase, FaVideo, FaMapMarkedAlt, FaFileWord, FaFileExcel, FaFilePowerpoint, FaGlobe, FaCode, FaPaintBrush, FaChartBar, FaNodeJs, FaCog } from "react-icons/fa";
-import { BiMoviePlay } from "react-icons/bi";
+import { SiQgis, SiPython, SiJavascript, SiHtml5, SiCss3, SiCanva, SiReact, SiTypescript, SiTailwindcss, SiNextdotjs, SiPostgresql, SiMysql, SiTableau, SiDatabricks, SiApachespark } from "react-icons/si";
+import { FaDatabase, FaVideo, FaMapMarkedAlt, FaFileWord, FaFileExcel, FaFilePowerpoint, FaGlobe, FaCode, FaPaintBrush, FaChartBar, FaNodeJs, FaCog, FaTruck, FaWarehouse, FaShippingFast, FaIndustry, FaMapMarked, FaChartLine, FaBrain, FaRobot } from "react-icons/fa";
+import { BiMoviePlay, BiData } from "react-icons/bi";
+import { TbTruckDelivery, TbMapSearch } from "react-icons/tb";
+import { MdAnalytics, MdScience } from "react-icons/md";
 
 // Icon mapping
 const skillIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   "geospatial": FaGlobe,
+  "gis": FaMapMarked,
+  "mapping": TbMapSearch,
+  "spatial": FaMapMarkedAlt,
   "sql": FaDatabase,
+  "database": FaDatabase,
   "python": SiPython,
   "web": FaCode,
   "excel": FaChartBar,
   "video": BiMoviePlay,
   "design": FaPaintBrush,
-  "default": FaCog,
-};
-
-const toolIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  "python": SiPython,
+  "supply chain": FaTruck,
+  "logistics": FaShippingFast,
+  "warehouse": FaWarehouse,
+  "transportation": TbTruckDelivery,
+  "postgresql": SiPostgresql,
+  "mysql": SiMysql,
+  "javascript": SiJavascript,
+  "html": SiHtml5,
+  "css": SiCss3,
+  "excel": FaFileExcel,
+  "word": FaFileWord,
+  "powerpoint": FaFilePowerpoint,
+  "canva": SiCanva,
+  "capcut": FaVideo,
+  "react": SiReact,
+  "typescript": SiTypescript,
+  "tailwind": SiTailwindcss,
+  "next": SiNextdotjs,
+  "node": FaNodeJs,
+  "tableau": SiTableau,
+  "power bi": FaChartBar,
+  "powerbi": FaChartBar,
+  "databricks": SiDatabricks,
+  "spark": SiApachesparkon,
   "qgis": SiQgis,
   "arcgis": FaMapMarkedAlt,
   "sql": FaDatabase,
@@ -230,13 +255,13 @@ function SkillCard({ skill, index }: { skill: SkillWithCertificates; index: numb
       {/* Modal */}
       {showModal && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/90 backdrop-blur-md"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-stone-900/90 backdrop-blur-md"
           onClick={(e) => e.target === e.currentTarget && setShowModal(false)}
         >
           <div 
             className="bg-white border-2 border-stone-900 shadow-[8px_8px_0px_0px_#fbbf24] w-full max-h-[90vh] overflow-auto animate-in zoom-in-95 duration-200"
             style={{
-              maxWidth: 'min(512px, 65vh)', // Width ≤ height × 0.5 (hardcore constraint)
+              maxWidth: 'min(700px, 90vw)',
             }}
           >
             {/* Modal Header */}

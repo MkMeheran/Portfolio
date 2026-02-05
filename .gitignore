@@ -16,9 +16,18 @@
 # next.js
 /.next/
 /out/
+.turbo/
+*.tsbuildinfo
+next-env.d.ts
 
 # production
 /build
+/dist
+
+# cache
+.cache/
+node_modules/.cache/
+.next/cache/
 
 # misc
 .DS_Store

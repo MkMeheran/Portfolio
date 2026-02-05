@@ -24,20 +24,45 @@ import * as LucideIcons from "lucide-react";
 import * as SimpleIcons from "@icons-pack/react-simple-icons";
 
 // react-icons imports (fallback icons)
-import { SiQgis, SiPython, SiJavascript, SiHtml5, SiCss3, SiCanva } from "react-icons/si";
-import { FaDatabase, FaVideo, FaMapMarkedAlt, FaFileWord, FaFileExcel, FaFilePowerpoint, FaGlobe, FaCode, FaPaintBrush, FaChartBar, FaCog } from "react-icons/fa";
-import { BiMoviePlay } from "react-icons/bi";
+import { SiQgis, SiPython, SiJavascript, SiHtml5, SiCss3, SiCanva, SiPostgresql, SiMysql, SiTableau, SiDatabricks, SiApachespark } from "react-icons/si";
+import { FaDatabase, FaVideo, FaMapMarkedAlt, FaFileWord, FaFileExcel, FaFilePowerpoint, FaGlobe, FaCode, FaPaintBrush, FaChartBar, FaCog, FaTruck, FaWarehouse, FaShippingFast, FaIndustry, FaMapMarked, FaChartLine, FaBrain, FaRobot } from "react-icons/fa";
+import { BiMoviePlay, BiData } from "react-icons/bi";
+import { TbTruckDelivery, TbMapSearch } from "react-icons/tb";
+import { MdAnalytics, MdScience } from "react-icons/md";
 
 // Icon mapping for skills
 const skillIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   "geospatial": FaGlobe,
+  "gis": FaMapMarked,
+  "mapping": TbMapSearch,
+  "spatial": FaMapMarkedAlt,
   "sql": FaDatabase,
+  "database": FaDatabase,
   "python": SiPython,
   "web": FaCode,
   "excel": FaChartBar,
   "video": BiMoviePlay,
   "design": FaPaintBrush,
-  "default": FaCog,
+  "supply chain": FaTruck,
+  "logistics": FaShippingFast,
+  "warehouse": FaWarehouse,
+  "transportation": TbTruckDelivery,
+  "distribution": FaIndustry,
+  "postgresql": SiPostgresql,
+  "mysql": SiMysql,
+  "javascript": SiJavascript,
+  "html": SiHtml5,
+  "css": SiCss3,
+  "excel": FaFileExcel,
+  "word": FaFileWord,
+  "powerpoint": FaFilePowerpoint,
+  "canva": SiCanva,
+  "capcut": FaVideo,
+  "tableau": SiTableau,
+  "power bi": FaChartBar,
+  "powerbi": FaChartBar,
+  "databricks": SiDatabricks,
+  "spark": SiApachespark
 };
 
 // Icon mapping for tools  
@@ -397,12 +422,11 @@ export function SkillsSection() {
 
       {/* Skills Details Modal */}
       {showDetails && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4" onClick={() => setShowDetails(false)}>
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-3 sm:p-4 md:p-6" onClick={() => setShowDetails(false)}>
           <div 
-            className="bg-white border-2 border-stone-900 shadow-[6px_6px_0px_0px_#1c1917] w-full max-h-[85vh] overflow-y-auto"
+            className="bg-white border-2 border-stone-900 shadow-[6px_6px_0px_0px_#1c1917] w-full max-h-[90vh] overflow-y-auto"
             style={{
-              minWidth: 'min(400px, 65vh)',
-              maxWidth: 'min(672px, 42.5vh)',
+              maxWidth: 'min(800px, 90vw)',
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -423,7 +447,7 @@ export function SkillsSection() {
             </div>
 
             {/* Content */}
-            <div className="p-4">
+            <div className="p-4 sm:p-5 md:p-6">
               {selectedSkill ? (
                 // Single Skill View with Multiple Certificates
                 <div className="space-y-4">
