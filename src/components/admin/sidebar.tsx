@@ -17,6 +17,7 @@ import {
   User,
   Sparkles,
   Image,
+  FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -31,6 +32,11 @@ const sidebarLinks = [
     title: "প্রোফাইল",
     href: "/admin/profile",
     icon: User,
+  },
+  {
+    title: "এবাউট",
+    href: "/admin/about",
+    icon: FileText,
   },
   {
     title: "শিক্ষা",
@@ -142,13 +148,30 @@ export function AdminSidebar() {
   );
 }
 
-export function AdminHeader({ title, description }: { title: string; description?: string }) {
+export function AdminHeader({ 
+  title, 
+  description,
+  actions 
+}: { 
+  title: string; 
+  description?: string;
+  actions?: React.ReactNode;
+}) {
   return (
     <div className="mb-8">
-      <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
-      {description && (
-        <p className="text-muted-foreground mt-1">{description}</p>
-      )}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
+          {description && (
+            <p className="text-muted-foreground mt-1">{description}</p>
+          )}
+        </div>
+        {actions && (
+          <div className="flex items-center gap-2">
+            {actions}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

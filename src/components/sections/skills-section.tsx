@@ -40,7 +40,6 @@ const skillIconMap: Record<string, React.ComponentType<{ className?: string }>> 
   "database": FaDatabase,
   "python": SiPython,
   "web": FaCode,
-  "excel": FaChartBar,
   "video": BiMoviePlay,
   "design": FaPaintBrush,
   "supply chain": FaTruck,
@@ -178,6 +177,16 @@ function getToolIcon(name: string): React.ComponentType<{ className?: string }> 
     if (lowerName.includes(key)) return toolIconMap[key];
   }
   return toolIconMap.default;
+}
+
+// Helper to ensure URL has proper protocol
+function ensureUrlProtocol(url: string): string {
+  if (!url) return url;
+  const trimmedUrl = url.trim();
+  if (trimmedUrl.startsWith('http://') || trimmedUrl.startsWith('https://')) {
+    return trimmedUrl;
+  }
+  return `https://${trimmedUrl}`;
 }
 
 // Helper to get icon component from database icon field
@@ -424,10 +433,7 @@ export function SkillsSection() {
       {showDetails && (
         <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-3 sm:p-4 md:p-6" onClick={() => setShowDetails(false)}>
           <div 
-            className="bg-white border-2 border-stone-900 shadow-[6px_6px_0px_0px_#1c1917] w-full max-h-[90vh] overflow-y-auto"
-            style={{
-              maxWidth: 'min(800px, 90vw)',
-            }}
+            className="bg-white border-2 border-stone-900 shadow-[6px_6px_0px_0px_#1c1917] w-full max-w-full sm:max-w-md md:max-w-xl max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
@@ -503,10 +509,10 @@ export function SkillsSection() {
                       </h5>
                       <div className="space-y-3">
                         {selectedSkill.certificates.map((cert, idx) => (
-                          <div key={cert.id} className="relative bg-gradient-to-br from-amber-100 to-purple-100 border-2 border-stone-900 shadow-[4px_4px_0px_0px_#1c1917] p-3">
+                          <div key={cert.id} className="relative bg-gradient-to-br from-amber-100 to-purple-100 border-2 border-stone-900 shadow-[4px_4px_0px_0px_#1c1917] p-3 w-full">
                             
                             {/* Certificate Title - Center */}
-                            <h6 className="text-center text-xl md:text-2xl font-bold text-stone-900 font-[family-name:var(--font-space-mono)] mb-1 tracking-tight">
+                            <h6 className="text-center text-base sm:text-lg md:text-xl font-bold text-stone-900 font-[family-name:var(--font-space-mono)] mb-1 tracking-tight">
                               {cert.title}
                             </h6>
 
@@ -517,7 +523,7 @@ export function SkillsSection() {
                               </p>
                             )}
 
-                            {/* Certificate Image - 16:9 */}
+                            {/* Certificate Image */}
                             {cert.image_url && (
                               <div className="relative bg-white border border-stone-900 mb-2 overflow-hidden"
                                 style={{
@@ -553,8 +559,9 @@ export function SkillsSection() {
                               </div>
                               {cert.credential_url && (
                                 <Link
-                                  href={cert.credential_url}
+                                  href={ensureUrlProtocol(cert.credential_url)}
                                   target="_blank"
+                                  rel="noopener noreferrer"
                                   className="flex items-center gap-1 px-2 py-1 bg-amber-400 text-stone-900 text-[10px] font-black border border-stone-900 shadow-[2px_2px_0px_0px_#1c1917] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
                                   style={{ borderRadius: '6%' }}
                                 >

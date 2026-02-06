@@ -81,21 +81,28 @@ export default function ProfileAdminPage() {
           })
           .eq("id", existing.id);
 
-        if (error) throw error;
+        if (error) {
+          console.error("Update error:", error);
+          throw error;
+        }
       } else {
         // Insert
         const { error } = await supabase
           .from("profile")
           .insert([formData]);
 
-        if (error) throw error;
+        if (error) {
+          console.error("Insert error:", error);
+          throw error;
+        }
       }
 
       toast.success("Profile saved!");
       router.refresh();
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to save");
+      console.error("Save error:", error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to save";
+      toast.error(errorMessage);
     } finally {
       setIsSaving(false);
     }

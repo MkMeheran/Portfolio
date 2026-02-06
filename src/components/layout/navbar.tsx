@@ -18,7 +18,7 @@ import {
   ExternalLink
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { placeholderProfile } from "@/lib/placeholders";
 
@@ -78,9 +78,9 @@ export function Navbar() {
               className="object-cover"
             />
           </div>
-          <div className="hidden sm:block">
-            <span className="font-bold text-base sm:text-lg tracking-tight">Meheran</span>
-            <span className="text-[9px] sm:text-[10px] text-muted-foreground block -mt-0.5 font-medium">URP @ KUET</span>
+          <div>
+            <span className="font-bold text-sm sm:text-base md:text-lg tracking-tight">Meheran</span>
+            <span className="text-[8px] sm:text-[9px] md:text-[10px] text-muted-foreground block -mt-0.5 font-medium">URP @ KUET</span>
           </div>
         </Link>
 
@@ -139,14 +139,15 @@ export function Navbar() {
           </Button>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation - Hamburger Menu */}
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild className="lg:hidden">
-            <Button variant="outline" size="icon" className="rounded-md">
+            <Button variant="outline" size="icon" className="rounded-md" aria-label="Menu">
               <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-72 pt-12 border-l">
+            <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
             <div className="flex flex-col gap-1">
               <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-3 mb-2">Navigation</p>
               {navLinks.map((link) => {

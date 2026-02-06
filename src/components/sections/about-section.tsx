@@ -212,12 +212,6 @@ export function AboutSection() {
                     passionate about bridging urban planning with cutting-edge technology. I combine spatial thinking 
                     with AI, GIS, and Web Development to create innovative solutions for real-world planning challenges.
                   </p>
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    <span className="text-xs sm:text-sm font-bold bg-amber-100 text-amber-800 px-2 py-1 border border-amber-300">🎓 KUET 24&apos;</span>
-                    <span className="text-xs sm:text-sm font-bold bg-emerald-100 text-emerald-800 px-2 py-1 border border-emerald-300">🗺️ GIS Analyst</span>
-                    <span className="text-xs sm:text-sm font-bold bg-violet-100 text-violet-800 px-2 py-1 border border-violet-300">💻 Web Dev</span>
-                    <span className="text-xs sm:text-sm font-bold bg-pink-100 text-pink-800 px-2 py-1 border border-pink-300">🇩🇪 Germany Aspirant</span>
-                  </div>
                 </div>
               </div>
             </CardContent>

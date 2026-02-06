@@ -9,17 +9,23 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['lucide-react', '@icons-pack/react-simple-icons', 'react-icons'],
     // Disable image optimization in dev to save memory
     disableOptimizedLoading: process.env.NODE_ENV === 'development',
+    // Enable static page generation caching
+    staleTimes: {
+      dynamic: 30,
+      static: 180,
+    },
   },
   
-  // Dev options
-  allowedDevOrigins: ['192.168.0.109', 'localhost'],
+  // Production optimizations
+  compress: true,
+  poweredByHeader: false,
   
   // Image optimization
   images: {
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    unoptimized: true, // Disable image optimization to speed up dev server
+    unoptimized: process.env.NODE_ENV === 'development', // Only disable in dev
     remotePatterns: [
       {
         protocol: 'https',

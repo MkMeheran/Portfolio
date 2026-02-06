@@ -50,15 +50,26 @@ function HeroSection({ profile, heroCarousel }: { profile: Profile; heroCarousel
   return (
     <section className="relative">
       {/* Cover Image - Fixed height */}
-      <div className="relative h-48 sm:h-56 md:h-64 lg:h-72 bg-linear-to-br from-amber-200 via-amber-100 to-orange-100 border-b-4 border-foreground/10">
-        <div className="absolute inset-0 bg-linear-to-t from-background/60 to-transparent" />
-        {/* Decorative elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-8 left-8 w-28 h-28 border-4 border-amber-400/40 rotate-12" />
-          <div className="absolute top-12 right-12 w-24 h-24 border-4 border-orange-400/40 rounded-full" />
-          <div className="absolute bottom-20 left-1/4 w-20 h-20 bg-amber-400/25 -rotate-6" />
-          <div className="absolute top-20 right-1/3 w-16 h-16 bg-orange-400/30 rounded-full" />
-        </div>
+      <div className="relative h-48 sm:h-56 md:h-64 lg:h-72 bg-linear-to-br from-amber-200 via-amber-100 to-orange-100 border-b-4 border-foreground/10 overflow-hidden">
+        {/* Cover Image if available */}
+        {profile.cover_url && (
+          <Image
+            src={profile.cover_url}
+            alt="Cover"
+            fill
+            className="object-cover"
+            priority
+          />
+        )}
+        {/* Decorative elements - only show if no cover image */}
+        {!profile.cover_url && (
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute top-8 left-8 w-28 h-28 border-4 border-amber-400/40 rotate-12" />
+            <div className="absolute top-12 right-12 w-24 h-24 border-4 border-orange-400/40 rounded-full" />
+            <div className="absolute bottom-20 left-1/4 w-20 h-20 bg-amber-400/25 -rotate-6" />
+            <div className="absolute top-20 right-1/3 w-16 h-16 bg-orange-400/30 rounded-full" />
+          </div>
+        )}
       </div>
 
       {/* Profile Content - Below cover */}
@@ -107,7 +118,7 @@ function HeroSection({ profile, heroCarousel }: { profile: Profile; heroCarousel
             {/* Buttons + Social - Always in same row, shows from tablet-desktop (768px+) */}
             <div className="hidden md:flex items-center gap-1.5 lg:gap-3">
               <Button size="default" className="h-8 lg:h-10 text-xs lg:text-sm px-2.5 lg:px-4 font-bold font-[family-name:var(--font-space)]" variant="cta" asChild>
-                <Link href="/projects">
+                <Link href="https://udyomxorg.vercel.app/projects">
                   <Target className="mr-1 lg:mr-2 h-3.5 w-3.5 lg:h-4 lg:w-4" />
                   Projects
                 </Link>
@@ -425,7 +436,7 @@ function ExperienceSection({ experiences }: { experiences: Experience[] }) {
                     <div className="relative h-10 w-10 shrink-0 border-2 border-stone-900 bg-white overflow-hidden">
                       <Image
                         src={exp.logo_url}
-                        alt={exp.logo_alt || exp.organization}
+                        alt={exp.logo_alt || exp.company}
                         fill
                         className="object-contain p-1"
                       />

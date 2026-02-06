@@ -128,8 +128,9 @@ export default function SkillsAdminPage() {
       setEditingItem(null);
       router.refresh();
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to save");
+      console.error("Error saving skill:", error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to save";
+      toast.error(errorMessage);
     } finally {
       setIsSaving(false);
     }
@@ -192,8 +193,9 @@ export default function SkillsAdminPage() {
       setEditingCert(null);
       router.refresh();
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to save");
+      console.error("Error saving certificate:", error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to save";
+      toast.error(errorMessage);
     } finally {
       setIsSaving(false);
     }
@@ -214,8 +216,9 @@ export default function SkillsAdminPage() {
       toast.success("Deleted!");
       setDeleteId(null);
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to delete");
+      console.error("Error deleting skill:", error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to delete";
+      toast.error(errorMessage);
     }
   };
 
@@ -237,8 +240,9 @@ export default function SkillsAdminPage() {
       toast.success("Certificate deleted!");
       setDeleteCertId(null);
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to delete");
+      console.error("Error deleting certificate:", error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to delete";
+      toast.error(errorMessage);
     }
   };
 
