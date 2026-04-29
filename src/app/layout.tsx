@@ -90,12 +90,8 @@ export async function generateMetadata(): Promise<Metadata> {
       },
     },
     
-    // Icons - using dynamic profile avatar
-    icons: {
-      icon: images.avatar,
-      apple: images.avatar,
-      shortcut: images.avatar,
-    },
+   // Icons - using dynamic profile avatar
+    manifest: '/manifest.json',
     
     // Verification codes (only include if configured)
     ...(seoConfig.verification.google || seoConfig.verification.bing ? {
