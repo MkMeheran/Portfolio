@@ -2,71 +2,77 @@
 
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { placeholderProfile } from "@/lib/placeholders";
+import { createClient } from "@/lib/supabase/client";
 import {
   Music,
   Heart,
   Camera,
   Gamepad2,
-  Plane,
   BookOpen,
+  Plane,
   Coffee,
-  Sparkles,
-  User,
-  Pause,
-  Play,
-  Volume2,
-  VolumeX,
-  ChevronLeft,
-  ChevronRight,
-  X,
-  MapPin,
   Code,
-  Globe,
+  Zap,
+  Briefcase,
+  Award,
 } from "lucide-react";
-import { placeholderProfile } from "@/lib/placeholders";
-import { createClient } from "@/lib/supabase/client";
 
-// Gallery images
 const galleryImages = [
-  { id: 1, src: "/placeholder-avatar.jpg", alt: "Profile" },
-  { id: 2, src: "https://meheran-portfolio.vercel.app/assets/urp.webp", alt: "URP Work" },
-  { id: 3, src: "https://meheran-portfolio.vercel.app/assets/StudentInformationWebsite.jpg", alt: "Project" },
-  { id: 4, src: "https://meheran-portfolio.vercel.app/assets/URP_Cover_Image.jpg", alt: "Cover Design" },
+  { id: 1, src: "/placeholder-avatar.jpg", alt: "PROFILE", category: "PERSONAL" },
+  { id: 2, src: "https://meheran-portfolio.vercel.app/assets/urp.webp", alt: "URP WORK", category: "ACADEMIC" },
+  { id: 3, src: "https://meheran-portfolio.vercel.app/assets/StudentInformationWebsite.jpg", alt: "PROJECT", category: "WORK" },
+  { id: 4, src: "https://meheran-portfolio.vercel.app/assets/URP_Cover_Image.jpg", alt: "DESIGN", category: "CREATIVE" },
 ];
 
-// Interests data
 const interests = [
-  { icon: Code, label: "Coding", color: "bg-violet-500" },
-  { icon: Globe, label: "GIS & Maps", color: "bg-emerald-500" },
-  { icon: Camera, label: "Photography", color: "bg-pink-500" },
-  { icon: Gamepad2, label: "Gaming", color: "bg-blue-500" },
-  { icon: BookOpen, label: "Learning", color: "bg-amber-500" },
-  { icon: Plane, label: "Travel", color: "bg-cyan-500" },
-  { icon: Coffee, label: "Coffee", color: "bg-orange-500" },
-  { icon: Music, label: "Music", color: "bg-rose-500" },
+  { label: "Music", Icon: Music },
+  { label: "Passion", Icon: Heart },
+  { label: "Photography", Icon: Camera },
+  { label: "Gaming", Icon: Gamepad2 },
+  { label: "Learning", Icon: BookOpen },
+  { label: "Travel", Icon: Plane },
+  { label: "Coffee", Icon: Coffee },
+  { label: "Coding", Icon: Code },
 ];
+
+const stats = [
+  { value: "2+", label: "Years Experience", Icon: Zap },
+  { value: "5", label: "Projects Built", Icon: Briefcase },
+  { value: "3", label: "Fields Mastered", Icon: Award },
+];
+
+// NES-style box shadow (retro 8-bit effect)
+const nesBoxStyle = {
+  border: '4px solid #000',
+  boxShadow: 'inset -4px -4px 0px #808080, inset 4px 4px 0px #dfdfdf',
+  background: '#c0c0c0',
+  padding: '2px'
+};
+
+const nesInnerStyle = {
+  background: '#fff',
+  border: '2px solid',
+  borderColor: '#dfdfdf #404040 #404040 #dfdfdf',
+  padding: '2rem'
+};
+
+const nesButtonStyle = {
+  border: '2px outset #dfdfdf',
+  borderColor: '#dfdfdf #404040 #404040 #dfdfdf',
+  background: '#c0c0c0',
+  padding: '4px 12px',
+  fontWeight: 600,
+  cursor: 'pointer',
+  fontSize: '0.875rem',
+  transition: 'border-color 0.1s'
+};
 
 export function AboutSection() {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [hoveredInterest, setHoveredInterest] = useState<number | null>(null);
   const [profile, setProfile] = useState<{ avatar_url?: string | null } | null>(null);
-
-  // Initialize audio
-  useEffect(() => {
-    audioRef.current = new Audio("/music/favorite-song.mp3");
-    audioRef.current.loop = true;
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
-  }, []);
 
   useEffect(() => {
     const supabase = createClient();
@@ -80,27 +86,6 @@ export function AboutSection() {
     return () => { mounted = false };
   }, []);
 
-  const toggleMusic = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play().catch(() => {
-          // Handle autoplay restriction
-          console.log("Audio playback requires user interaction");
-        });
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const toggleMute = () => {
-    if (audioRef.current) {
-      audioRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
-    }
-  };
-
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % galleryImages.length);
   };
@@ -109,242 +94,304 @@ export function AboutSection() {
     setCurrentImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
   };
 
-  // Auto-advance carousel
   useEffect(() => {
-    const interval = setInterval(nextImage, 4000);
+    const interval = setInterval(nextImage, 5000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <section id="about" className="py-10 relative overflow-hidden">
-      {/* Animated background */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-50/80 via-orange-50/50 to-rose-50/80" />
-        {/* Floating shapes */}
-        <div className="absolute top-20 left-10 w-32 h-32 bg-amber-200/30 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-40 h-40 bg-pink-200/30 rounded-full blur-3xl animate-pulse delay-1000" />
-        <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-violet-200/30 rounded-full blur-2xl animate-pulse delay-500" />
-        {/* Grid pattern */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: `linear-gradient(to right, #000 1px, transparent 1px), linear-gradient(to bottom, #000 1px, transparent 1px)`,
-          backgroundSize: '40px 40px',
-        }} />
-      </div>
-
-      <div className="container mx-auto px-3 sm:px-4 lg:px-6">
-        {/* Section Header with Music Button */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-br from-pink-500 to-violet-500 border-2 border-stone-900 shadow-[3px_3px_0px_0px_#1c1917]">
-              <User className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-black tracking-tight font-[family-name:var(--font-space)]">About Me</h2>
-              <p className="text-xs sm:text-sm text-muted-foreground font-medium font-[family-name:var(--font-space)]">Get to know me better</p>
-            </div>
-          </div>
-          
-          {/* Music Player Button */}
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={toggleMusic}
-              className={`relative group border-2 border-stone-900 shadow-[3px_3px_0px_0px_#1c1917] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all ${
-                isPlaying ? 'bg-gradient-to-r from-pink-500 to-violet-500 text-white' : 'bg-white text-stone-900'
-              }`}
-              size="sm"
-            >
-              {isPlaying ? (
-                <>
-                  <Pause className="h-4 w-4 mr-1.5" />
-                  <span className="hidden sm:inline text-xs font-bold">Playing</span>
-                  {/* Animated music bars */}
-                  <div className="flex items-end gap-0.5 ml-2 h-3">
-                    <div className="w-0.5 bg-white animate-bounce" style={{ height: '8px', animationDelay: '0ms' }} />
-                    <div className="w-0.5 bg-white animate-bounce" style={{ height: '12px', animationDelay: '150ms' }} />
-                    <div className="w-0.5 bg-white animate-bounce" style={{ height: '6px', animationDelay: '300ms' }} />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <Music className="h-4 w-4 mr-1.5" />
-                  <span className="hidden sm:inline text-xs font-bold">Play Music</span>
-                </>
-              )}
-            </Button>
-            {isPlaying && (
-              <Button
-                onClick={toggleMute}
-                variant="outline"
-                size="icon"
-                className="h-8 w-8 border-2 border-stone-900 shadow-[2px_2px_0px_0px_#1c1917] hover:shadow-none"
-              >
-                {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-              </Button>
-            )}
-          </div>
+    <section id="about" style={{ padding: '3rem 1rem', background: 'linear-gradient(135deg, #fef3c7 0%, #fecaca 25%, #dbeafe 50%, #d1d5db 75%, #f3e8ff 100%)', fontFamily: "'Segoe UI', 'Helvetica Neue', sans-serif", cursor: 'auto' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', cursor: 'auto' }}>
+        {/* Header */}
+        <div style={{ marginBottom: '3rem' }}>
+          <h2 style={{ 
+            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+            fontWeight: 900,
+            letterSpacing: '-1px',
+            marginBottom: '1rem',
+            cursor: 'auto',
+            fontFamily: "'Courier New', monospace",
+            color: '#1e40af'
+          }}>
+            $ About Me
+          </h2>
+          <p style={{
+            fontSize: 'clamp(1rem, 2.5vw, 1.25rem)',
+            color: '#333',
+            fontWeight: 500,
+            lineHeight: 1.6,
+            cursor: 'auto'
+          }}>
+            Discover what drives my passion for innovation and creation
+          </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-4">
-          {/* About Me Card */}
-          <Card className="lg:col-span-2 bg-white/80 backdrop-blur-sm border-2 border-stone-900 shadow-[4px_4px_0px_0px_#1c1917] overflow-hidden">
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex items-start gap-4">
-                <div className="relative shrink-0 hidden sm:block">
-                  <div className="w-20 h-20 border-2 border-stone-900 shadow-[3px_3px_0px_0px_#1c1917] overflow-hidden">
-                    <Image
-                      src={profile?.avatar_url || placeholderProfile.avatar}
-                      alt="Meheran"
-                      width={80}
-                      height={80}
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="absolute -bottom-1 -right-1 p-1 bg-emerald-400 border-2 border-stone-900">
-                    <Sparkles className="h-3 w-3 text-white" />
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-xl sm:text-2xl font-black mb-2 font-[family-name:var(--font-space)]">
-                    Hey, I&apos;m Meheran! 👋
-                  </h3>
-                  <p className="text-base sm:text-lg text-muted-foreground leading-relaxed font-[family-name:var(--font-space)]">
-                    I&apos;m an <span className="font-bold text-amber-600">Urban & Regional Planning</span> student at KUET, 
-                    passionate about bridging urban planning with cutting-edge technology. I combine spatial thinking 
-                    with AI, GIS, and Web Development to create innovative solutions for real-world planning challenges.
+        {/* Main Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2.5rem', marginBottom: '2.5rem' }}>
+          {/* Bio Card */}
+          <div style={{ gridColumn: 'span 2', ...nesBoxStyle }}>
+            <div style={nesInnerStyle}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem', cursor: 'auto', fontFamily: "'Courier New', monospace" }}>$ Hello, I'm Meheran!</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem' }}>
+                <div>
+                  <p style={{
+                    fontSize: 'clamp(1rem, 1.5vw, 1.125rem)',
+                    color: '#333',
+                    lineHeight: 1.8,
+                    marginBottom: '1.5rem',
+                    fontWeight: 500,
+                    cursor: 'auto'
+                  }}>
+                    I'm an <strong>Urban & Regional Planning</strong> student at KUET, passionate about bridging urban planning with cutting-edge technology. 
+                    I combine spatial thinking with AI, GIS, and Web Development to create innovative solutions for real-world challenges.
                   </p>
+                  <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                    <button style={{ ...nesButtonStyle, color: '#000' }}>Planner</button>
+                    <button style={{ ...nesButtonStyle, color: '#000' }}>Developer</button>
+                    <button style={{ ...nesButtonStyle, color: '#000' }}>GIS Expert</button>
+                  </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          {/* Interests Card */}
-          <Card className="bg-gradient-to-br from-fuchsia-50 to-violet-50 border-2 border-stone-900 shadow-[4px_4px_0px_0px_#1c1917] overflow-hidden">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="p-1 bg-fuchsia-400 border-2 border-stone-900">
-                  <Heart className="h-4 w-4 text-white" />
-                </div>
-                <h3 className="font-black text-base tracking-tight font-[family-name:var(--font-space)]">My Interests</h3>
-              </div>
-              <div className="grid grid-cols-4 gap-1.5">
-                {interests.map((interest, idx) => {
-                  const Icon = interest.icon;
+          {/* Stats Card */}
+          <div style={{ ...nesBoxStyle }}>
+            <div style={nesInnerStyle}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem', cursor: 'auto', fontFamily: "'Courier New', monospace" }}>$ Journey</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {stats.map((stat, idx) => {
+                  const StatIcon = stat.Icon;
                   return (
-                    <div
-                      key={idx}
-                      className={`group flex flex-col items-center justify-center p-2 ${interest.color} border-2 border-stone-900 shadow-[2px_2px_0px_0px_#1c1917] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all cursor-pointer`}
-                    >
-                      <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-white group-hover:scale-110 transition-transform" />
-                      <span className="text-[9px] sm:text-[10px] font-bold text-white mt-1 font-[family-name:var(--font-space-mono)]">{interest.label}</span>
+                    <div key={idx} style={{ ...nesBoxStyle, padding: '0.5px' }}>
+                      <div style={{ ...nesInnerStyle, padding: '1rem', background: idx === 0 ? '#fef08a' : idx === 1 ? '#bfdbfe' : '#e9d5ff', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        <StatIcon size={28} style={{ minWidth: '28px', color: '#333' }} />
+                        <div style={{ cursor: 'auto' }}>
+                          <div style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 900, color: '#333', fontFamily: "'Courier New', monospace" }}>
+                            {stat.value}
+                          </div>
+                          <div style={{ fontSize: '0.95rem', color: '#666', fontWeight: 600, fontFamily: "'Courier New', monospace" }}>
+                            {stat.label}
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   );
                 })}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
-        {/* Gallery Section */}
-        <Card className="mt-4 bg-stone-900 border-2 border-stone-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] overflow-hidden">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <div className="p-1 bg-amber-400 border-2 border-stone-700">
-                  <Camera className="h-4 w-4 text-stone-900" />
-                </div>
-                <h3 className="font-black text-base tracking-tight text-white font-[family-name:var(--font-space)]">Gallery</h3>
-              </div>
-              <div className="flex items-center gap-1">
-                {galleryImages.map((_, idx) => (
-                  <button
+        {/* Interests */}
+        <div style={{ ...nesBoxStyle, marginBottom: '2.5rem' }}>
+          <div style={nesInnerStyle}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem', cursor: 'auto', fontFamily: "'Courier New', monospace" }}>$ Interests</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '1rem' }}>
+              {interests.map((interest, idx) => {
+                const InterestIcon = interest.Icon;
+                return (
+                  <div
                     key={idx}
-                    onClick={() => setCurrentImageIndex(idx)}
-                    className={`w-2 h-2 transition-all ${
-                      idx === currentImageIndex ? 'bg-amber-400 w-4' : 'bg-stone-600'
-                    }`}
-                  />
-                ))}
-              </div>
+                    onMouseEnter={() => setHoveredInterest(idx)}
+                    onMouseLeave={() => setHoveredInterest(null)}
+                    style={{
+                      ...nesBoxStyle,
+                      padding: '0.5px',
+                      cursor: 'pointer',
+                      transform: hoveredInterest === idx ? 'scale(1.05)' : 'scale(1)',
+                      transition: 'transform 0.2s'
+                    }}
+                  >
+                    <div style={{ ...nesInnerStyle, textAlign: 'center', padding: '1.5rem', background: '#f5f5f5', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem' }}>
+                      <InterestIcon size={32} style={{ color: '#333' }} />
+                      <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#333', cursor: 'auto', fontFamily: "'Courier New', monospace" }}>
+                        {interest.label}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
+          </div>
+        </div>
+
+        {/* Gallery */}
+        <div style={{ ...nesBoxStyle, marginBottom: '2.5rem' }}>
+          <div style={nesInnerStyle}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem', cursor: 'auto', fontFamily: "'Courier New', monospace" }}>$ Gallery</h3>
             
-            {/* Carousel */}
-            <div className="relative group">
-              <div className="overflow-hidden">
-                <div 
-                  className="flex gap-2 transition-transform duration-500 ease-out"
-                  style={{ transform: `translateX(-${currentImageIndex * (100 / galleryImages.length)}%)` }}
-                >
-                  {galleryImages.map((img, idx) => (
+            <div style={{ position: 'relative', marginBottom: '1rem' }}>
+              <div style={{ overflow: 'hidden', border: '2px solid #333' }}>
+                <div style={{ display: 'flex', transition: 'transform 0.5s ease-out', transform: `translateX(-${currentImageIndex * 100}%)` }}>
+                  {galleryImages.map((img) => (
                     <div
                       key={img.id}
-                      className={`relative shrink-0 w-[calc(50%-4px)] sm:w-[calc(33.333%-6px)] md:w-[calc(25%-6px)] aspect-[4/3] border-2 border-stone-700 overflow-hidden cursor-pointer transition-all duration-300 ${
-                        idx === currentImageIndex ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-stone-900' : 'opacity-70 hover:opacity-100'
-                      }`}
-                      onClick={() => {
-                        setCurrentImageIndex(idx);
-                        setLightboxOpen(true);
+                      style={{
+                        flex: '0 0 100%',
+                        aspectRatio: '16 / 9',
+                        position: 'relative',
+                        cursor: 'pointer'
                       }}
+                      onClick={() => setLightboxOpen(true)}
                     >
                       <Image
                         src={img.src}
                         alt={img.alt}
                         fill
-                        className="object-cover hover:scale-110 transition-transform duration-500"
+                        style={{ objectFit: 'cover' }}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent">
-                        <span className="absolute bottom-2 left-2 text-[10px] font-bold text-white">{img.alt}</span>
+                      <div style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'linear-gradient(to top, rgba(0,0,0,0.6), transparent)',
+                        display: 'flex',
+                        alignItems: 'flex-end',
+                        padding: '1.5rem'
+                      }}>
+                        <div style={{ color: '#fff', cursor: 'auto' }}>
+                          <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#ccc' }}>{img.category}</div>
+                          <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{img.alt}</div>
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-              
-              {/* Navigation Arrows */}
+
+              {/* Navigation */}
               <button
                 onClick={prevImage}
-                className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 bg-amber-400 border-2 border-stone-900 shadow-[2px_2px_0px_0px_#1c1917] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all opacity-0 group-hover:opacity-100"
+                onMouseEnter={() => setHoveredInterest(-1)}
+                onMouseLeave={() => setHoveredInterest(null)}
+                style={{
+                  position: 'absolute',
+                  left: '1rem',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  ...nesButtonStyle,
+                  opacity: hoveredInterest === -1 ? 1 : 0.6,
+                  transition: 'opacity 0.2s'
+                }}
               >
-                <ChevronLeft className="h-4 w-4" />
+                ‹
               </button>
               <button
                 onClick={nextImage}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 bg-amber-400 border-2 border-stone-900 shadow-[2px_2px_0px_0px_#1c1917] hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all opacity-0 group-hover:opacity-100"
+                onMouseEnter={() => setHoveredInterest(-2)}
+                onMouseLeave={() => setHoveredInterest(null)}
+                style={{
+                  position: 'absolute',
+                  right: '1rem',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  ...nesButtonStyle,
+                  opacity: hoveredInterest === -2 ? 1 : 0.6,
+                  transition: 'opacity 0.2s'
+                }}
               >
-                <ChevronRight className="h-4 w-4" />
+                ›
               </button>
+
+              {/* Indicators */}
+              <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', marginTop: '1rem', cursor: 'auto' }}>
+                {galleryImages.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentImageIndex(idx)}
+                    style={{
+                      width: idx === currentImageIndex ? '1.5rem' : '0.75rem',
+                      height: '0.75rem',
+                      background: idx === currentImageIndex ? '#333' : '#ccc',
+                      border: '2px solid #333',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s'
+                    }}
+                  />
+                ))}
+              </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div style={{ ...nesBoxStyle }}>
+          <div style={nesInnerStyle}>
+            <p style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1.5rem', color: '#333', textAlign: 'center', cursor: 'auto' }}>
+              Want to collaborate or learn more?
+            </p>
+            <div style={{ textAlign: 'center' }}>
+              <a href="#contact" style={{ ...nesButtonStyle, padding: '8px 24px', fontSize: '1rem', display: 'inline-block', color: '#000', textDecoration: 'none' }}>
+                Get In Touch →
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Lightbox */}
       {lightboxOpen && (
-        <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4" onClick={() => setLightboxOpen(false)}>
-          <button
-            onClick={() => setLightboxOpen(false)}
-            className="absolute top-4 right-4 p-2 bg-white border-2 border-stone-900"
-          >
-            <X className="h-5 w-5" />
-          </button>
-          <div className="relative max-w-4xl max-h-[80vh] w-full aspect-[4/3]" onClick={(e) => e.stopPropagation()}>
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0, 0, 0, 0.9)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 50,
+            padding: '1rem',
+            cursor: 'auto'
+          }}
+          onClick={() => setLightboxOpen(false)}
+        >
+          <div style={{ position: 'relative', maxWidth: '90vw', maxHeight: '80vh', width: '100%', cursor: 'auto' }} onClick={(e) => e.stopPropagation()}>
             <Image
               src={galleryImages[currentImageIndex].src}
               alt={galleryImages[currentImageIndex].alt}
-              fill
-              className="object-contain"
+              width={800}
+              height={450}
+              style={{ width: '100%', height: 'auto' }}
             />
           </div>
           <button
             onClick={(e) => { e.stopPropagation(); prevImage(); }}
-            className="absolute left-4 p-2 bg-amber-400 border-2 border-stone-900"
+            style={{
+              position: 'absolute',
+              left: '2rem',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              ...nesButtonStyle,
+              color: '#000'
+            }}
           >
-            <ChevronLeft className="h-6 w-6" />
+            ‹
           </button>
           <button
             onClick={(e) => { e.stopPropagation(); nextImage(); }}
-            className="absolute right-4 p-2 bg-amber-400 border-2 border-stone-900"
+            style={{
+              position: 'absolute',
+              right: '2rem',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              ...nesButtonStyle,
+              color: '#000'
+            }}
           >
-            <ChevronRight className="h-6 w-6" />
+            ›
+          </button>
+          <button
+            onClick={() => setLightboxOpen(false)}
+            style={{
+              position: 'absolute',
+              top: '1rem',
+              right: '1rem',
+              ...nesButtonStyle,
+              color: '#000',
+              padding: '4px 8px'
+            }}
+          >
+            ✕
           </button>
         </div>
       )}

@@ -10,30 +10,40 @@ import { placeholderProfile } from "@/lib/placeholders";
 const quickLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
-  { href: "/projects", label: "Projects" },
-  { href: "/writings", label: "Writings" },
-];
-
-const socialLinks = [
-  { href: placeholderProfile.social.github, icon: Github, label: "GitHub", color: "hover:bg-stone-700" },
-  { href: placeholderProfile.social.linkedin, icon: Linkedin, label: "LinkedIn", color: "hover:bg-blue-600" },
-  { href: placeholderProfile.social.facebook, icon: Facebook, label: "Facebook", color: "hover:bg-blue-500" },
+  { href: "https://udyomxorg.vercel.app/projects", label: "Projects" },
+  { href: "/skills", label: "Skills" },
 ];
 
 export function Footer() {
-  const [profile, setProfile] = useState<{ avatar_url?: string | null; location?: string | null; email?: string | null } | null>(null);
+  const [profile, setProfile] = useState<{
+    avatar_url?: string | null;
+    location?: string | null;
+    email?: string | null;
+    github_url?: string | null;
+    linkedin_url?: string | null;
+    facebook_url?: string | null;
+  } | null>(null);
 
   useEffect(() => {
     const supabase = createClient();
     let mounted = true;
     (async () => {
       try {
-        const { data } = await supabase.from('profile').select('avatar_url, location, email').single();
+        const { data } = await supabase
+          .from('profile')
+          .select('avatar_url, location, email, github_url, linkedin_url, facebook_url')
+          .single();
         if (mounted && data) setProfile(data as any);
       } catch {}
     })();
     return () => { mounted = false };
   }, []);
+
+  const socialLinks = [
+    { href: profile?.github_url?.trim() || "https://github.com/MkMeheran", icon: Github, label: "GitHub", color: "hover:bg-stone-700" },
+    { href: profile?.linkedin_url?.trim() || "https://www.linkedin.com/", icon: Linkedin, label: "LinkedIn", color: "hover:bg-blue-600" },
+    { href: profile?.facebook_url?.trim() || "https://facebook.com/Meheran216/", icon: Facebook, label: "Facebook", color: "hover:bg-blue-500" },
+  ];
   return (
     <footer className="relative overflow-hidden border-t-2 border-stone-900 bg-stone-900 text-stone-100">
       {/* Animated background pattern */}
@@ -43,12 +53,12 @@ export function Footer() {
         }} />
       </div>
       
-      <div className="container relative mx-auto px-4 sm:px-6 py-8">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+      <div className="container relative mx-auto px-4 sm:px-6 py-8 sm:py-10">
+        <div className="grid gap-7 sm:gap-8 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand Section */}
-          <div className="space-y-4">
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="relative h-12 w-12 rounded-[12%] overflow-hidden border-2 border-amber-500 shadow-[3px_3px_0px_0px_rgba(251,191,36,0.5)] transition-all group-hover:shadow-[2px_2px_0px_0px_rgba(251,191,36,0.5)] group-hover:translate-x-[1px] group-hover:translate-y-[1px]">
+          <div className="space-y-4 text-center sm:text-left">
+            <Link href="/" className="flex items-center justify-center sm:justify-start gap-3 group">
+              <div className="relative h-12 w-12 rounded-[12%] overflow-hidden border-2 border-amber-500 shadow-[1px_1px_0px_0px_rgba(251,191,36,0.3)] transition-all group-hover:shadow-[0.5px_0.5px_0px_0px_rgba(251,191,36,0.2)] group-hover:translate-x-[0.5px] group-hover:translate-y-[0.5px]">
                 <Image
                   src={profile?.avatar_url || placeholderProfile.avatar}
                   alt="Meheran"
@@ -61,11 +71,11 @@ export function Footer() {
                 <span className="text-xs text-amber-400 font-medium">URP @ KUET</span>
               </div>
             </Link>
-            <p className="text-sm text-stone-400 max-w-xs leading-relaxed font-[family-name:var(--font-space)]">
+            <p className="text-sm text-stone-400 max-w-xs leading-relaxed font-[family-name:var(--font-space)] mx-auto sm:mx-0">
               Urban Planner • GIS Analyst • Web Developer
             </p>
             {/* Social Icons - Neu-brutalism */}
-            <div className="flex gap-2 pt-2">
+            <div className="flex gap-2 pt-2 justify-center sm:justify-start">
               {socialLinks.map((social, idx) => {
                 const Icon = social.icon;
                 const key = social.label ?? `social-${idx}`;
@@ -75,7 +85,7 @@ export function Footer() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`flex h-9 w-9 items-center justify-center bg-stone-800 border-2 border-stone-600 text-stone-400 hover:text-white ${social.color} shadow-[2px_2px_0px_0px_rgba(0,0,0,0.5)] hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all`}
+                    className={`flex h-9 w-9 items-center justify-center bg-stone-800 border-2 border-stone-600 text-stone-400 hover:text-white rounded-md ${social.color} shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-none hover:translate-x-[0.5px] hover:translate-y-[0.5px] transition-all`}
                     aria-label={social.label}
                   >
                     <Icon className="h-4 w-4" />
@@ -86,9 +96,9 @@ export function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div className="space-y-4">
+          <div className="space-y-4 text-center sm:text-left">
             <h3 className="font-bold text-sm text-amber-400 uppercase tracking-wider font-[family-name:var(--font-space)]">Quick Links</h3>
-            <nav className="flex flex-col gap-2">
+            <nav className="flex flex-col gap-2 items-center sm:items-start">
               {quickLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -103,32 +113,32 @@ export function Footer() {
           </div>
 
           {/* Skills Preview */}
-          <div className="space-y-4">
+          <div className="space-y-4 text-center sm:text-left">
             <h3 className="font-bold text-sm text-amber-400 uppercase tracking-wider font-[family-name:var(--font-space)]">What I Do</h3>
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap gap-1.5 justify-center sm:justify-start">
               {["GIS", "Web Dev", "UI/UX", "Python", "Data"].map((skill) => (
                 <span key={skill} className="text-[10px] font-bold text-stone-300 bg-stone-800 border border-stone-700 px-2 py-1 font-[family-name:var(--font-space-mono)]">
                   {skill}
                 </span>
               ))}
             </div>
-            <div className="flex items-center gap-2 text-stone-500 text-xs mt-2">
+            <div className="flex items-center justify-center sm:justify-start gap-2 text-stone-500 text-xs mt-2">
               <Globe className="h-3 w-3 text-amber-400" />
               <span>Open to Opportunities</span>
             </div>
           </div>
 
           {/* Contact */}
-          <div className="space-y-4">
+          <div className="space-y-4 text-center sm:text-left">
             <h3 className="font-bold text-sm text-amber-400 uppercase tracking-wider font-[family-name:var(--font-space)]">Contact</h3>
             <div className="space-y-3">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center sm:justify-start gap-2">
                 <MapPin className="h-4 w-4 text-amber-400 shrink-0" />
                 <span className="text-sm text-stone-400">{profile?.location || placeholderProfile.location}</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center sm:justify-start gap-2">
                 <Mail className="h-4 w-4 text-amber-400 shrink-0" />
-                <Link href={`mailto:${profile?.email || placeholderProfile.email}`} className="text-sm text-stone-400 hover:text-amber-400 transition-colors truncate">
+                <Link href={`mailto:${profile?.email || placeholderProfile.email}`} className="text-xs sm:text-sm text-stone-400 hover:text-amber-400 transition-colors break-all sm:break-normal">
                   {profile?.email || placeholderProfile.email}
                 </Link>
               </div>
@@ -137,11 +147,11 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-8 pt-4 border-t border-stone-800 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs text-stone-500 font-[family-name:var(--font-space)]">
+        <div className="mt-8 pt-4 border-t border-stone-800 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between text-center sm:text-left">
+          <p className="text-xs text-stone-500 font-[family-name:var(--font-space)] leading-relaxed">
             © {new Date().getFullYear()} Meheran. Made with <Heart className="inline h-3 w-3 text-red-500 fill-red-500" />
           </p>
-          <div className="flex items-center gap-3 text-xs text-stone-500">
+          <div className="flex items-center justify-center sm:justify-end flex-wrap gap-2 sm:gap-3 text-xs text-stone-500">
             <span className="flex items-center gap-1.5">
               <Code className="h-3 w-3" />
               Built with Next.js

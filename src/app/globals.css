@@ -47,8 +47,8 @@
 }
 
 :root {
-  /* Neu-Brutalism: Smaller radius */
-  --radius: 0.375rem;
+  /* Neu-Brutalism: Mild radius (softer than harsh zero, like iPhone but smaller) */
+  --radius: 0.625rem;
   
   /* Professional Warm Brown Theme */
   --background: oklch(0.98 0.008 60);

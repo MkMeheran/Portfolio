@@ -67,7 +67,7 @@ export function IconPicker({ value, onChange, className }: IconPickerProps) {
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute z-50 mt-1 w-full min-w-[320px] bg-white border-2 border-stone-900 shadow-[4px_4px_0px_0px_#1c1917] rounded-none">
+        <div className="absolute z-50 mt-1 w-full min-w-[320px] bg-white border-2 border-stone-900 shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] rounded-none">
           {/* Header */}
           <div className="p-3 border-b-2 border-stone-200">
             <div className="flex items-center gap-2 mb-3">
@@ -137,7 +137,7 @@ export function IconPicker({ value, onChange, className }: IconPickerProps) {
                         onClick={() => handleSelect(iconName)}
                         title={iconName}
                         className={cn(
-                          "relative flex items-center justify-center p-2 rounded-sm border transition-all",
+                          "relative flex items-center justify-center p-2 rounded-md border transition-all",
                           isSelected
                             ? "bg-amber-100 border-amber-500 text-amber-700"
                             : "bg-white border-stone-200 hover:border-stone-400 hover:bg-stone-50"
@@ -224,7 +224,7 @@ export function IconPickerInline({
               onClick={() => onChange(iconName)}
               title={iconName}
               className={cn(
-                "relative flex items-center justify-center p-2 rounded-sm border-2 transition-all",
+                "relative flex items-center justify-center p-2 rounded-md border-2 transition-all",
                 isSelected
                   ? "bg-amber-100 border-amber-500 text-amber-700 shadow-[2px_2px_0px_0px_#fbbf24]"
                   : "bg-white border-stone-200 hover:border-stone-400 hover:bg-stone-50"
@@ -251,7 +251,7 @@ export function IconPickerInline({
 
       {/* Selected Display */}
       {value && (
-        <div className="flex items-center gap-2 p-2 bg-stone-50 border-2 border-stone-200 rounded-sm">
+        <div className="flex items-center gap-2 p-2 bg-stone-50 border-2 border-stone-200 rounded-md">
           {iconRegistry[value as IconName] && (
             <>
               {(() => {

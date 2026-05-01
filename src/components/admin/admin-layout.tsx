@@ -88,9 +88,9 @@ const SidebarLink = memo(({ link, pathname, onClick }: {
       href={link.href}
       onClick={onClick}
       className={cn(
-        "flex items-center gap-3 px-3 py-2.5 rounded-sm text-sm font-medium transition-all",
+        "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-all",
         isActive
-          ? "bg-amber-100 text-stone-900 border-2 border-stone-900 shadow-[2px_2px_0px_0px_#1c1917]"
+          ? "bg-amber-100 text-stone-900 border-2 border-stone-900 shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)]"
           : "text-stone-600 hover:bg-stone-100 hover:text-stone-900 border-2 border-transparent"
       )}
     >
@@ -136,7 +136,7 @@ export const AdminLayout = memo(function AdminLayout({ children }: AdminLayoutPr
         {/* Logo */}
         <div className="h-16 flex items-center justify-between px-4 border-b-2 border-stone-200">
           <Link href="/admin" className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-amber-400 border-2 border-stone-900 flex items-center justify-center shadow-[2px_2px_0px_0px_#1c1917]">
+            <div className="w-9 h-9 bg-amber-400 border-2 border-stone-900 flex items-center justify-center shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)]">
               <LayoutDashboard className="h-5 w-5 text-stone-900" />
             </div>
             <div>
@@ -174,7 +174,7 @@ export const AdminLayout = memo(function AdminLayout({ children }: AdminLayoutPr
             <Link
               href="/"
               target="_blank"
-              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-white border-2 border-stone-200 hover:border-stone-400 rounded-sm text-xs font-medium transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-white border-2 border-stone-200 hover:border-stone-400 rounded-md text-xs font-medium transition-colors"
             >
               <Home className="h-3.5 w-3.5" />
               View Site
@@ -229,7 +229,7 @@ export const AdminLayout = memo(function AdminLayout({ children }: AdminLayoutPr
               <input
                 type="text"
                 placeholder="Search..."
-                className="w-48 h-9 pl-8 pr-3 text-sm border-2 border-stone-200 rounded-sm focus:outline-none focus:border-amber-400"
+                className="w-48 h-9 pl-8 pr-3 text-sm border-2 border-stone-200 rounded-md focus:outline-none focus:border-amber-400"
               />
             </div>
             

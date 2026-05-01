@@ -277,14 +277,14 @@ export default function SkillsAdminPage() {
           <Button
             variant="outline"
             onClick={() => setShowPreview(!showPreview)}
-            className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold"
+            className="border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold"
           >
             <Eye className="h-4 w-4 mr-2" />
             {showPreview ? "List" : "Preview"}
           </Button>
           <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
             <DialogTrigger asChild>
-              <Button onClick={() => setEditingItem({})} className="bg-black text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold">
+              <Button onClick={() => setEditingItem({})} className="bg-black text-white border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold">
                 <Plus className="h-4 w-4 mr-2" />
                 Add New Skill
               </Button>

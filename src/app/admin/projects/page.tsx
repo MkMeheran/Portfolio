@@ -161,14 +161,14 @@ export default function ProjectsAdminPage() {
           <Button
             variant="outline"
             onClick={() => setShowPreview(!showPreview)}
-            className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold"
+            className="border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold"
           >
             <Eye className="h-4 w-4 mr-2" />
             {showPreview ? "List" : "Preview"}
           </Button>
           <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
             <DialogTrigger asChild>
-              <Button onClick={() => setEditingItem({})} className="bg-black text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold">
+              <Button onClick={() => setEditingItem({})} className="bg-black text-white border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold">
                 <Plus className="h-4 w-4 mr-2" />
                 Add New
               </Button>
@@ -327,7 +327,7 @@ export default function ProjectsAdminPage() {
         // Preview Mode - Grid
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project) => (
-            <Card key={project.id} className="overflow-hidden group border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all">
+            <Card key={project.id} className="overflow-hidden group border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.25)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all">
               <div className="relative aspect-video bg-muted">
                 {project.thumbnail_url ? (
                   <Image
@@ -418,7 +418,7 @@ export default function ProjectsAdminPage() {
             </Card>
           ) : (
             projects.map((project) => (
-              <Card key={project.id} className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+              <Card key={project.id} className="border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)]">
                 <CardContent className="flex items-center gap-4 p-4">
                   {project.thumbnail_url ? (
                     <div className="relative h-16 w-24 rounded overflow-hidden bg-muted shrink-0">

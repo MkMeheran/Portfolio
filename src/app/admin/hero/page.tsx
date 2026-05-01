@@ -185,7 +185,7 @@ export default function HeroAdminPage() {
         <DialogTrigger asChild>
           <Button
             onClick={() => setEditingItem({ line_number: 1, order_index: 0, is_active: true })}
-            className="mb-6 bg-black text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+            className="mb-6 bg-black text-white border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
           >
             <Plus className="h-4 w-4 mr-2" />
             Add Item
@@ -205,7 +205,7 @@ export default function HeroAdminPage() {
           {line1Items.map((item) => (
             <Card
               key={item.id}
-              className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
+              className="border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.25)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
             >
               <CardContent className="p-4">
                 <div className="flex items-start justify-between gap-2">
@@ -262,7 +262,7 @@ export default function HeroAdminPage() {
           {line2Items.map((item) => (
             <Card
               key={item.id}
-              className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
+              className="border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.25)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
             >
               <CardContent className="p-4">
                 <div className="flex items-start justify-between gap-2">
@@ -381,7 +381,7 @@ export default function HeroAdminPage() {
             <Button
               onClick={handleSave}
               disabled={isSaving}
-              className="bg-black text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+              className="bg-black text-white border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
             >
               {isSaving ? (
                 <>

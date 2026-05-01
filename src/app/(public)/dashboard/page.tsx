@@ -122,7 +122,7 @@ function StreakCalendar() {
       {streakData.map((level, index) => (
         <div
           key={index}
-          className={`w-3 h-3 rounded-sm ${levelColors[level]} transition-colors hover:ring-2 hover:ring-primary/50`}
+          className={`w-3 h-3 rounded-md ${levelColors[level]} transition-colors hover:ring-2 hover:ring-primary/50`}
           title={`Activity level: ${level}`}
         />
       ))}
@@ -253,7 +253,7 @@ export default function DashboardPage() {
                     {[0, 1, 2, 3, 4].map((level) => (
                       <div
                         key={level}
-                        className={`w-3 h-3 rounded-sm ${
+                        className={`w-3 h-3 rounded-md ${
                           level === 0
                             ? "bg-muted"
                             : level === 1

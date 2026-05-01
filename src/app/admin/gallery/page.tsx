@@ -147,14 +147,14 @@ export default function GalleryAdminPage() {
             variant="outline"
             onClick={() => setShowPreview(!showPreview)}
             disabled={items.length === 0}
-            className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold disabled:opacity-50"
+            className="border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold disabled:opacity-50"
           >
             <Eye className="h-4 w-4 mr-2" />
             {showPreview ? "List" : "Preview"}
           </Button>
           <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
             <DialogTrigger asChild>
-              <Button onClick={() => setEditingItem({})} className="bg-black text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold">
+              <Button onClick={() => setEditingItem({})} className="bg-black text-white border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold">
                 <Plus className="h-4 w-4 mr-2" />
                 Add New Image
               </Button>
@@ -279,7 +279,7 @@ export default function GalleryAdminPage() {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {items.map((item) => (
-                <Card key={item.id} className="overflow-hidden border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <Card key={item.id} className="overflow-hidden border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)]">
                   <div className="relative aspect-video bg-muted">
                     {item.image_url ? (
                       <Image

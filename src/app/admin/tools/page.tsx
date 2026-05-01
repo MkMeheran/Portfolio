@@ -249,14 +249,14 @@ export default function ToolsAdminPage() {
             variant="outline"
             onClick={() => setShowPreview(!showPreview)}
             disabled={tools.length === 0}
-            className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold disabled:opacity-50"
+            className="border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold disabled:opacity-50"
           >
             <Eye className="h-4 w-4 mr-2" />
             {showPreview ? "List" : "Preview"}
           </Button>
           <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
             <DialogTrigger asChild>
-              <Button onClick={() => setEditingItem({})} className="bg-black text-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold">
+              <Button onClick={() => setEditingItem({})} className="bg-black text-white border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold">
                 <Plus className="h-4 w-4 mr-2" />
                 Add Tool
               </Button>
@@ -478,7 +478,7 @@ export default function ToolsAdminPage() {
             </Card>
           ) : (
             tools.map((tool) => (
-              <Card key={tool.id} className="border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+              <Card key={tool.id} className="border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)]">
                 <CardContent className="flex items-center gap-4 p-4">
                   <div className="cursor-move text-muted-foreground">
                     <GripVertical className="h-5 w-5" />

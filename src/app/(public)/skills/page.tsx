@@ -283,6 +283,7 @@ function SkillCard({ skill, index }: { skill: SkillWithCertificates; index: numb
                 </div>
                 <button
                   onClick={() => setShowModal(false)}
+                  aria-label="Close skill details"
                   className="p-2 bg-white/20 hover:bg-white/30 transition-colors border border-white/30"
                 >
                   <X className="h-5 w-5 text-white" />

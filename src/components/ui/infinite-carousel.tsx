@@ -2,8 +2,6 @@
 
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
-import * as LucideIcons from "lucide-react";
-import * as SimpleIcons from "@icons-pack/react-simple-icons";
 
 interface CarouselItem {
   id: string;
@@ -71,41 +69,20 @@ export function InfiniteCarousel({
         }}
       >
         {items.map((item) => {
-          // Get icon component - support both Lucide and Brand icons
-          let IconComponent = null;
-          
-          if (item.icon) {
-            if (item.icon.startsWith('brand:')) {
-              // Brand icon (Simple Icons)
-              const brandName = item.icon.replace('brand:', '');
-              const pascalName = "Si" + brandName.charAt(0).toUpperCase() + brandName.slice(1)
-                .replace("dotjs", "Dotjs")
-                .replace("dotnet", "Dotnet")
-                .replace("plusplus", "Plusplus");
-              IconComponent = (SimpleIcons as any)[pascalName];
-            } else {
-              // Lucide icon
-              IconComponent = (LucideIcons as any)[item.icon];
-            }
-          }
-          
+          const hasIcon = Boolean(item.icon?.trim());
           return (
             <div
               key={item.id}
               className={cn(
                 "relative shrink-0 border-2 border-stone-900 px-3 py-1.5",
-                "bg-card shadow-[2px_2px_0px_0px_#1c1917]",
+                "bg-card shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)]",
                 "text-sm font-bold whitespace-nowrap flex items-center gap-1.5 font-[family-name:var(--font-space)]",
                 "hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all cursor-default",
                 item.color || "text-stone-800"
               )}
             >
-              {item.icon && (
-                IconComponent ? (
-                  <IconComponent className="h-4 w-4" />
-                ) : (
-                  <span className="text-base">{item.icon}</span>
-                )
+              {hasIcon && (
+                <span className="text-base leading-none">{item.icon}</span>
               )}
               <span>{item.text}</span>
             </div>

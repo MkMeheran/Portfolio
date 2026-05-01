@@ -20,6 +20,8 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import type { Skill, Certificate, Tool } from "@/types/database.types";
+import * as LucideIcons from "lucide-react";
+import * as SimpleIcons from "@icons-pack/react-simple-icons";
 
 // react-icons imports (fallback icons)
 import { SiQgis, SiPython, SiJavascript, SiHtml5, SiCss3, SiCanva, SiPostgresql, SiMysql, SiTableau, SiDatabricks, SiApachespark } from "react-icons/si";
@@ -84,6 +86,81 @@ interface SkillWithCertificates extends Skill {
   certificates?: Certificate[];
 }
 
+// Fallback static data
+const fallbackTools = [
+  { name: "Python", icon: SiPython, color: "text-stone-900", bg: "bg-yellow-400", size: "lg" },
+  { name: "QGIS", icon: SiQgis, color: "text-stone-900", bg: "bg-green-400", size: "md" },
+  { name: "ArcGIS", icon: FaMapMarkedAlt, color: "text-white", bg: "bg-blue-600", size: "sm" },
+  { name: "SQL", icon: FaDatabase, color: "text-white", bg: "bg-orange-500", size: "md" },
+  { name: "JavaScript", icon: SiJavascript, color: "text-stone-900", bg: "bg-yellow-300", size: "sm" },
+  { name: "HTML", icon: SiHtml5, color: "text-white", bg: "bg-orange-600", size: "sm" },
+  { name: "CSS", icon: SiCss3, color: "text-white", bg: "bg-blue-500", size: "sm" },
+  { name: "MS Excel", icon: FaFileExcel, color: "text-white", bg: "bg-green-600", size: "md" },
+  { name: "MS Word", icon: FaFileWord, color: "text-white", bg: "bg-blue-700", size: "sm" },
+  { name: "PowerPoint", icon: FaFilePowerpoint, color: "text-white", bg: "bg-red-500", size: "sm" },
+  { name: "SPSS", icon: FaDatabase, color: "text-white", bg: "bg-rose-600", size: "sm" },
+  { name: "Canva", icon: SiCanva, color: "text-white", bg: "bg-violet-500", size: "md" },
+  { name: "CapCut", icon: FaVideo, color: "text-white", bg: "bg-pink-500", size: "sm" },
+];
+
+const fallbackSkills = [
+  {
+    name: "Geospatial Data Analysis",
+    hasCert: true,
+    icon: FaGlobe,
+    bg: "bg-emerald-500",
+    subSkills: ["QGIS Mapping", "Remote Sensing", "Spatial Analysis", "Cartography", "GeoJSON/Shapefile"],
+    certificates: [],
+  },
+  {
+    name: "Data Analysis with SQL",
+    hasCert: true,
+    icon: FaDatabase,
+    bg: "bg-orange-500",
+    subSkills: ["PostgreSQL", "MySQL", "Data Queries", "Database Design", "Data Cleaning"],
+    certificates: [],
+  },
+  {
+    name: "Data Analysis with Python",
+    hasCert: true,
+    icon: SiPython,
+    bg: "bg-yellow-500",
+    subSkills: ["Pandas", "NumPy", "Matplotlib", "Data Visualization", "Automation"],
+    certificates: [],
+  },
+  {
+    name: "Full Stack Web Dev",
+    hasCert: true,
+    icon: FaCode,
+    bg: "bg-violet-500",
+    subSkills: ["React/Next.js", "TypeScript", "Tailwind CSS", "Node.js", "REST APIs"],
+    certificates: [],
+  },
+  {
+    name: "Word & Excel Mastery",
+    hasCert: false,
+    icon: FaChartBar,
+    bg: "bg-blue-500",
+    subSkills: ["Advanced Formulas", "Pivot Tables", "Document Formatting", "Data Analysis", "Macros"],
+    certificates: [],
+  },
+  {
+    name: "Video Editing",
+    hasCert: false,
+    icon: BiMoviePlay,
+    bg: "bg-pink-500",
+    subSkills: ["CapCut Pro", "Color Grading", "Motion Graphics", "Audio Sync", "Transitions"],
+    certificates: [],
+  },
+  {
+    name: "Poster Design",
+    hasCert: false,
+    icon: FaPaintBrush,
+    bg: "bg-rose-500",
+    subSkills: ["Canva Design", "Typography", "Layout", "Color Theory", "Branding"],
+    certificates: [],
+  },
+];
 
 // Helper to get icon from name
 function getSkillIcon(name: string): React.ComponentType<{ className?: string }> {
@@ -110,6 +187,28 @@ function ensureUrlProtocol(url: string): string {
     return trimmedUrl;
   }
   return `https://${trimmedUrl}`;
+}
+
+// Helper to get icon component from database icon field
+function getIconComponent(iconName: string | null): React.ComponentType<{ className?: string }> | null {
+  if (!iconName) return null;
+  
+  try {
+    if (iconName.startsWith('brand:')) {
+      // Brand icon (Simple Icons)
+      const brandName = iconName.replace('brand:', '');
+      const pascalName = "Si" + brandName.charAt(0).toUpperCase() + brandName.slice(1)
+        .replace("dotjs", "Dotjs")
+        .replace("dotnet", "Dotnet")
+        .replace("plusplus", "Plusplus");
+      return (SimpleIcons as any)[pascalName] || null;
+    } else {
+      // Lucide icon
+      return (LucideIcons as any)[iconName] || null;
+    }
+  } catch {
+    return null;
+  }
 }
 
 export function SkillsSection() {
@@ -171,16 +270,12 @@ export function SkillsSection() {
 
   return (
     <>
-      <section id="skills" className="py-10 bg-gradient-to-b from-amber-50/50 to-transparent" style={{ cursor: 'auto' }}>
-        <style>{`
-          #skills * { cursor: auto; }
-          #skills button { cursor: pointer; }
-        `}</style>
-        <div className="container mx-auto px-3 sm:px-4 lg:px-6">
-          {/* Section Header */}
+      <section id="skills" className="py-10 bg-gradient-to-b from-amber-50/50 to-transparent">
+        <div className="container mx-0 px-2 sm:px-4 lg:px-6">
+          {/* Section Header - Neu-brutalism */}
           <div className="flex items-center justify-between mb-6 gap-2">
             <div className="flex items-center gap-2 min-[480px]:gap-3 min-w-0">
-              <div className="p-1.5 min-[480px]:p-2 bg-amber-400 border-2 border-stone-900 rounded-sm shrink-0">
+              <div className="p-[1px] border border-red-500 min-[480px]:p-2 bg-amber-400 border-2 border-stone-900 rounded-sm shrink-0">
                 <Target className="h-5 min-[480px]:h-6 w-5 min-[480px]:w-6 text-stone-900" />
               </div>
               <div className="min-w-0">
@@ -192,15 +287,7 @@ export function SkillsSection() {
             {/* Show Details Button */}
             <Button
               onClick={() => setShowDetails(true)}
-              aria-label="Filter skills"
-              className="border-2 border-stone-900 rounded-md shrink-0"
-              style={{
-                background: '#c0c0c0',
-                borderColor: '#dfdfdf #404040 #404040 #dfdfdf',
-                padding: '6px 12px',
-                fontWeight: 600,
-                cursor: 'pointer'
-              }}
+              className="border-2 border-stone-900 hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all bg-gradient-to-r from-fuchsia-500 to-violet-500 text-white rounded-md shrink-0"
               size="sm"
             >
               <Eye className="h-4 w-4 mr-1.5" />
@@ -209,19 +296,16 @@ export function SkillsSection() {
           </div>
 
           <div className="grid gap-3 lg:grid-cols-5">
-            {/* Skills List - NES Card */}
-            <Card className="lg:col-span-2 bg-fuchsia-50 border-2 border-stone-900 overflow-hidden rounded-md" style={{
-              border: '4px solid #000',
-              boxShadow: 'inset -4px -4px 0px #808080, inset 4px 4px 0px #dfdfdf'
-            }}>
-              <CardContent className="px-0 py-0 min-[480px]:p-0">
-                <div className="flex items-center gap-2 mb-4 p-3 min-[480px]:p-4" style={{ borderBottom: '2px solid #000' }}>
+            {/* Skills List - Neu-brutalism Card (First) */}
+            <Card className="lg:col-span-2 bg-fuchsia-50 border-2 border-stone-900 overflow-hidden rounded-md">
+              <CardContent className="px-[0.5px] py-2.5 min-[480px]:p-3">
+                <div className="flex items-center gap-2 mb-4">
                   <div className="p-1 bg-fuchsia-400 border-2 border-stone-900 rounded-sm">
                     <Brain className="h-5 w-5 text-stone-900" />
                   </div>
-                  <h3 className="font-black text-base min-[480px]:text-lg tracking-tight font-[family-name:var(--font-space)]" style={{ fontFamily: "'Courier New', monospace" }}>$ What I Can Do</h3>
+                  <h3 className="font-black text-base min-[480px]:text-lg tracking-tight font-[family-name:var(--font-space)]">What I Can Do</h3>
                 </div>
-                <div className="space-y-2 min-[480px]:space-y-2.5 px-2 min-[480px]:px-3 pb-2 min-[480px]:pb-3">
+                <div className="space-y-2 min-[480px]:space-y-2.5">
                   {loading ? (
                     <div className="flex items-center justify-center p-4">
                       <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
@@ -239,12 +323,7 @@ export function SkillsSection() {
                         <div
                           key={skill.id}
                           onClick={() => openDetails(skill)}
-                          className="group relative flex items-center gap-2 px-2 py-3 min-[480px]:p-3.5 bg-white border-2 border-stone-900 hover:border-fuchsia-400 transition-all duration-100 cursor-pointer overflow-hidden rounded-sm"
-                          style={{
-                            border: '2px solid #000',
-                            boxShadow: 'inset -2px -2px 0px #808080, inset 2px 2px 0px #dfdfdf',
-                            cursor: 'pointer'
-                          }}
+                          className="group relative flex items-center gap-2 px-2 py-3 min-[480px]:p-3.5 bg-white border-2 border-stone-900 hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-100 cursor-pointer overflow-hidden rounded-sm"
                         >
                           {/* Cyberpunk scanline effect */}
                           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -269,17 +348,14 @@ export function SkillsSection() {
               </CardContent>
             </Card>
 
-            {/* Tools Bento Grid - NES Card */}
-            <Card className="lg:col-span-3 bg-stone-50 border-2 border-stone-900 overflow-hidden rounded-md" style={{
-              border: '4px solid #000',
-              boxShadow: 'inset -4px -4px 0px #808080, inset 4px 4px 0px #dfdfdf'
-            }}>
+            {/* Tools Bento Grid (Second) */}
+            <Card className="lg:col-span-3 bg-stone-50 border-2 border-stone-900 overflow-hidden rounded-md">
               <CardContent className="p-2.5 min-[480px]:p-3">
-                <div className="flex items-center gap-2 mb-4 min-[480px]:mb-4 p-2 min-[480px]:p-3" style={{ borderBottom: '2px solid #000' }}>
+                <div className="flex items-center gap-2 mb-4 min-[480px]:mb-4">
                   <div className="p-1.5 bg-lime-400 border-2 border-stone-900 rounded-sm shrink-0">
                     <Code className="h-5 min-[480px]:h-6 w-5 min-[480px]:w-6 text-stone-900" />
                   </div>
-                  <h3 className="font-black text-lg min-[480px]:text-lg tracking-tight font-[family-name:var(--font-space)]" style={{ fontFamily: "'Courier New', monospace" }}>$ Tools</h3>
+                  <h3 className="font-black text-lg min-[480px]:text-lg tracking-tight font-[family-name:var(--font-space)]">Tools I Use</h3>
                   <span className="ml-auto text-xs font-bold text-stone-900 bg-lime-300 px-2 py-1 border-2 border-stone-900 rounded-sm">{displayTools.length}</span>
                 </div>
                 {/* Bento Grid */}
@@ -293,36 +369,34 @@ export function SkillsSection() {
                     <p className="text-xs">Admin Panel থেকে টুল যোগ করুন</p>
                   </div>
                 ) : (
-                    <div className="grid grid-cols-4 sm:grid-cols-6 gap-1">
-                      {displayTools.map((tool) => {
-                        const ToolIcon = getToolIcon(tool.name);
+                  <div className="grid grid-cols-4 sm:grid-cols-6 gap-1">
+                    {displayTools.map((tool) => {
+                      // Try to get icon from database first, then fallback to name mapping
+                      const DatabaseIcon = tool.icon ? getIconComponent(tool.icon) : null;
+                      const FallbackIcon = getToolIcon(tool.name);
+                      const ToolIcon = DatabaseIcon || FallbackIcon;
                       
                       const gridSize = tool.grid_size || "1x1";
                       const sizeClass = gridSize === "2x2" ? "lg" : gridSize === "2x1" ? "md" : "sm";
                       // Define colorful Bento grid palette
                       const colorPalette = [
-                        "bg-yellow-600", "bg-green-700", "bg-blue-700", "bg-red-700",
-                        "bg-violet-700", "bg-pink-700", "bg-orange-700", "bg-cyan-700",
-                        "bg-emerald-700", "bg-rose-700", "bg-amber-700", "bg-teal-700",
-                        "bg-indigo-700"
+                        "bg-yellow-400", "bg-green-500", "bg-blue-500", "bg-red-500", 
+                        "bg-violet-500", "bg-pink-500", "bg-orange-500", "bg-cyan-500",
+                        "bg-emerald-500", "bg-rose-500", "bg-amber-500", "bg-teal-500",
+                        "bg-indigo-500"
                       ];
                       // Assign color based on index for variety
                       const toolBg = colorPalette[displayTools.indexOf(tool) % colorPalette.length];
-                      const toolColor = ["bg-yellow-600", "bg-amber-700"].includes(toolBg) ? "text-stone-950" : "text-white";
+                      const toolColor = ["bg-yellow-400", "bg-yellow-300", "bg-cyan-500", "bg-amber-500"].includes(toolBg) ? "text-stone-900" : "text-white";
                       
                       return (
                         <div
                           key={tool.id}
-                          className={`group relative flex flex-col items-center justify-center ${toolBg} border-2 border-stone-900 cursor-pointer overflow-hidden rounded-sm
+                          className={`group relative flex flex-col items-center justify-center ${toolBg} border-2 border-stone-900 hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-100 cursor-pointer overflow-hidden rounded-sm
                             ${sizeClass === "lg" ? "col-span-2 row-span-2 p-4" : ""}
                             ${sizeClass === "md" ? "col-span-2 p-2.5" : ""}
                             ${sizeClass === "sm" ? "col-span-1 p-2.5" : ""}
                           `}
-                          style={{
-                            border: '3px solid #000',
-                            boxShadow: 'inset -3px -3px 0px rgba(0,0,0,0.3), inset 3px 3px 0px rgba(255,255,255,0.5)',
-                            cursor: 'pointer'
-                          }}
                         >
                           {tool.icon_url ? (
                             <Image
@@ -361,28 +435,18 @@ export function SkillsSection() {
           <div 
             className="bg-white border-2 border-stone-900 w-full max-w-full sm:max-w-md md:max-w-xl max-h-[90vh] overflow-y-auto rounded-md"
             onClick={(e) => e.stopPropagation()}
-            style={{
-              border: '4px solid #000',
-              boxShadow: 'inset -4px -4px 0px #808080, inset 4px 4px 0px #dfdfdf'
-            }}
           >
             {/* Header */}
-            <div className="sticky top-0 bg-fuchsia-300 p-4 border-b-2 border-stone-900 flex items-center justify-between" style={{ borderBottom: '4px solid #000' }}>
-              <h3 className="text-lg font-black text-stone-900 font-[family-name:var(--font-space)]" style={{ fontFamily: "'Courier New', monospace" }}>
-                $ {selectedSkill ? selectedSkill.name : "All Skills & Certifications"}
+            <div className="sticky top-0 bg-gradient-to-r from-fuchsia-500 to-violet-500 p-4 border-b-2 border-stone-900 flex items-center justify-between">
+              <h3 className="text-lg font-black text-white font-[family-name:var(--font-space)]">
+                {selectedSkill ? selectedSkill.name : "All Skills & Certifications"}
               </h3>
               <button
                 onClick={() => {
                   setShowDetails(false);
                   setSelectedSkill(null);
                 }}
-                aria-label="Close skills details"
-                className="p-1 bg-white border-2 border-stone-900"
-                style={{
-                  border: '2px solid #000',
-                  boxShadow: 'inset -2px -2px 0px #808080, inset 2px 2px 0px #dfdfdf',
-                  cursor: 'pointer'
-                }}
+                className="p-1 bg-white border-2 border-stone-900 hover:bg-stone-100"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -398,16 +462,13 @@ export function SkillsSection() {
                       const SkillIcon = getSkillIcon(selectedSkill.name);
                       const bgColor = selectedSkill.bg_color ? `bg-${selectedSkill.bg_color}` : "bg-emerald-500";
                       return (
-                        <div className={`p-2 ${bgColor} border-2 border-stone-900`} style={{
-                          border: '3px solid #000',
-                          boxShadow: 'inset -2px -2px 0px rgba(0,0,0,0.3), inset 2px 2px 0px rgba(255,255,255,0.5)'
-                        }}>
+                        <div className={`p-2 ${bgColor} border-2 border-stone-900`}>
                           <SkillIcon className="h-6 w-6 text-white" />
                         </div>
                       );
                     })()}
                     <div>
-                      <h4 className="font-black text-lg font-[family-name:var(--font-space)]" style={{ fontFamily: "'Courier New', monospace" }}>$ {selectedSkill.name}</h4>
+                      <h4 className="font-black text-lg font-[family-name:var(--font-space)]">{selectedSkill.name}</h4>
                       {selectedSkill.has_certificates && (
                         <span className="text-xs text-emerald-600 font-bold flex items-center gap-1">
                           <CheckCircle2 className="h-3 w-3" /> Certified
@@ -416,12 +477,12 @@ export function SkillsSection() {
                     </div>
                   </div>
 
-                  {/* 1. $ Skills */}
+                  {/* 1. Skills Included */}
                   {selectedSkill.sub_skills && selectedSkill.sub_skills.length > 0 && (
                     <div>
-                      <h5 className="text-sm font-bold mb-2 text-muted-foreground flex items-center gap-2" style={{ fontFamily: "'Courier New', monospace" }}>
+                      <h5 className="text-sm font-bold mb-2 text-muted-foreground flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                        $ Skills
+                        Skills Included
                       </h5>
                       <div className="flex flex-wrap gap-1.5">
                         {selectedSkill.sub_skills.map((sub, idx) => {
@@ -442,13 +503,13 @@ export function SkillsSection() {
                   {/* 2. Certificates */}
                   {selectedSkill.certificates && selectedSkill.certificates.length > 0 && (
                     <div>
-                      <h5 className="text-sm font-bold mb-2 text-muted-foreground flex items-center gap-2" style={{ fontFamily: "'Courier New', monospace" }}>
+                      <h5 className="text-sm font-bold mb-2 text-muted-foreground flex items-center gap-2">
                         <Award className="h-4 w-4 text-amber-500" />
-                        $ Certificates ({selectedSkill.certificates.length})
+                        Certificates ({selectedSkill.certificates.length})
                       </h5>
                       <div className="space-y-3">
                         {selectedSkill.certificates.map((cert, idx) => (
-                          <div key={cert.id} className="relative bg-gradient-to-br from-amber-100 to-purple-100 border-2 border-stone-900  p-3 w-full">
+                          <div key={cert.id} className="relative bg-gradient-to-br from-amber-100 to-purple-100 border-2 border-stone-900 shadow-[4px_4px_0px_0px_#1c1917] p-3 w-full">
                             
                             {/* Certificate Title - Center */}
                             <h6 className="text-center text-base sm:text-lg md:text-xl font-bold text-stone-900 font-[family-name:var(--font-space-mono)] mb-1 tracking-tight">
@@ -480,7 +541,7 @@ export function SkillsSection() {
 
                             {/* Date & Credential ID & Verify Button - Below Picture */}
                             <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-                              <div className="flex items-center gap-2" style={{ fontFamily: "'Courier New', monospace" }}>
+                              <div className="flex items-center gap-2">
                                 {cert.issue_date && (
                                   <div className="flex items-center gap-1 px-2 py-1 bg-purple-300 border border-stone-900 text-stone-900 font-bold">
                                     <Calendar className="h-3 w-3" />
@@ -501,13 +562,8 @@ export function SkillsSection() {
                                   href={ensureUrlProtocol(cert.credential_url)}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="flex items-center gap-1 px-2 py-1 bg-amber-400 text-stone-900 text-[10px] font-black border border-stone-900"
-                                  style={{
-                                    borderRadius: '6%',
-                                    border: '2px solid #000',
-                                    boxShadow: 'inset -2px -2px 0px rgba(0,0,0,0.3), inset 2px 2px 0px rgba(255,255,255,0.5)',
-                                    cursor: 'pointer'
-                                  }}
+                                  className="flex items-center gap-1 px-2 py-1 bg-amber-400 text-stone-900 text-[10px] font-black border border-stone-900 shadow-[2px_2px_0px_0px_#1c1917] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+                                  style={{ borderRadius: '6%' }}
                                 >
                                   <ExternalLink className="h-2.5 w-2.5" />
                                   VERIFY
@@ -523,7 +579,7 @@ export function SkillsSection() {
                   {/* 3. Capabilities */}
                   {selectedSkill.sub_skills && selectedSkill.sub_skills.length > 0 && (
                     <div>
-                      <h5 className="text-sm font-bold mb-2 text-muted-foreground flex items-center gap-2" style={{ fontFamily: "'Courier New', monospace" }}>
+                      <h5 className="text-sm font-bold mb-2 text-muted-foreground flex items-center gap-2">
                         <Award className="h-4 w-4 text-violet-500" />
                         Capabilities
                       </h5>
@@ -544,12 +600,7 @@ export function SkillsSection() {
                   <Button
                     onClick={() => setSelectedSkill(null)}
                     variant="outline"
-                    className="w-full border-2 border-stone-900"
-                    style={{
-                      border: '3px solid #000',
-                      boxShadow: 'inset -3px -3px 0px #808080, inset 3px 3px 0px #dfdfdf',
-                      cursor: 'pointer'
-                    }}
+                    className="w-full border-2 border-stone-900 shadow-[2px_2px_0px_0px_#1c1917] hover:shadow-none"
                   >
                     ← Back to All Skills
                   </Button>
@@ -570,12 +621,7 @@ export function SkillsSection() {
                         <div
                           key={skill.id}
                           onClick={() => setSelectedSkill(skill)}
-                          className={`group flex items-center gap-3 p-3 min-[480px]:p-4 border-2 border-stone-900 cursor-pointer rounded-sm ${bgColor}/10`}
-                          style={{
-                            border: '2px solid #000',
-                            boxShadow: 'inset -2px -2px 0px rgba(0,0,0,0.2), inset 2px 2px 0px rgba(255,255,255,0.4)',
-                            cursor: 'pointer'
-                          }}
+                          className={`group flex items-center gap-3 p-3 min-[480px]:p-4 border-2 border-stone-900 hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all cursor-pointer rounded-sm ${bgColor}/10`}
                         >
                           <div className={`p-2 min-[480px]:p-2.5 ${bgColor} border-2 border-stone-900 rounded-sm shrink-0`}>
                             <SkillIcon className="h-5 w-5 min-[480px]:h-6 min-[480px]:w-6 text-white" />
