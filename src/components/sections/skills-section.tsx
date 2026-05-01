@@ -210,18 +210,18 @@ export function SkillsSection() {
 
           <div className="grid gap-3 lg:grid-cols-5">
             {/* Skills List - NES Card */}
-            <Card className="lg:col-span-2 bg-fuchsia-50 border-2 border-stone-900 overflow-hidden rounded-md" style={{
+            <Card className="px-3 md:px-4 lg:col-span-2 bg-fuchsia-50 border-2 border-stone-900 overflow-hidden rounded-md" style={{
               border: '4px solid #000',
               boxShadow: 'inset -4px -4px 0px #808080, inset 4px 4px 0px #dfdfdf'
             }}>
               <CardContent className="px-0 py-0 min-[480px]:p-0">
-                <div className="flex items-center gap-2 mb-4 p-3 min-[480px]:p-4" style={{ borderBottom: '2px solid #000' }}>
+                <div className="flex items-center gap-2 mb-4 p-2 min-[480px]:p-4" style={{ borderBottom: '2px solid #000' }}>
                   <div className="p-1 bg-fuchsia-400 border-2 border-stone-900 rounded-sm">
                     <Brain className="h-5 w-5 text-stone-900" />
                   </div>
                   <h3 className="font-black text-base min-[480px]:text-lg tracking-tight font-[family-name:var(--font-space)]" style={{ fontFamily: "'Courier New', monospace" }}>$ What I Can Do</h3>
                 </div>
-                <div className="space-y-2 min-[480px]:space-y-2.5 px-2 min-[480px]:px-3 pb-2 min-[480px]:pb-3">
+                <div className="space-y-2 min-[480px]:space-y-2.5  min-[480px]:px-0 pb-2 min-[480px]:pb-3">
                   {loading ? (
                     <div className="flex items-center justify-center p-4">
                       <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
@@ -274,7 +274,7 @@ export function SkillsSection() {
               border: '4px solid #000',
               boxShadow: 'inset -4px -4px 0px #808080, inset 4px 4px 0px #dfdfdf'
             }}>
-              <CardContent className="p-2.5 min-[480px]:p-3">
+              <CardContent className="p-0 min-[480px]:p-1">
                 <div className="flex items-center gap-2 mb-4 min-[480px]:mb-4 p-2 min-[480px]:p-3" style={{ borderBottom: '2px solid #000' }}>
                   <div className="p-1.5 bg-lime-400 border-2 border-stone-900 rounded-sm shrink-0">
                     <Code className="h-5 min-[480px]:h-6 w-5 min-[480px]:w-6 text-stone-900" />

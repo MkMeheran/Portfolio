@@ -108,7 +108,7 @@ export function Navbar() {
         {/* CTA Buttons - Desktop */}
         <div className="hidden lg:flex lg:items-center lg:gap-2">
           <Button variant="outline" size="sm" className="rounded-md border-2 border-stone-900 bg-white/80 text-stone-900 hover:bg-white" asChild>
-            <a href="/cv.pdf" target="_blank">
+            <a href="https://drive.google.com/file/d/1GLkglhVgT6c86CDlimGgCC7nLUBPeGeo/view?usp=sharing" target="_blank">
               <FileText className="mr-1.5 h-4 w-4" />
               CV
             </a>
@@ -168,7 +168,7 @@ export function Navbar() {
               
               <div className="mt-8 flex flex-col gap-2 px-3">
                 <Button variant="outline" size="sm" className="w-full justify-start rounded-md border-2 border-stone-900 bg-white/80 text-stone-900 hover:bg-white" asChild>
-                  <a href="/cv.pdf" target="_blank" onClick={() => setIsOpen(false)}>
+                  <a href="https://drive.google.com/file/d/1GLkglhVgT6c86CDlimGgCC7nLUBPeGeo/view?usp=sharing" target="_blank" onClick={() => setIsOpen(false)}>
                     <FileText className="mr-2 h-4 w-4" />
                     Download CV
                   </a>

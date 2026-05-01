@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 import { getHomePageData } from "@/lib/data";
 import { InfiniteCarousel } from "@/components/ui/infinite-carousel";
-import { LazySkillsSection } from "@/components/sections/lazy-skills-section";
+import { SkillsSection } from "@/components/sections/skills-section";
 import type { Profile, Education, Experience, Project, HeroCarousel } from "@/types/database.types";
 
 function normalizeImageUrl(url?: string | null): string | null {
@@ -139,7 +139,7 @@ function HeroSection({ profile, heroCarousel }: { profile: Profile; heroCarousel
                 </Link>
               </Button>
               <Button size="sm" className="h-9 sm:h-10 text-sm sm:text-base px-3.5 sm:px-4 font-bold font-[family-name:var(--font-space)]" variant="outline" asChild>
-                <Link href="/cv.pdf" target="_blank">
+                <Link href="https://drive.google.com/file/d/1GLkglhVgT6c86CDlimGgCC7nLUBPeGeo/view?usp=sharing" target="_blank">
                   <Download className="mr-2 h-4 w-4 sm:h-4.5 sm:w-4.5" />
                   Resume
                 </Link>
@@ -188,7 +188,7 @@ function HeroSection({ profile, heroCarousel }: { profile: Profile; heroCarousel
                 </Link>
               </Button>
               <Button size="sm" className="h-10 sm:h-11 text-base sm:text-lg px-4 sm:px-5 font-bold font-[family-name:var(--font-space)] flex-1 sm:flex-none min-w-max" variant="outline" asChild>
-                <Link href="/cv.pdf" target="_blank">
+                <Link href="https://drive.google.com/file/d/1GLkglhVgT6c86CDlimGgCC7nLUBPeGeo/view?usp=sharing" target="_blank">
                   <Download className="mr-2 h-4.5 w-4.5 sm:h-5 sm:w-5" />
                   Resume
                 </Link>
@@ -244,7 +244,7 @@ function FeaturedProjects({ projects }: { projects: Project[] }) {
   const featuredProjects = allFeaturedProjects.slice(0, 10);
 
   return (
-    <section id="projects" className="py-10 sm:py-12 md:py-14 lg:py-16">
+    <section id="projects" className="px-1 md:px-2 py-10 sm:py-12 md:py-14 lg:py-16">
       <div className="container mx-auto px-2 min-[480px]:px- sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex items-center gap-3 min-[480px]:gap-4 mb-6 min-[480px]:mb-8">
@@ -573,7 +573,7 @@ export default async function HomePage() {
   return (
     <>
       <HeroSection profile={profile} heroCarousel={heroCarousel} />
-      <LazySkillsSection />
+      <SkillsSection />
       <FeaturedProjects projects={projects} />
       <EducationSection education={education} />
       <ExperienceSection experiences={experiences} />
