@@ -14,7 +14,7 @@ export default function SettingsPage() {
 
       <div className="space-y-6 max-w-3xl">
         {/* Database Info */}
-        <Card>
+        <Card className="admin-card">
           <CardHeader>
             <div className="flex items-center gap-2">
               <Database className="h-5 w-5 text-primary" />
@@ -27,7 +27,7 @@ export default function SettingsPage() {
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-sm">Connection</span>
-              <Badge variant="outline" className="text-green-600">
+              <Badge variant="outline" className="text-green-700 border-2 border-stone-900 rounded-[4px]">
                 Configured
               </Badge>
             </div>
@@ -40,7 +40,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* Site Info */}
-        <Card>
+        <Card className="admin-card">
           <CardHeader>
             <div className="flex items-center gap-2">
               <Globe className="h-5 w-5 text-primary" />
@@ -67,7 +67,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* Theme */}
-        <Card>
+        <Card className="admin-card">
           <CardHeader>
             <div className="flex items-center gap-2">
               <Palette className="h-5 w-5 text-primary" />
@@ -80,15 +80,15 @@ export default function SettingsPage() {
           <CardContent>
             <div className="flex gap-4">
               <div className="flex flex-col items-center gap-2">
-                <div className="h-12 w-12 rounded-lg bg-[oklch(0.25_0.08_250)] border" />
+                <div className="h-12 w-12 rounded-[4px] bg-[oklch(0.25_0.08_250)] border-2 border-stone-900" />
                 <span className="text-xs">Primary</span>
               </div>
               <div className="flex flex-col items-center gap-2">
-                <div className="h-12 w-12 rounded-lg bg-[oklch(0.65_0.15_195)] border" />
+                <div className="h-12 w-12 rounded-[4px] bg-[oklch(0.65_0.15_195)] border-2 border-stone-900" />
                 <span className="text-xs">Accent</span>
               </div>
               <div className="flex flex-col items-center gap-2">
-                <div className="h-12 w-12 rounded-lg bg-background border" />
+                <div className="h-12 w-12 rounded-[4px] bg-background border-2 border-stone-900" />
                 <span className="text-xs">Background</span>
               </div>
             </div>
@@ -99,7 +99,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* Security */}
-        <Card>
+        <Card className="admin-card">
           <CardHeader>
             <div className="flex items-center gap-2">
               <Shield className="h-5 w-5 text-primary" />
@@ -112,11 +112,11 @@ export default function SettingsPage() {
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-sm">Admin Authentication</span>
-              <Badge>Supabase Auth</Badge>
+              <Badge className="border-2 border-stone-900 rounded-[4px]">Supabase Auth</Badge>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm">Row Level Security</span>
-              <Badge variant="outline" className="text-green-600">Enabled</Badge>
+              <Badge variant="outline" className="text-green-700 border-2 border-stone-900 rounded-[4px]">Enabled</Badge>
             </div>
             <Separator />
             <p className="text-sm text-muted-foreground">

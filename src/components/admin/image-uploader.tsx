@@ -12,13 +12,13 @@ import { cn } from "@/lib/utils";
 
 // Image presets for different use cases
 const IMAGE_PRESETS = {
-  avatar: { width: 400, height: 400, ratio: "1:1", label: "প্রোফাইল ছবি" },
-  cover: { width: 1920, height: 480, ratio: "4:1", label: "কভার ইমেজ" },
-  project: { width: 1200, height: 630, ratio: "1.91:1", label: "প্রজেক্ট থাম্বনেইল" },
-  certificate: { width: 1200, height: 850, ratio: "1.41:1", label: "সার্টিফিকেট" },
-  gallery: { width: 800, height: 600, ratio: "4:3", label: "গ্যালারি ছবি" },
-  logo: { width: 200, height: 200, ratio: "1:1", label: "লোগো" },
-  general: { width: 800, height: 600, ratio: "4:3", label: "সাধারণ ছবি" },
+  avatar: { width: 400, height: 400, ratio: "1:1", label: "Profile photo" },
+  cover: { width: 1920, height: 480, ratio: "4:1", label: "Cover image" },
+  project: { width: 1200, height: 630, ratio: "1.91:1", label: "Project thumbnail" },
+  certificate: { width: 1200, height: 850, ratio: "1.41:1", label: "Certificate" },
+  gallery: { width: 800, height: 600, ratio: "4:3", label: "Gallery image" },
+  logo: { width: 200, height: 200, ratio: "1:1", label: "Logo" },
+  general: { width: 800, height: 600, ratio: "4:3", label: "General image" },
 } as const;
 
 type ImagePreset = keyof typeof IMAGE_PRESETS;
@@ -62,13 +62,13 @@ export function ImageUploader({
 
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      toast.error("শুধুমাত্র ছবি ফাইল আপলোড করুন");
+      toast.error("Only image files are allowed");
       return;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      toast.error("ফাইলের আকার ৫MB এর কম হতে হবে");
+      toast.error("File size must be under 5MB");
       return;
     }
 
@@ -103,10 +103,10 @@ export function ImageUploader({
         `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket}/${encodeURIComponent(filePath)}`;
 
       onChange(publicUrl);
-      toast.success("ছবি আপলোড হয়েছে!");
+      toast.success("Image uploaded");
     } catch (error) {
       console.error("Upload error:", error);
-      toast.error("ছবি আপলোড করতে সমস্যা হয়েছে");
+      toast.error("Failed to upload image");
     } finally {
       setIsUploading(false);
     }
@@ -115,7 +115,7 @@ export function ImageUploader({
   const handleUrlSubmit = () => {
     if (urlInput.trim()) {
       onChange(urlInput.trim());
-      toast.success("ছবির URL সেট হয়েছে!");
+      toast.success("Image URL set");
     }
   };
 
@@ -144,7 +144,7 @@ export function ImageUploader({
         <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/50 px-3 py-2 rounded border">
           <Info className="h-4 w-4 shrink-0" />
           <span>
-            <strong>{presetInfo.label}</strong> — প্রস্তাবিত সাইজ: {presetInfo.width}×{presetInfo.height}px (Ratio: {presetInfo.ratio})
+            <strong>{presetInfo.label}</strong> — Recommended size: {presetInfo.width}×{presetInfo.height}px (Ratio: {presetInfo.ratio})
           </span>
         </div>
       )}
@@ -159,7 +159,7 @@ export function ImageUploader({
           className="flex-1"
         >
           <Upload className="h-4 w-4 mr-1.5" />
-          আপলোড
+          Upload
         </Button>
         <Button
           type="button"
@@ -169,7 +169,7 @@ export function ImageUploader({
           className="flex-1"
         >
           <LinkIcon className="h-4 w-4 mr-1.5" />
-          URL দিন
+          Use URL
         </Button>
       </div>
 
@@ -191,13 +191,13 @@ export function ImageUploader({
             {isUploading ? (
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Loader2 className="h-5 w-5 animate-spin" />
-                <span>আপলোড হচ্ছে...</span>
+                <span>Uploading...</span>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-2 text-muted-foreground">
                 <Upload className="h-8 w-8" />
-                <span className="text-sm font-medium">ছবি আপলোড করতে ক্লিক করুন</span>
-                <span className="text-xs">PNG, JPG, WEBP (সর্বোচ্চ ৫MB)</span>
+                <span className="text-sm font-medium">Click to upload image</span>
+                <span className="text-xs">PNG, JPG, WEBP (max 5MB)</span>
               </div>
             )}
           </Label>
@@ -212,7 +212,7 @@ export function ImageUploader({
             className="flex-1"
           />
           <Button type="button" onClick={handleUrlSubmit}>
-            সেট করুন
+            Set
           </Button>
         </div>
       )}
@@ -220,7 +220,7 @@ export function ImageUploader({
       {/* Preview */}
       {value && (
         <div className="space-y-2">
-          <Label className="text-xs text-muted-foreground">প্রিভিউ:</Label>
+          <Label className="text-xs text-muted-foreground">Preview:</Label>
           <div className="relative">
             <div className="relative w-full h-48 rounded-lg overflow-hidden border bg-muted/30">
               <Image
@@ -247,12 +247,12 @@ export function ImageUploader({
       {showAltField && (
         <div className="space-y-1">
           <Label htmlFor={`alt-${preset}`} className="text-xs">
-            Alt Text (SEO এর জন্য গুরুত্বপূর্ণ)
+            Alt text (important for SEO)
           </Label>
           <Input
             id={`alt-${preset}`}
             type="text"
-            placeholder="ছবির বিবরণ লিখুন..."
+            placeholder="Describe the image..."
             value={localAlt}
             onChange={(e) => handleAltChange(e.target.value)}
           />

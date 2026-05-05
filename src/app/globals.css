@@ -1,6 +1,11 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@source "./**/*.{ts,tsx}";
+@source "../components/**/*.{ts,tsx}";
+@source "../lib/**/*.{ts,tsx}";
+@source "../config/**/*.{ts,tsx}";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -149,6 +154,36 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .admin-shell {
+    --radius: 0.25rem;
+  }
+
+  .admin-card {
+    @apply border-2 border-stone-900 rounded-[4px] bg-card shadow-[1px_1px_0px_0px_rgba(0,0,0,0.25)];
+  }
+
+  .admin-card-soft {
+    @apply border-2 border-stone-900 rounded-[4px] bg-amber-50/70 shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)];
+  }
+
+  .admin-btn {
+    @apply border-2 border-stone-900 rounded-[4px] font-bold transition-colors;
+  }
+
+  .admin-btn-primary {
+    @apply bg-amber-600 text-white hover:bg-amber-700;
+  }
+
+  .admin-btn-ghost {
+    @apply bg-white text-stone-900 hover:bg-amber-50;
+  }
+
+  .admin-chip {
+    @apply border-2 border-stone-900 rounded-[4px] bg-amber-100 text-stone-900 font-bold text-xs px-2 py-1;
   }
 }
 

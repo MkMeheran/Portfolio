@@ -1,9 +1,10 @@
 ﻿"use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { AdminHeader, ImageUploader } from "@/components/admin";
+import { AdminHeader } from "@/components/admin";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -34,6 +35,16 @@ import {
 import { toast } from "sonner";
 import Image from "next/image";
 import type { Gallery } from "@/types/database.types";
+
+const ImageUploader = dynamic(
+  () => import("@/components/admin/image-uploader").then((mod) => mod.ImageUploader),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="text-xs text-muted-foreground">Loading uploader...</div>
+    ),
+  }
+);
 
 export default function GalleryAdminPage() {
   const router = useRouter();
@@ -137,24 +148,24 @@ export default function GalleryAdminPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
         <div>
-          <h1 className="text-4xl font-black mb-2 tracking-tight border-b-4 border-black inline-block pb-1">Gallery</h1>
-          <p className="text-muted-foreground mt-2">Manage your image gallery</p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 tracking-tight text-stone-900">Gallery</h1>
+          <p className="text-stone-600 mt-2">Manage your image gallery</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-2">
           <Button
             variant="outline"
             onClick={() => setShowPreview(!showPreview)}
             disabled={items.length === 0}
-            className="border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold disabled:opacity-50"
+            className="admin-btn admin-btn-ghost disabled:opacity-50"
           >
             <Eye className="h-4 w-4 mr-2" />
             {showPreview ? "List" : "Preview"}
           </Button>
           <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
             <DialogTrigger asChild>
-              <Button onClick={() => setEditingItem({})} className="bg-black text-white border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold">
+              <Button onClick={() => setEditingItem({})} className="admin-btn admin-btn-primary">
                 <Plus className="h-4 w-4 mr-2" />
                 Add New Image
               </Button>
@@ -212,10 +223,10 @@ export default function GalleryAdminPage() {
               </div>
 
               <DialogFooter>
-                <Button variant="outline" onClick={() => setEditingItem(null)}>
+                <Button variant="outline" onClick={() => setEditingItem(null)} className="admin-btn admin-btn-ghost">
                   Cancel
                 </Button>
-                <Button onClick={handleSave} disabled={isSaving}>
+                <Button onClick={handleSave} disabled={isSaving} className="admin-btn admin-btn-primary">
                   {isSaving ? (
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                   ) : (
@@ -262,13 +273,13 @@ export default function GalleryAdminPage() {
         // List Mode
         <div className="space-y-4">
           {items.length === 0 ? (
-            <Card>
+            <Card className="admin-card">
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <ImageIcon className="h-12 w-12 text-muted-foreground mb-4" />
                 <p className="text-muted-foreground">No images</p>
                 <Button 
                   variant="outline" 
-                  className="mt-4"
+                  className="mt-4 admin-btn admin-btn-ghost"
                   onClick={() => setEditingItem({})}
                 >
                   <Plus className="h-4 w-4 mr-2" />
@@ -279,8 +290,8 @@ export default function GalleryAdminPage() {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {items.map((item) => (
-                <Card key={item.id} className="overflow-hidden border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)]">
-                  <div className="relative aspect-video bg-muted">
+                <Card key={item.id} className="admin-card overflow-hidden">
+                  <div className="relative aspect-video bg-muted border-b-2 border-stone-900">
                     {item.image_url ? (
                       <Image
                         src={item.image_url}

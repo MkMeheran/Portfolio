@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { AdminHeader, ImageUploader } from "@/components/admin";
+import { AdminHeader } from "@/components/admin";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -15,6 +16,16 @@ import { Save, Loader2, Eye, User, Link as LinkIcon, Globe, Search } from "lucid
 import { toast } from "sonner";
 import Image from "next/image";
 import type { Profile } from "@/types/database.types";
+
+const ImageUploader = dynamic(
+  () => import("@/components/admin/image-uploader").then((mod) => mod.ImageUploader),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="text-xs text-muted-foreground">Loading uploader...</div>
+    ),
+  }
+);
 
 export default function ProfileAdminPage() {
   const router = useRouter();
@@ -118,38 +129,39 @@ export default function ProfileAdminPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <AdminHeader 
-          title="Profile" 
-          description="Edit your personal information" 
-        />
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={() => setShowPreview(!showPreview)}
-          >
-            <Eye className="h-4 w-4 mr-2" />
-            {showPreview ? "Edit" : "Preview"}
-          </Button>
-          <Button onClick={handleSave} disabled={isSaving}>
-            {isSaving ? (
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-            ) : (
-              <Save className="h-4 w-4 mr-2" />
-            )}
-            Save
-          </Button>
-        </div>
-      </div>
+      <AdminHeader
+        title="Profile"
+        description="Edit your personal information"
+        actions={
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setShowPreview(!showPreview)}
+              className="admin-btn admin-btn-ghost"
+            >
+              <Eye className="h-4 w-4 mr-2" />
+              {showPreview ? "Edit" : "Preview"}
+            </Button>
+            <Button onClick={handleSave} disabled={isSaving} className="admin-btn admin-btn-primary">
+              {isSaving ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4 mr-2" />
+              )}
+              Save
+            </Button>
+          </div>
+        }
+      />
 
       {showPreview ? (
         // Preview Mode
-        <Card>
+        <Card className="admin-card">
           <CardContent className="pt-6">
             <div className="relative">
               {/* Cover */}
               {formData.cover_url ? (
-                <div className="relative h-32 rounded-t-lg overflow-hidden">
+                <div className="relative h-32 rounded-[4px] overflow-hidden border-2 border-stone-900">
                   <Image
                     src={formData.cover_url}
                     alt={formData.name || "Cover"}
@@ -158,12 +170,12 @@ export default function ProfileAdminPage() {
                   />
                 </div>
               ) : (
-                <div className="h-32 bg-gradient-to-r from-amber-200 to-orange-100 rounded-t-lg" />
+                <div className="h-32 bg-gradient-to-r from-amber-200 to-orange-100 rounded-[4px] border-2 border-stone-900" />
               )}
               
               {/* Avatar */}
               <div className="absolute left-6 -bottom-12">
-                <div className="relative h-24 w-24 rounded-full border-4 border-white overflow-hidden bg-muted">
+                <div className="relative h-24 w-24 rounded-[4px] border-2 border-stone-900 overflow-hidden bg-muted">
                   {formData.avatar_url ? (
                     <Image
                       src={formData.avatar_url}
@@ -192,7 +204,7 @@ export default function ProfileAdminPage() {
       ) : (
         // Edit Mode
         <Tabs defaultValue="basic" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
             <TabsTrigger value="basic">
               <User className="h-4 w-4 mr-2" />
               Basic
@@ -213,13 +225,13 @@ export default function ProfileAdminPage() {
 
           {/* Basic Info */}
           <TabsContent value="basic">
-            <Card>
+            <Card className="admin-card">
               <CardHeader>
                 <CardTitle>Basic Information</CardTitle>
                 <CardDescription>Your name, title and bio</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">Name *</Label>
                     <Input
@@ -263,7 +275,7 @@ export default function ProfileAdminPage() {
 
                 <Separator />
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="location">Location</Label>
                     <Input
@@ -300,8 +312,8 @@ export default function ProfileAdminPage() {
 
           {/* Images */}
           <TabsContent value="images">
-            <div className="grid md:grid-cols-2 gap-6">
-              <Card>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card className="admin-card">
                 <CardHeader>
                   <CardTitle>Profile Picture</CardTitle>
                   <CardDescription>Your avatar image</CardDescription>
@@ -316,7 +328,7 @@ export default function ProfileAdminPage() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="admin-card">
                 <CardHeader>
                   <CardTitle>Cover Image</CardTitle>
                   <CardDescription>Profile background image</CardDescription>
@@ -335,13 +347,13 @@ export default function ProfileAdminPage() {
 
           {/* Social Links */}
           <TabsContent value="social">
-            <Card>
+            <Card className="admin-card">
               <CardHeader>
                 <CardTitle>Social Media Links</CardTitle>
                 <CardDescription>Your social profile links</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="github">GitHub</Label>
                     <Input
@@ -362,7 +374,7 @@ export default function ProfileAdminPage() {
                   </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="facebook">Facebook</Label>
                     <Input
@@ -398,7 +410,7 @@ export default function ProfileAdminPage() {
 
           {/* SEO */}
           <TabsContent value="seo">
-            <Card>
+            <Card className="admin-card">
               <CardHeader>
                 <CardTitle>SEO Settings</CardTitle>
                 <CardDescription>Search engine optimization</CardDescription>

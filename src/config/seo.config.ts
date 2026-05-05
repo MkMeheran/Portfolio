@@ -346,34 +346,42 @@ export function getFAQStructuredData() {
  * এই function Supabase থেকে profile picture fetch করে
  */
 export async function getProfileImage() {
-  try {
-    // Dynamic import to avoid server/client issues
-    const { createClient } = await import('@/lib/supabase/server');
-    const supabase = await createClient();
-    
-    const { data, error } = await supabase
-      .from('profile')
-      .select('avatar_url, cover_url')
-      .single();
-    
-    if (error || !data) {
-      return {
-        avatar: seoConfig.personal.profileImageFallback,
-        cover: seoConfig.openGraph.image.urlFallback,
-      };
-    }
-    
-    return {
-      avatar: data.avatar_url || seoConfig.personal.profileImageFallback,
-      cover: data.cover_url || data.avatar_url || seoConfig.openGraph.image.urlFallback,
-    };
-  } catch (error) {
-    // Fallback if database fails
-    return {
-      avatar: seoConfig.personal.profileImageFallback,
-      cover: seoConfig.openGraph.image.urlFallback,
-    };
-  }
+  const { unstable_cache } = await import("next/cache");
+  const { createPublicClient } = await import("@/lib/supabase/server");
+
+  const getProfileImageCached = unstable_cache(
+    async () => {
+      try {
+        const supabase = createPublicClient();
+
+        const { data, error } = await supabase
+          .from("profile")
+          .select("avatar_url, cover_url")
+          .single();
+
+        if (error || !data) {
+          return {
+            avatar: seoConfig.personal.profileImageFallback,
+            cover: seoConfig.openGraph.image.urlFallback,
+          };
+        }
+
+        return {
+          avatar: data.avatar_url || seoConfig.personal.profileImageFallback,
+          cover: data.cover_url || data.avatar_url || seoConfig.openGraph.image.urlFallback,
+        };
+      } catch {
+        return {
+          avatar: seoConfig.personal.profileImageFallback,
+          cover: seoConfig.openGraph.image.urlFallback,
+        };
+      }
+    },
+    ["seo-profile-image"],
+    { revalidate: 60 }
+  );
+
+  return getProfileImageCached();
 }
 
 /**

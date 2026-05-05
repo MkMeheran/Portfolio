@@ -25,7 +25,7 @@ import {
   X,
   ChevronRight,
 } from "lucide-react";
-import { getHomePageData } from "@/lib/data";
+import { getHomePageData, getSkillsSectionData } from "@/lib/data";
 import { InfiniteCarousel } from "@/components/ui/infinite-carousel";
 import { SkillsSection } from "@/components/sections/skills-section";
 import type { Profile, Education, Experience, Project, HeroCarousel } from "@/types/database.types";
@@ -569,11 +569,12 @@ function ContactSection({ profile }: { profile: Profile }) {
 export default async function HomePage() {
   // Fetch all data from Supabase
   const { profile, projects, education, experiences, heroCarousel } = await getHomePageData();
+  const { skills } = await getSkillsSectionData();
 
   return (
     <>
-      <HeroSection profile={profile} heroCarousel={heroCarousel} />
-      <SkillsSection />
+        <HeroSection profile={profile} heroCarousel={heroCarousel} />
+        <SkillsSection initialSkills={skills} />
       <FeaturedProjects projects={projects} />
       <EducationSection education={education} />
       <ExperienceSection experiences={experiences} />

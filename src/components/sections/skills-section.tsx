@@ -112,53 +112,90 @@ function ensureUrlProtocol(url: string): string {
   return `https://${trimmedUrl}`;
 }
 
-export function SkillsSection() {
+interface SkillsSectionProps {
+  initialSkills?: SkillWithCertificates[];
+}
+
+export function SkillsSection({ initialSkills }: SkillsSectionProps) {
+  const hasInitialSkills = initialSkills !== undefined;
   const [showDetails, setShowDetails] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState<SkillWithCertificates | null>(null);
-  const [skills, setSkills] = useState<SkillWithCertificates[]>([]);
+  const [skills, setSkills] = useState<SkillWithCertificates[]>(initialSkills || []);
   const [tools, setTools] = useState<Tool[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [skillsLoading, setSkillsLoading] = useState(!hasInitialSkills);
+  const [toolsLoading, setToolsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       const supabase = createClient();
-      
-      // Fetch skills with certificates
-      const { data: skillsData } = await supabase
-        .from("skills")
-        .select("*")
-        .order("display_order", { ascending: true });
-      
-      // Fetch certificates
-      const { data: certsData } = await supabase
-        .from("certificates")
-        .select("*")
-        .order("display_order", { ascending: true });
-      
-      // Fetch tools
-      const { data: toolsData } = await supabase
-        .from("tools")
-        .select("*")
-        .order("display_order", { ascending: true });
 
-      // Merge certificates with skills
-      if (skillsData) {
-        const skillsWithCerts = skillsData.map((skill) => ({
-          ...skill,
-          certificates: certsData?.filter((cert) => cert.skill_id === skill.id) || [],
-        }));
-        setSkills(skillsWithCerts);
+      const skillsPromise = hasInitialSkills
+        ? null
+        : supabase.from("skills").select("*").order("display_order", { ascending: true });
+      const certsPromise = hasInitialSkills
+        ? null
+        : supabase.from("certificates").select("*").order("display_order", { ascending: true });
+      const toolsPromise = supabase.from("tools").select("*").order("display_order", { ascending: true });
+
+      const [skillsRes, certsRes, toolsRes] = await Promise.all([
+        skillsPromise,
+        certsPromise,
+        toolsPromise,
+      ]);
+
+      if (!hasInitialSkills) {
+        if (skillsRes?.data) {
+          const skillsWithCerts = skillsRes.data.map((skill) => ({
+            ...skill,
+            certificates: certsRes?.data?.filter((cert) => cert.skill_id === skill.id) || [],
+          }));
+          setSkills(skillsWithCerts);
+        }
+        setSkillsLoading(false);
+      } else {
+        setSkillsLoading(false);
       }
 
-      if (toolsData) {
-        setTools(toolsData);
+      if (toolsRes?.data) {
+        setTools(toolsRes.data);
       }
-      
-      setLoading(false);
+      setToolsLoading(false);
     }
     
     fetchData();
-  }, []);
+  }, [hasInitialSkills]);
+
+  useEffect(() => {
+    if (!showDetails) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const closeModal = () => {
+      setShowDetails(false);
+      setSelectedSkill(null);
+    };
+
+    const handlePopState = () => {
+      closeModal();
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeModal();
+      }
+    };
+
+    window.history.pushState({ skillsModal: true }, "");
+    window.addEventListener("popstate", handlePopState);
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("popstate", handlePopState);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showDetails]);
 
   const openDetails = (skill: SkillWithCertificates) => {
     setSelectedSkill(skill);
@@ -219,10 +256,10 @@ export function SkillsSection() {
                   <div className="p-1 bg-fuchsia-400 border-2 border-stone-900 rounded-sm">
                     <Brain className="h-5 w-5 text-stone-900" />
                   </div>
-                  <h3 className="font-black text-base min-[480px]:text-lg tracking-tight font-[family-name:var(--font-space)]" style={{ fontFamily: "'Courier New', monospace" }}>$ What I Can Do</h3>
+                  <h3 className="font-black text-base min-[480px]:text-lg tracking-tight font-[family-name:var(--font-space-mono)]">$ What I Can Do</h3>
                 </div>
                 <div className="space-y-2 min-[480px]:space-y-2.5  min-[480px]:px-0 pb-2 min-[480px]:pb-3">
-                  {loading ? (
+                  {skillsLoading ? (
                     <div className="flex items-center justify-center p-4">
                       <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
                     </div>
@@ -279,11 +316,11 @@ export function SkillsSection() {
                   <div className="p-1.5 bg-lime-400 border-2 border-stone-900 rounded-sm shrink-0">
                     <Code className="h-5 min-[480px]:h-6 w-5 min-[480px]:w-6 text-stone-900" />
                   </div>
-                  <h3 className="font-black text-lg min-[480px]:text-lg tracking-tight font-[family-name:var(--font-space)]" style={{ fontFamily: "'Courier New', monospace" }}>$ Tools</h3>
+                  <h3 className="font-black text-lg min-[480px]:text-lg tracking-tight font-[family-name:var(--font-space-mono)]">$ Tools</h3>
                   <span className="ml-auto text-xs font-bold text-stone-900 bg-lime-300 px-2 py-1 border-2 border-stone-900 rounded-sm">{displayTools.length}</span>
                 </div>
                 {/* Bento Grid */}
-                {loading ? (
+                {toolsLoading ? (
                   <div className="flex items-center justify-center p-8">
                     <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
                   </div>
@@ -359,7 +396,7 @@ export function SkillsSection() {
       {showDetails && (
         <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-3 sm:p-4 md:p-6" onClick={() => setShowDetails(false)}>
           <div 
-            className="bg-white border-2 border-stone-900 w-full max-w-full sm:max-w-md md:max-w-xl max-h-[90vh] overflow-y-auto rounded-md"
+            className="bg-white border-2 border-stone-900 w-full max-w-full sm:max-w-md md:max-w-xl max-h-[90vh] overflow-y-auto rounded-[4px] relative"
             onClick={(e) => e.stopPropagation()}
             style={{
               border: '4px solid #000',
@@ -367,9 +404,9 @@ export function SkillsSection() {
             }}
           >
             {/* Header */}
-            <div className="sticky top-0 bg-fuchsia-300 p-4 border-b-2 border-stone-900 flex items-center justify-between" style={{ borderBottom: '4px solid #000' }}>
-              <h3 className="text-lg font-black text-stone-900 font-[family-name:var(--font-space)]" style={{ fontFamily: "'Courier New', monospace" }}>
-                $ {selectedSkill ? selectedSkill.name : "All Skills & Certifications"}
+            <div className="sticky top-0 z-20 bg-fuchsia-300 p-4 border-b-2 border-stone-900 flex items-center justify-between rounded-t-[4px]" style={{ borderBottom: '4px solid #000' }}>
+              <h3 className="text-base sm:text-lg md:text-xl font-black text-stone-900 font-[family-name:var(--font-space-mono)]">
+                {selectedSkill ? selectedSkill.name : "All Skills & Certifications"}
               </h3>
               <button
                 onClick={() => {
@@ -377,7 +414,7 @@ export function SkillsSection() {
                   setSelectedSkill(null);
                 }}
                 aria-label="Close skills details"
-                className="p-1 bg-white border-2 border-stone-900"
+                className="p-1 bg-white border-2 border-stone-900 rounded-[4px]"
                 style={{
                   border: '2px solid #000',
                   boxShadow: 'inset -2px -2px 0px #808080, inset 2px 2px 0px #dfdfdf',
@@ -398,7 +435,7 @@ export function SkillsSection() {
                       const SkillIcon = getSkillIcon(selectedSkill.name);
                       const bgColor = selectedSkill.bg_color ? `bg-${selectedSkill.bg_color}` : "bg-emerald-500";
                       return (
-                        <div className={`p-2 ${bgColor} border-2 border-stone-900`} style={{
+                        <div className={`p-2 ${bgColor} border-2 border-stone-900 rounded-[4px]`} style={{
                           border: '3px solid #000',
                           boxShadow: 'inset -2px -2px 0px rgba(0,0,0,0.3), inset 2px 2px 0px rgba(255,255,255,0.5)'
                         }}>
@@ -407,7 +444,7 @@ export function SkillsSection() {
                       );
                     })()}
                     <div>
-                      <h4 className="font-black text-lg font-[family-name:var(--font-space)]" style={{ fontFamily: "'Courier New', monospace" }}>$ {selectedSkill.name}</h4>
+                      <h4 className="font-black text-base sm:text-lg md:text-xl font-[family-name:var(--font-space-mono)]">{selectedSkill.name}</h4>
                       {selectedSkill.has_certificates && (
                         <span className="text-xs text-emerald-600 font-bold flex items-center gap-1">
                           <CheckCircle2 className="h-3 w-3" /> Certified
@@ -419,9 +456,9 @@ export function SkillsSection() {
                   {/* 1. $ Skills */}
                   {selectedSkill.sub_skills && selectedSkill.sub_skills.length > 0 && (
                     <div>
-                      <h5 className="text-sm font-bold mb-2 text-muted-foreground flex items-center gap-2" style={{ fontFamily: "'Courier New', monospace" }}>
+                      <h5 className="text-xs sm:text-sm md:text-base font-bold mb-2 text-muted-foreground flex items-center gap-2 font-[family-name:var(--font-space-mono)]">
                         <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                        $ Skills
+                        Skills
                       </h5>
                       <div className="flex flex-wrap gap-1.5">
                         {selectedSkill.sub_skills.map((sub, idx) => {
@@ -429,7 +466,7 @@ export function SkillsSection() {
                           return (
                             <span
                               key={idx}
-                              className={`text-xs font-bold px-2 py-1 border-2 border-stone-900 ${bgColor} text-white`}
+                              className={`text-[10px] sm:text-xs md:text-sm font-bold px-2 py-1 border-2 border-stone-900 ${bgColor} text-white rounded-[4px]`}
                             >
                               {sub}
                             </span>
@@ -442,29 +479,29 @@ export function SkillsSection() {
                   {/* 2. Certificates */}
                   {selectedSkill.certificates && selectedSkill.certificates.length > 0 && (
                     <div>
-                      <h5 className="text-sm font-bold mb-2 text-muted-foreground flex items-center gap-2" style={{ fontFamily: "'Courier New', monospace" }}>
+                      <h5 className="text-xs sm:text-sm md:text-base font-bold mb-2 text-muted-foreground flex items-center gap-2 font-[family-name:var(--font-space-mono)]">
                         <Award className="h-4 w-4 text-amber-500" />
-                        $ Certificates ({selectedSkill.certificates.length})
+                        Certificates ({selectedSkill.certificates.length})
                       </h5>
                       <div className="space-y-3">
                         {selectedSkill.certificates.map((cert, idx) => (
-                          <div key={cert.id} className="relative bg-gradient-to-br from-amber-100 to-purple-100 border-2 border-stone-900  p-3 w-full">
+                          <div key={cert.id} className="relative bg-gradient-to-br from-amber-100 to-purple-100 border-2 border-stone-900 p-3 w-full rounded-[4px]">
                             
                             {/* Certificate Title - Center */}
-                            <h6 className="text-center text-base sm:text-lg md:text-xl font-bold text-stone-900 font-[family-name:var(--font-space-mono)] mb-1 tracking-tight">
+                            <h6 className="text-sm sm:text-base md:text-lg font-bold text-stone-900 font-[family-name:var(--font-space-mono)] mb-1 tracking-tight text-center">
                               {cert.title}
                             </h6>
 
                             {/* Provider */}
                             {cert.issuer && (
-                              <p className="text-left text-xs text-stone-600 font-medium mb-2">
+                              <p className="text-left text-[10px] sm:text-xs md:text-sm text-stone-600 font-medium mb-2">
                                 By {cert.issuer}
                               </p>
                             )}
 
                             {/* Certificate Image */}
                             {cert.image_url && (
-                              <div className="relative bg-white border border-stone-900 mb-2 overflow-hidden"
+                              <div className="relative bg-white border border-stone-900 mb-2 overflow-hidden rounded-[4px] z-0"
                                 style={{
                                   aspectRatio: '16/9',
                                 }}
@@ -479,10 +516,10 @@ export function SkillsSection() {
                             )}
 
                             {/* Date & Credential ID & Verify Button - Below Picture */}
-                            <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-                              <div className="flex items-center gap-2" style={{ fontFamily: "'Courier New', monospace" }}>
+                            <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] sm:text-xs md:text-sm">
+                              <div className="flex items-center gap-2 font-[family-name:var(--font-space-mono)]">
                                 {cert.issue_date && (
-                                  <div className="flex items-center gap-1 px-2 py-1 bg-purple-300 border border-stone-900 text-stone-900 font-bold">
+                                  <div className="flex items-center gap-1 px-2 py-1 bg-purple-300 border border-stone-900 text-stone-900 font-bold rounded-[4px]">
                                     <Calendar className="h-3 w-3" />
                                     {new Date(cert.issue_date).toLocaleDateString('en-US', { 
                                       year: 'numeric', 
@@ -491,7 +528,7 @@ export function SkillsSection() {
                                   </div>
                                 )}
                                 {cert.credential_id && (
-                                  <span className="text-[10px] text-stone-600 font-medium">
+                                  <span className="text-[10px] sm:text-xs md:text-sm text-stone-600 font-medium">
                                     ID: {cert.credential_id}
                                   </span>
                                 )}
@@ -501,9 +538,8 @@ export function SkillsSection() {
                                   href={ensureUrlProtocol(cert.credential_url)}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="flex items-center gap-1 px-2 py-1 bg-amber-400 text-stone-900 text-[10px] font-black border border-stone-900"
+                                  className="flex items-center gap-1 px-2 py-1 bg-amber-400 text-stone-900 text-[10px] sm:text-xs md:text-sm font-black border border-stone-900 rounded-[4px]"
                                   style={{
-                                    borderRadius: '6%',
                                     border: '2px solid #000',
                                     boxShadow: 'inset -2px -2px 0px rgba(0,0,0,0.3), inset 2px 2px 0px rgba(255,255,255,0.5)',
                                     cursor: 'pointer'
@@ -523,7 +559,7 @@ export function SkillsSection() {
                   {/* 3. Capabilities */}
                   {selectedSkill.sub_skills && selectedSkill.sub_skills.length > 0 && (
                     <div>
-                      <h5 className="text-sm font-bold mb-2 text-muted-foreground flex items-center gap-2" style={{ fontFamily: "'Courier New', monospace" }}>
+                      <h5 className="text-xs sm:text-sm md:text-base font-bold mb-2 text-muted-foreground flex items-center gap-2 font-[family-name:var(--font-space-mono)]">
                         <Award className="h-4 w-4 text-violet-500" />
                         Capabilities
                       </h5>
@@ -531,7 +567,7 @@ export function SkillsSection() {
                         {selectedSkill.sub_skills.map((sub, idx) => (
                           <div
                             key={idx}
-                            className="px-3 py-2 bg-stone-50 border border-stone-200 text-stone-700 text-sm font-medium flex items-center gap-2 hover:border-stone-400 transition-colors"
+                            className="px-3 py-2 bg-stone-50 border border-stone-200 text-stone-700 text-xs sm:text-sm md:text-base font-medium flex items-center gap-2 hover:border-stone-400 transition-colors rounded-[4px]"
                           >
                             <ChevronRight className="h-3 w-3 text-amber-500" />
                             {sub}

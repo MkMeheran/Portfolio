@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 interface CarouselItem {
   id: string;
@@ -27,6 +27,25 @@ export function InfiniteCarousel({
 }: InfiniteCarouselProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [start, setStart] = useState(false);
+  const [lucideIcons, setLucideIcons] = useState<Record<string, any> | null>(null);
+  const [simpleIcons, setSimpleIcons] = useState<Record<string, any> | null>(null);
+
+  const needsBrandIcons = useMemo(
+    () => items.some((item) => item.icon?.startsWith("brand:")),
+    [items]
+  );
+
+  const needsLucideIcons = useMemo(
+    () =>
+      items.some((item) => {
+        const icon = item.icon?.trim();
+        if (!icon) return false;
+        if (icon.startsWith("brand:")) return false;
+        if (/[\u0080-\uFFFF]/.test(icon)) return false;
+        return /^[A-Za-z][A-Za-z0-9]+$/.test(icon);
+      }),
+    [items]
+  );
 
   useEffect(() => {
     if (scrollerRef.current) {
@@ -41,6 +60,26 @@ export function InfiniteCarousel({
       setStart(true);
     }
   }, []);
+
+  useEffect(() => {
+    let active = true;
+
+    if (needsLucideIcons && !lucideIcons) {
+      import("lucide-react").then((mod) => {
+        if (active) setLucideIcons(mod as Record<string, any>);
+      });
+    }
+
+    if (needsBrandIcons && !simpleIcons) {
+      import("@icons-pack/react-simple-icons").then((mod) => {
+        if (active) setSimpleIcons(mod as Record<string, any>);
+      });
+    }
+
+    return () => {
+      active = false;
+    };
+  }, [needsBrandIcons, needsLucideIcons, lucideIcons, simpleIcons]);
 
   const speedMap = {
     slow: "60s",
@@ -69,7 +108,31 @@ export function InfiniteCarousel({
         }}
       >
         {items.map((item) => {
-          const hasIcon = Boolean(item.icon?.trim());
+          const iconValue = item.icon?.trim();
+          const isEmoji = Boolean(iconValue && /[\u0080-\uFFFF]/.test(iconValue));
+          const isBrandIcon = Boolean(iconValue && iconValue.startsWith("brand:"));
+
+          let IconComponent: any = null;
+
+          if (iconValue && isBrandIcon && simpleIcons) {
+            const brandName = iconValue.replace("brand:", "");
+            const pascalName = "Si" + brandName.charAt(0).toUpperCase() + brandName.slice(1)
+              .replace("dotjs", "Dotjs")
+              .replace("dotnet", "Dotnet")
+              .replace("plusplus", "Plusplus");
+            IconComponent = simpleIcons[pascalName] || null;
+          }
+
+          if (iconValue && !IconComponent && !isBrandIcon && !isEmoji && lucideIcons) {
+            IconComponent = lucideIcons[iconValue] || null;
+          }
+
+          const iconNode = IconComponent
+            ? <IconComponent className="h-4 w-4" />
+            : isEmoji
+              ? <span className="text-base leading-none">{iconValue}</span>
+              : null;
+
           return (
             <div
               key={item.id}
@@ -81,9 +144,7 @@ export function InfiniteCarousel({
                 item.color || "text-stone-800"
               )}
             >
-              {hasIcon && (
-                <span className="text-base leading-none">{item.icon}</span>
-              )}
+              {iconNode}
               <span>{item.text}</span>
             </div>
           );

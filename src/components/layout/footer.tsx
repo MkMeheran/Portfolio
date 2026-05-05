@@ -24,6 +24,18 @@ export function Footer() {
     facebook_url?: string | null;
   } | null>(null);
 
+  function normalizeImageUrl(url?: string | null): string | null {
+    if (!url) return null;
+    const trimmed = url.trim();
+    if (!trimmed) return null;
+    if (trimmed.startsWith("/")) return trimmed;
+    try {
+      return new URL(trimmed).toString();
+    } catch {
+      return null;
+    }
+  }
+
   useEffect(() => {
     const supabase = createClient();
     let mounted = true;
@@ -44,6 +56,8 @@ export function Footer() {
     { href: profile?.linkedin_url?.trim() || "https://www.linkedin.com/", icon: Linkedin, label: "LinkedIn", color: "hover:bg-blue-600" },
     { href: profile?.facebook_url?.trim() || "https://facebook.com/Meheran216/", icon: Facebook, label: "Facebook", color: "hover:bg-blue-500" },
   ];
+
+  const avatarUrl = normalizeImageUrl(profile?.avatar_url) || placeholderProfile.avatar;
   return (
     <footer className="relative overflow-hidden border-t-2 border-stone-900 bg-stone-900 text-stone-100">
       {/* Animated background pattern */}
@@ -60,7 +74,7 @@ export function Footer() {
             <Link href="/" className="flex items-center justify-center sm:justify-start gap-3 group">
               <div className="relative h-12 w-12 rounded-[12%] overflow-hidden border-2 border-amber-500 shadow-[1px_1px_0px_0px_rgba(251,191,36,0.3)] transition-all group-hover:shadow-[0.5px_0.5px_0px_0px_rgba(251,191,36,0.2)] group-hover:translate-x-[0.5px] group-hover:translate-y-[0.5px]">
                 <Image
-                  src={profile?.avatar_url || placeholderProfile.avatar}
+                  src={avatarUrl}
                   alt="Meheran"
                   fill
                   className="object-cover"

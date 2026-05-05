@@ -139,53 +139,53 @@ export default async function AdminDashboard() {
 
       {/* Stats Overview */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <Card>
+        <Card className="admin-card">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Total Projects</p>
                 <p className="text-3xl font-bold">{stats.projects}</p>
               </div>
-              <div className="p-3 bg-violet-100 rounded-lg">
+              <div className="p-3 bg-violet-100 rounded-[4px] border-2 border-stone-900">
                 <FolderKanban className="h-6 w-6 text-violet-600" />
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="admin-card">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Skills</p>
                 <p className="text-3xl font-bold">{stats.skills}</p>
               </div>
-              <div className="p-3 bg-emerald-100 rounded-lg">
+              <div className="p-3 bg-emerald-100 rounded-[4px] border-2 border-stone-900">
                 <Wrench className="h-6 w-6 text-emerald-600" />
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="admin-card">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Education</p>
                 <p className="text-3xl font-bold">{stats.education}</p>
               </div>
-              <div className="p-3 bg-amber-100 rounded-lg">
+              <div className="p-3 bg-amber-100 rounded-[4px] border-2 border-stone-900">
                 <GraduationCap className="h-6 w-6 text-amber-600" />
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="admin-card">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Experience</p>
                 <p className="text-3xl font-bold">{stats.experience}</p>
               </div>
-              <div className="p-3 bg-sky-100 rounded-lg">
+              <div className="p-3 bg-sky-100 rounded-[4px] border-2 border-stone-900">
                 <Briefcase className="h-6 w-6 text-sky-600" />
               </div>
             </div>
@@ -194,7 +194,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Quick Actions Grid */}
-      <h2 className="text-xl font-bold mb-4">Quick Actions</h2>
+      <h2 className="text-xl font-bold mb-4 text-stone-900">Quick Actions</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {quickActions.map((action) => {
           const Icon = action.icon;
@@ -202,27 +202,27 @@ export default async function AdminDashboard() {
           
           return (
             <Link key={action.href} href={action.href}>
-              <Card className="group hover:shadow-lg transition-all hover:-translate-y-1 cursor-pointer h-full">
+              <Card className="admin-card group transition-all hover:-translate-y-0.5 cursor-pointer h-full">
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
-                    <div className={`p-2 rounded-lg ${action.color}`}>
+                    <div className={`p-2 rounded-[4px] border-2 border-stone-900 ${action.color}`}>
                       <Icon className="h-5 w-5 text-white" />
                     </div>
                     {count !== null && count > 0 && (
-                      <span className="text-xs font-bold bg-muted px-2 py-1 rounded-full">
+                      <span className="admin-chip">
                         {count}
                       </span>
                     )}
                   </div>
-                  <CardTitle className="text-lg group-hover:text-primary transition-colors">
+                  <CardTitle className="text-lg text-stone-900">
                     {action.title}
                   </CardTitle>
-                  <CardDescription className="text-xs">
+                  <CardDescription className="text-xs text-stone-600">
                     {action.description}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <div className="flex items-center text-sm text-primary font-medium group-hover:underline">
+                  <div className="flex items-center text-sm text-stone-900 font-bold">
                     Manage
                     <ArrowRight className="ml-1 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </div>
@@ -235,7 +235,7 @@ export default async function AdminDashboard() {
 
       {/* View Site Button */}
       <div className="mt-8 flex justify-center">
-        <Button asChild size="lg" className="gap-2">
+        <Button asChild size="lg" className="gap-2 admin-btn admin-btn-primary">
           <Link href="/" target="_blank">
             <Eye className="h-5 w-5" />
             View Live Site

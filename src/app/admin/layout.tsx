@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { AdminSidebar } from "@/components/admin";
+import { AdminLayout } from "@/components/admin/admin-layout";
 
-export default async function AdminLayout({
+export default async function AdminRootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -16,13 +16,6 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-muted/30">
-      <AdminSidebar />
-      <main className="pl-64">
-        <div className="container mx-auto p-8">
-          {children}
-        </div>
-      </main>
-    </div>
+    <AdminLayout>{children}</AdminLayout>
   );
 }

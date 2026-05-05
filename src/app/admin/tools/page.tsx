@@ -1,11 +1,11 @@
 ﻿"use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { AdminHeader } from "@/components/admin";
 import { Button } from "@/components/ui/button";
-import { IconPicker } from "@/components/ui/icon-picker-optimized";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -43,6 +43,16 @@ import * as LucideIcons from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
 import type { Tool } from "@/types/database.types";
+
+const IconPicker = dynamic(
+  () => import("@/components/ui/icon-picker-optimized").then((mod) => mod.IconPicker),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="text-xs text-muted-foreground">Loading icons...</div>
+    ),
+  }
+);
 
 // Grid size options
 const GRID_SIZES = [
@@ -239,24 +249,24 @@ export default function ToolsAdminPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
         <div>
-          <h1 className="text-4xl font-black mb-2 tracking-tight border-b-4 border-black inline-block pb-1">Tools & Software</h1>
-          <p className="text-muted-foreground mt-2">Manage the tools you use</p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 tracking-tight text-stone-900">Tools & Software</h1>
+          <p className="text-stone-600 mt-2">Manage the tools you use</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-2">
           <Button
             variant="outline"
             onClick={() => setShowPreview(!showPreview)}
             disabled={tools.length === 0}
-            className="border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold disabled:opacity-50"
+            className="admin-btn admin-btn-ghost disabled:opacity-50"
           >
             <Eye className="h-4 w-4 mr-2" />
             {showPreview ? "List" : "Preview"}
           </Button>
           <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
             <DialogTrigger asChild>
-              <Button onClick={() => setEditingItem({})} className="bg-black text-white border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold">
+              <Button onClick={() => setEditingItem({})} className="admin-btn admin-btn-primary">
                 <Plus className="h-4 w-4 mr-2" />
                 Add Tool
               </Button>
@@ -290,16 +300,16 @@ export default function ToolsAdminPage() {
 
                 <div className="space-y-2">
                   <Label>Grid Size</Label>
-                  <div className="grid grid-cols-4 gap-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     {GRID_SIZES.map((size) => (
                       <button
                         key={size.value}
                         type="button"
                         onClick={() => setEditingItem(prev => ({ ...prev, grid_size: size.value }))}
-                        className={`p-3 rounded-lg border-2 text-center transition-all ${
+                        className={`p-3 rounded-[4px] border-2 text-center transition-all ${
                           editingItem?.grid_size === size.value
-                            ? "border-primary bg-primary/5"
-                            : "border-muted hover:border-muted-foreground/30"
+                            ? "border-stone-900 bg-amber-50"
+                            : "border-stone-400 hover:border-stone-900"
                         }`}
                       >
                         <size.icon className="h-6 w-6 mx-auto mb-1" />
@@ -317,10 +327,10 @@ export default function ToolsAdminPage() {
                         key={color.value}
                         type="button"
                         onClick={() => setEditingItem(prev => ({ ...prev, bg_color: color.value }))}
-                        className={`h-8 w-8 rounded-full ${color.class} border-2 transition-all ${
+                        className={`h-8 w-8 rounded-[4px] ${color.class} border-2 transition-all ${
                           editingItem?.bg_color === color.value 
-                            ? "border-primary scale-110" 
-                            : "border-transparent hover:scale-105"
+                            ? "border-stone-900 scale-110" 
+                            : "border-stone-400 hover:border-stone-900"
                         }`}
                         title={color.name}
                       />
@@ -336,10 +346,10 @@ export default function ToolsAdminPage() {
                         key={color.value}
                         type="button"
                         onClick={() => setEditingItem(prev => ({ ...prev, bg_color: color.value }))}
-                        className={`h-8 w-8 rounded-full ${color.class} border-2 transition-all ${
+                        className={`h-8 w-8 rounded-[4px] ${color.class} border-2 transition-all ${
                           editingItem?.bg_color === color.value 
-                            ? "border-primary scale-110" 
-                            : "border-transparent hover:scale-105"
+                            ? "border-stone-900 scale-110" 
+                            : "border-stone-400 hover:border-stone-900"
                         }`}
                         title={color.name}
                       />
@@ -403,7 +413,7 @@ export default function ToolsAdminPage() {
           {Object.entries(groupedTools).map(([category, categoryTools]) => (
             <div key={category}>
               <h3 className="font-semibold mb-4">{category}</h3>
-              <div className="grid grid-cols-4 gap-4 auto-rows-[100px]">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 auto-rows-[90px]">
                 {categoryTools.map((tool) => {
                   const gridClass = 
                     tool.grid_size === "2x2" ? "col-span-2 row-span-2" :
@@ -412,8 +422,8 @@ export default function ToolsAdminPage() {
                     "col-span-1 row-span-1";
                   
                   return (
-                    <Card key={tool.id} className={`overflow-hidden ${gridClass}`}>
-                      <CardContent className="h-full flex flex-col items-center justify-center p-4 text-center hover:bg-muted/50 transition-colors">
+                    <Card key={tool.id} className={`admin-card overflow-hidden ${gridClass}`}>
+                      <CardContent className="h-full flex flex-col items-center justify-center p-4 text-center hover:bg-amber-50 transition-colors">
                         {(() => {
                           const IconComponent = tool.icon && (LucideIcons as any)[tool.icon];
                           const iconSizeClass = 
@@ -436,7 +446,7 @@ export default function ToolsAdminPage() {
                             );
                           } else {
                             return (
-                              <div className={`${iconSizeClass} rounded bg-muted flex items-center justify-center mb-2`}>
+                              <div className={`${iconSizeClass} rounded-[4px] border-2 border-stone-900 bg-muted flex items-center justify-center mb-2`}>
                                 <Wrench className={`${tool.grid_size === "2x2" ? "h-8 w-8" : "h-5 w-5"}`} />
                               </div>
                             );
@@ -462,13 +472,13 @@ export default function ToolsAdminPage() {
         // List Mode
         <div className="space-y-4">
           {tools.length === 0 ? (
-            <Card>
+            <Card className="admin-card">
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <Wrench className="h-12 w-12 text-muted-foreground mb-4" />
                 <p className="text-muted-foreground">No tools found</p>
                 <Button 
                   variant="outline" 
-                  className="mt-4"
+                  className="mt-4 admin-btn admin-btn-ghost"
                   onClick={() => setEditingItem({})}
                 >
                   <Plus className="h-4 w-4 mr-2" />
@@ -478,7 +488,7 @@ export default function ToolsAdminPage() {
             </Card>
           ) : (
             tools.map((tool) => (
-              <Card key={tool.id} className="border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)]">
+              <Card key={tool.id} className="admin-card">
                 <CardContent className="flex items-center gap-4 p-4">
                   <div className="cursor-move text-muted-foreground">
                     <GripVertical className="h-5 w-5" />
@@ -488,13 +498,13 @@ export default function ToolsAdminPage() {
                     const IconComponent = tool.icon && (LucideIcons as any)[tool.icon];
                     if (IconComponent) {
                       return (
-                        <div className="h-10 w-10 rounded bg-muted flex items-center justify-center shrink-0">
+                        <div className="h-10 w-10 rounded-[4px] border-2 border-stone-900 bg-muted flex items-center justify-center shrink-0">
                           <IconComponent className="h-5 w-5 text-foreground" />
                         </div>
                       );
                     } else if (tool.icon_url) {
                       return (
-                        <div className="relative h-10 w-10 rounded bg-muted overflow-hidden shrink-0">
+                        <div className="relative h-10 w-10 rounded-[4px] border-2 border-stone-900 bg-muted overflow-hidden shrink-0">
                           <Image
                             src={tool.icon_url}
                             alt={tool.icon_alt || tool.name}
@@ -505,7 +515,7 @@ export default function ToolsAdminPage() {
                       );
                     } else {
                       return (
-                        <div className="h-10 w-10 rounded bg-muted flex items-center justify-center shrink-0">
+                        <div className="h-10 w-10 rounded-[4px] border-2 border-stone-900 bg-muted flex items-center justify-center shrink-0">
                           <Wrench className="h-5 w-5" />
                         </div>
                       );
@@ -516,7 +526,7 @@ export default function ToolsAdminPage() {
                     <div className="flex items-center gap-2">
                       <h3 className="font-semibold truncate">{tool.name}</h3>
                       {tool.grid_size && tool.grid_size !== "1x1" && (
-                        <span className="text-xs bg-muted px-1.5 py-0.5 rounded">
+                        <span className="admin-chip bg-amber-100">
                           {tool.grid_size}
                         </span>
                       )}

@@ -67,7 +67,7 @@ export function IconPicker({ value, onChange, className }: IconPickerProps) {
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute z-50 mt-1 w-full min-w-[320px] bg-white border-2 border-stone-900 shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] rounded-none">
+        <div className="absolute z-50 mt-1 w-full min-w-[320px] bg-white border border-stone-200 shadow-md rounded-md">
           {/* Header */}
           <div className="p-3 border-b-2 border-stone-200">
             <div className="flex items-center gap-2 mb-3">
@@ -224,10 +224,10 @@ export function IconPickerInline({
               onClick={() => onChange(iconName)}
               title={iconName}
               className={cn(
-                "relative flex items-center justify-center p-2 rounded-md border-2 transition-all",
-                isSelected
-                  ? "bg-amber-100 border-amber-500 text-amber-700 shadow-[2px_2px_0px_0px_#fbbf24]"
-                  : "bg-white border-stone-200 hover:border-stone-400 hover:bg-stone-50"
+                        "relative flex items-center justify-center p-2 rounded-md border transition-all",
+                        isSelected
+                          ? "bg-amber-100 border-amber-300 text-amber-700"
+                          : "bg-white border-stone-200 hover:border-amber-300 hover:bg-amber-50"
               )}
             >
               <Icon className="h-4 w-4" />

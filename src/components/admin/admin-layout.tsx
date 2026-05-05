@@ -88,10 +88,10 @@ const SidebarLink = memo(({ link, pathname, onClick }: {
       href={link.href}
       onClick={onClick}
       className={cn(
-        "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-all",
+        "flex items-center gap-3 px-3 py-2.5 rounded-[4px] text-sm font-semibold transition-colors border-2 border-stone-900",
         isActive
-          ? "bg-amber-100 text-stone-900 border-2 border-stone-900 shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)]"
-          : "text-stone-600 hover:bg-stone-100 hover:text-stone-900 border-2 border-transparent"
+          ? "bg-amber-200 text-stone-900"
+          : "text-stone-700 bg-white hover:bg-amber-50"
       )}
     >
       <Icon className={cn("h-4 w-4", isActive && "text-amber-600")} />
@@ -118,7 +118,7 @@ export const AdminLayout = memo(function AdminLayout({ children }: AdminLayoutPr
   const openSidebar = useCallback(() => setSidebarOpen(true), []);
 
   return (
-    <div className="min-h-screen bg-stone-100">
+    <div className="admin-shell min-h-screen bg-background">
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div 
@@ -129,14 +129,14 @@ export const AdminLayout = memo(function AdminLayout({ children }: AdminLayoutPr
 
       {/* Sidebar */}
       <aside className={cn(
-        "fixed top-0 left-0 z-50 h-full w-64 bg-white border-r-2 border-stone-200 transition-transform duration-300",
+        "fixed top-0 left-0 z-50 h-full w-64 bg-amber-50 border-r-2 border-stone-900 transition-transform duration-300",
         "lg:translate-x-0",
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         {/* Logo */}
-        <div className="h-16 flex items-center justify-between px-4 border-b-2 border-stone-200">
+        <div className="h-16 flex items-center justify-between px-4 border-b-2 border-stone-900">
           <Link href="/admin" className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-amber-400 border-2 border-stone-900 flex items-center justify-center shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)]">
+            <div className="w-9 h-9 bg-amber-300 border-2 border-stone-900 flex items-center justify-center rounded-[4px]">
               <LayoutDashboard className="h-5 w-5 text-stone-900" />
             </div>
             <div>
@@ -148,7 +148,7 @@ export const AdminLayout = memo(function AdminLayout({ children }: AdminLayoutPr
             variant="ghost"
             size="icon"
             onClick={closeSidebar}
-            className="lg:hidden h-8 w-8"
+            className="lg:hidden h-8 w-8 admin-btn admin-btn-ghost"
           >
             <X className="h-5 w-5" />
           </Button>
@@ -169,12 +169,12 @@ export const AdminLayout = memo(function AdminLayout({ children }: AdminLayoutPr
         </div>
 
         {/* Footer */}
-        <div className="absolute bottom-0 left-0 right-0 p-3 border-t-2 border-stone-200 bg-stone-50">
+        <div className="absolute bottom-0 left-0 right-0 p-3 border-t-2 border-stone-900 bg-amber-50">
           <div className="flex items-center gap-2">
             <Link
               href="/"
               target="_blank"
-              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-white border-2 border-stone-200 hover:border-stone-400 rounded-md text-xs font-medium transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 admin-btn admin-btn-ghost text-xs"
             >
               <Home className="h-3.5 w-3.5" />
               View Site
@@ -184,7 +184,7 @@ export const AdminLayout = memo(function AdminLayout({ children }: AdminLayoutPr
               variant="outline"
               size="icon"
               onClick={handleSignOut}
-              className="h-9 w-9 border-2 border-stone-200 hover:border-red-400 hover:bg-red-50 hover:text-red-600"
+              className="h-9 w-9 admin-btn bg-white hover:bg-red-50 hover:text-red-600"
             >
               <LogOut className="h-4 w-4" />
             </Button>
@@ -195,13 +195,13 @@ export const AdminLayout = memo(function AdminLayout({ children }: AdminLayoutPr
       {/* Main Content */}
       <div className="lg:ml-64">
         {/* Top Header */}
-        <header className="sticky top-0 z-30 h-16 bg-white border-b-2 border-stone-200 flex items-center justify-between px-4">
+        <header className="sticky top-0 z-30 h-16 bg-amber-50 border-b-2 border-stone-900 flex items-center justify-between px-4">
           <div className="flex items-center gap-3">
             <Button
               variant="outline"
               size="icon"
               onClick={openSidebar}
-              className="lg:hidden h-9 w-9 border-2 border-stone-200"
+              className="lg:hidden h-9 w-9 admin-btn admin-btn-ghost"
             >
               <Menu className="h-5 w-5" />
             </Button>
@@ -223,27 +223,9 @@ export const AdminLayout = memo(function AdminLayout({ children }: AdminLayoutPr
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Search */}
-            <div className="hidden md:flex relative">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-48 h-9 pl-8 pr-3 text-sm border-2 border-stone-200 rounded-md focus:outline-none focus:border-amber-400"
-              />
-            </div>
-            
-            {/* Notifications */}
-            <Button variant="outline" size="icon" className="h-9 w-9 border-2 border-stone-200 relative">
-              <Bell className="h-4 w-4" />
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
-                3
-              </span>
-            </Button>
-
-            {/* User Menu */}
-            <div className="flex items-center gap-2 pl-2 border-l-2 border-stone-200">
-              <div className="w-8 h-8 rounded-full bg-amber-100 border-2 border-stone-200 flex items-center justify-center overflow-hidden">
+            {/* User */}
+            <div className="flex items-center gap-2 pl-2 border-l-2 border-stone-900">
+              <div className="w-8 h-8 rounded-[4px] bg-amber-100 border-2 border-stone-900 flex items-center justify-center overflow-hidden">
                 <User className="h-4 w-4 text-amber-700" />
               </div>
               <div className="hidden sm:block">

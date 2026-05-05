@@ -1,10 +1,10 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { AdminHeader, ImageUploader } from "@/components/admin";
-import { IconPicker } from "@/components/ui/icon-picker-optimized";
+import { AdminHeader } from "@/components/admin";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,26 @@ import { Switch } from "@/components/ui/switch";
 import { ArrowLeft, Save, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
+
+const ImageUploader = dynamic(
+  () => import("@/components/admin/image-uploader").then((mod) => mod.ImageUploader),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="text-xs text-muted-foreground">Loading uploader...</div>
+    ),
+  }
+);
+
+const IconPicker = dynamic(
+  () => import("@/components/ui/icon-picker-optimized").then((mod) => mod.IconPicker),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="text-xs text-muted-foreground">Loading icons...</div>
+    ),
+  }
+);
 
 export default function NewProjectPage() {
   const router = useRouter();
@@ -353,7 +373,7 @@ export default function NewProjectPage() {
             {/* Project Image */}
             <Card>
               <CardHeader>
-                <CardTitle>প্রজেক্ট ছবি</CardTitle>
+                <CardTitle>Project Image</CardTitle>
               </CardHeader>
               <CardContent>
                 <ImageUploader

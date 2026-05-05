@@ -92,6 +92,7 @@ export default function AboutAdminPage() {
               variant={showPreview ? "default" : "outline"}
               size="sm"
               onClick={() => setShowPreview(!showPreview)}
+              className={showPreview ? "admin-btn admin-btn-primary" : "admin-btn admin-btn-ghost"}
             >
               <Eye className="mr-2 h-4 w-4" />
               {showPreview ? "Edit" : "Preview"}
@@ -101,6 +102,7 @@ export default function AboutAdminPage() {
                 onClick={handleSave} 
                 disabled={isSaving}
                 size="sm"
+                className="admin-btn admin-btn-primary"
               >
                 {isSaving ? (
                   <>
@@ -121,7 +123,7 @@ export default function AboutAdminPage() {
 
       {showPreview ? (
         // Preview Mode
-        <Card>
+        <Card className="admin-card">
           <CardHeader>
             <CardTitle>Preview</CardTitle>
             <CardDescription>How your bio will appear</CardDescription>
@@ -134,7 +136,7 @@ export default function AboutAdminPage() {
         </Card>
       ) : (
         // Edit Mode
-        <Card>
+        <Card className="admin-card">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
@@ -160,7 +162,7 @@ export default function AboutAdminPage() {
             </div>
 
             {/* Quick formatting tips */}
-            <div className="p-4 bg-muted rounded-lg space-y-2">
+            <div className="admin-card-soft p-4 space-y-2">
               <h4 className="font-semibold text-sm">Formatting Tips:</h4>
               <ul className="text-xs text-muted-foreground space-y-1">
                 <li>• Use line breaks to separate paragraphs</li>

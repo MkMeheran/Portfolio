@@ -1,9 +1,10 @@
 ﻿"use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { AdminHeader, ImageUploader } from "@/components/admin";
+import { AdminHeader } from "@/components/admin";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -36,6 +37,16 @@ import {
 import { toast } from "sonner";
 import Image from "next/image";
 import type { Project } from "@/types/database.types";
+
+const ImageUploader = dynamic(
+  () => import("@/components/admin/image-uploader").then((mod) => mod.ImageUploader),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="text-xs text-muted-foreground">Loading uploader...</div>
+    ),
+  }
+);
 
 export default function ProjectsAdminPage() {
   const router = useRouter();
@@ -152,23 +163,23 @@ export default function ProjectsAdminPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
         <div>
-          <h1 className="text-4xl font-black mb-2 tracking-tight border-b-4 border-black inline-block pb-1">Projects</h1>
-          <p className="text-muted-foreground mt-2">Manage your project portfolio</p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 tracking-tight text-stone-900">Projects</h1>
+          <p className="text-stone-600 mt-2">Manage your project portfolio</p>
         </div> 
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-2">
           <Button
             variant="outline"
             onClick={() => setShowPreview(!showPreview)}
-            className="border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold"
+            className="admin-btn admin-btn-ghost"
           >
             <Eye className="h-4 w-4 mr-2" />
             {showPreview ? "List" : "Preview"}
           </Button>
           <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
             <DialogTrigger asChild>
-              <Button onClick={() => setEditingItem({})} className="bg-black text-white border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold">
+              <Button onClick={() => setEditingItem({})} className="admin-btn admin-btn-primary">
                 <Plus className="h-4 w-4 mr-2" />
                 Add New
               </Button>
@@ -306,10 +317,10 @@ export default function ProjectsAdminPage() {
               </div>
 
               <DialogFooter>
-                <Button variant="outline" onClick={() => setEditingItem(null)}>
+                <Button variant="outline" onClick={() => setEditingItem(null)} className="admin-btn admin-btn-ghost">
                   Cancel
                 </Button>
-                <Button onClick={handleSave} disabled={isSaving}>
+                <Button onClick={handleSave} disabled={isSaving} className="admin-btn admin-btn-primary">
                   {isSaving ? (
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                   ) : (
@@ -325,10 +336,10 @@ export default function ProjectsAdminPage() {
 
       {showPreview ? (
         // Preview Mode - Grid
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((project) => (
-            <Card key={project.id} className="overflow-hidden group border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,0.25)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all">
-              <div className="relative aspect-video bg-muted">
+            <Card key={project.id} className="admin-card overflow-hidden group">
+              <div className="relative aspect-video bg-muted border-b-2 border-stone-900">
                 {project.thumbnail_url ? (
                   <Image
                     src={project.thumbnail_url}
@@ -343,10 +354,10 @@ export default function ProjectsAdminPage() {
                 )}
                 {project.is_featured && (
                   <div className="absolute top-2 right-2">
-                    <Badge className="bg-yellow-500">
+                    <span className="admin-chip bg-amber-200">
                       <Star className="h-3 w-3 mr-1" />
-                      <Badge variant="outline" className="text-xs">Featured</Badge>
-                    </Badge>
+                      Featured
+                    </span>
                   </div>
                 )}
               </div>
@@ -402,13 +413,13 @@ export default function ProjectsAdminPage() {
         // List Mode
         <div className="space-y-4">
           {projects.length === 0 ? (
-            <Card>
+            <Card className="admin-card">
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <FolderKanban className="h-12 w-12 text-muted-foreground mb-4" />
                 <p className="text-muted-foreground">No projects</p>
                 <Button 
                   variant="outline" 
-                  className="mt-4"
+                  className="mt-4 admin-btn admin-btn-ghost"
                   onClick={() => setEditingItem({})}
                 >
                   <Plus className="h-4 w-4 mr-2" />
@@ -418,10 +429,10 @@ export default function ProjectsAdminPage() {
             </Card>
           ) : (
             projects.map((project) => (
-              <Card key={project.id} className="border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)]">
+              <Card key={project.id} className="admin-card">
                 <CardContent className="flex items-center gap-4 p-4">
                   {project.thumbnail_url ? (
-                    <div className="relative h-16 w-24 rounded overflow-hidden bg-muted shrink-0">
+                    <div className="relative h-16 w-24 rounded-[4px] border-2 border-stone-900 overflow-hidden bg-muted shrink-0">
                       <Image
                         src={project.thumbnail_url}
                         alt={project.thumbnail_alt || project.title}
@@ -430,7 +441,7 @@ export default function ProjectsAdminPage() {
                       />
                     </div>
                   ) : (
-                    <div className="h-16 w-24 rounded bg-muted flex items-center justify-center shrink-0">
+                    <div className="h-16 w-24 rounded-[4px] border-2 border-stone-900 bg-muted flex items-center justify-center shrink-0">
                       <FolderKanban className="h-6 w-6 text-muted-foreground" />
                     </div>
                   )}
@@ -442,7 +453,7 @@ export default function ProjectsAdminPage() {
                         <Star className="h-4 w-4 text-yellow-500 shrink-0" />
                       )}
                       {!project.is_active && (
-                        <Badge variant="secondary" className="text-xs">Inactive</Badge>
+                        <span className="admin-chip bg-stone-200">Inactive</span>
                       )}
                     </div>
                     <p className="text-sm text-muted-foreground truncate">
@@ -451,7 +462,7 @@ export default function ProjectsAdminPage() {
                     {project.technologies && (
                       <div className="flex gap-1 mt-1">
                         {project.technologies.slice(0, 3).map((tech, i) => (
-                          <span key={i} className="text-xs bg-muted px-1.5 py-0.5 rounded">
+                          <span key={i} className="admin-chip bg-amber-100">
                             {tech}
                           </span>
                         ))}

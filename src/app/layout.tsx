@@ -124,6 +124,19 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning className="scroll-smooth">
       <head>
         {/* Favicon is handled by metadata.icons dynamically */}
+        {/* Google tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-K9KSZZ240J" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: [
+              "window.dataLayer = window.dataLayer || [];",
+              "function gtag(){dataLayer.push(arguments);}",
+              "gtag('js', new Date());",
+              "gtag('config', 'G-K9KSZZ240J');",
+            ].join("\n"),
+          }}
+        />
+        <meta name="google-site-verification" content="yPE4By05HKPLCJixD1j0XOaJac_s8bd2QzyFsspipEA" />
         {/* JSON-LD Structured Data for Google (with dynamic profile image) */}
         <script
           type="application/ld+json"

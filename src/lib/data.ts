@@ -1,9 +1,11 @@
-import { createClient } from "@/lib/supabase/server";
+import { unstable_cache } from "next/cache";
+import { createClient, createPublicClient } from "@/lib/supabase/server";
 import type { 
   Profile, 
   Education, 
   Experience, 
   Project, 
+  Certificate,
   Skill, 
   SkillCategory,
   Tool, 
@@ -183,6 +185,35 @@ export async function getTools(options?: {
   return data || [];
 }
 
+export async function getSkillsSectionData() {
+  const getSkillsSectionDataCached = unstable_cache(
+    async () => {
+      const supabase = createPublicClient();
+      const [skillsRes, certsRes] = await Promise.all([
+        supabase.from("skills").select("*").order("display_order", { ascending: true }),
+        supabase.from("certificates").select("*").order("display_order", { ascending: true }),
+      ]);
+
+      const skills = skillsRes.data || [];
+      const certificates = certsRes.data || [];
+
+      const skillsWithCerts = skills.map((skill) => ({
+        ...skill,
+        certificates: certificates.filter((cert) => cert.skill_id === skill.id),
+      }));
+
+      return {
+        skills: skillsWithCerts,
+        certificates,
+      } as { skills: (Skill & { certificates?: Certificate[] })[]; certificates: Certificate[] };
+    },
+    ["skills-section-data"],
+    { revalidate: 60 }
+  );
+
+  return getSkillsSectionDataCached();
+}
+
 // ============================================
 // INTERESTS
 // ============================================
@@ -284,44 +315,61 @@ export async function getSiteSetting(key: string): Promise<string | null> {
 // COMBINED DATA (for homepage)
 // ============================================
 export async function getHomePageData() {
-  const [profile, education, experiences, projects, heroCarousel] = await Promise.all([
-    getProfile(),
-    getEducation(),
-    getExperience(),
-    getProjects({ published: true }),
-    getHeroCarousel(), // Get all carousel items
-  ]);
+  const getHomePageDataCached = unstable_cache(
+    async () => {
+      const supabase = createPublicClient();
 
-  // Create default profile if none exists
-  const defaultProfile: Profile = {
-    id: "",
-    name: "Portfolio",
-    title: "Developer",
-    subtitle: null,
-    bio: null,
-    location: null,
-    email: null,
-    phone: null,
-    avatar_url: null,
-    cover_url: null,
-    github_url: null,
-    linkedin_url: null,
-    facebook_url: null,
-    twitter_url: null,
-    whatsapp_url: null,
-    meta_title: null,
-    meta_description: null,
-    created_at: "",
-    updated_at: "",
-  };
+      const [profileRes, educationRes, experiencesRes, projectsRes, heroCarouselRes] = await Promise.all([
+        supabase.from("profile").select("*").single(),
+        supabase.from("education").select("*").order("order_index", { ascending: true }),
+        supabase.from("experience").select("*").order("order_index", { ascending: true }),
+        supabase
+          .from("projects")
+          .select("*")
+          .eq("is_published", true)
+          .order("order_index", { ascending: true }),
+        supabase
+          .from("hero_carousel")
+          .select("*")
+          .eq("is_active", true)
+          .order("order_index", { ascending: true }),
+      ]);
 
-  return {
-    profile: profile || defaultProfile,
-    education,
-    experiences,
-    projects,
-    heroCarousel,
-  };
+      const defaultProfile: Profile = {
+        id: "",
+        name: "Portfolio",
+        title: "Developer",
+        subtitle: null,
+        bio: null,
+        location: null,
+        email: null,
+        phone: null,
+        avatar_url: null,
+        cover_url: null,
+        github_url: null,
+        linkedin_url: null,
+        facebook_url: null,
+        twitter_url: null,
+        whatsapp_url: null,
+        meta_title: null,
+        meta_description: null,
+        created_at: "",
+        updated_at: "",
+      };
+
+      return {
+        profile: profileRes.data || defaultProfile,
+        education: educationRes.data || [],
+        experiences: experiencesRes.data || [],
+        projects: projectsRes.data || [],
+        heroCarousel: heroCarouselRes.data || [],
+      };
+    },
+    ["home-page-data"],
+    { revalidate: 60 }
+  );
+
+  return getHomePageDataCached();
 }
 
 export async function getAboutPageData() {

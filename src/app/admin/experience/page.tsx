@@ -1,9 +1,10 @@
 ﻿"use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { AdminHeader, ImageUploader } from "@/components/admin";
+import { AdminHeader } from "@/components/admin";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -31,6 +32,16 @@ import {
 import { Save, Loader2, Plus, Pencil, Trash2, GripVertical, Eye, Briefcase, Building } from "lucide-react";
 import { toast } from "sonner";
 import type { Experience } from "@/types/database.types";
+
+const ImageUploader = dynamic(
+  () => import("@/components/admin/image-uploader").then((mod) => mod.ImageUploader),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="text-xs text-muted-foreground">Loading uploader...</div>
+    ),
+  }
+);
 
 export default function ExperienceAdminPage() {
   const router = useRouter();
@@ -186,23 +197,23 @@ export default function ExperienceAdminPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
         <div>
-          <h1 className="text-4xl font-black mb-2 tracking-tight border-b-4 border-black inline-block pb-1">Experience</h1>
-          <p className="text-muted-foreground mt-2">Manage your work experience</p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 tracking-tight text-stone-900">Experience</h1>
+          <p className="text-stone-600 mt-2">Manage your work experience</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-2">
           <Button
             variant="outline"
             onClick={() => setShowPreview(!showPreview)}
-            className="border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold"
+            className="admin-btn admin-btn-ghost"
           >
             <Eye className="h-4 w-4 mr-2" />
             {showPreview ? "List" : "Preview"}
           </Button>
           <Dialog open={!!editingItem} onOpenChange={(open) => !open && setEditingItem(null)}>
             <DialogTrigger asChild>
-              <Button onClick={() => setEditingItem({})} className="bg-black text-white border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all font-bold">
+              <Button onClick={() => setEditingItem({})} className="admin-btn admin-btn-primary">
                 <Plus className="h-4 w-4 mr-2" />
                 Add New
               </Button>
@@ -215,7 +226,7 @@ export default function ExperienceAdminPage() {
               </DialogHeader>
               
               <div className="space-y-4 py-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="title">Position *</Label>
                     <Input
@@ -236,7 +247,7 @@ export default function ExperienceAdminPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="company">Company *</Label>
                     <Input
@@ -425,13 +436,13 @@ export default function ExperienceAdminPage() {
         // List Mode
         <div className="space-y-4">
           {experiences.length === 0 ? (
-            <Card>
+            <Card className="admin-card">
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <Briefcase className="h-12 w-12 text-muted-foreground mb-4" />
                 <p className="text-muted-foreground">No experience entries</p>
                 <Button 
                   variant="outline" 
-                  className="mt-4"
+                  className="mt-4 admin-btn admin-btn-ghost"
                   onClick={() => setEditingItem({})}
                 >
                   <Plus className="h-4 w-4 mr-2" />
@@ -441,7 +452,7 @@ export default function ExperienceAdminPage() {
             </Card>
           ) : (
             experiences.map((exp) => (
-              <Card key={exp.id} className="border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)]">
+              <Card key={exp.id} className="admin-card">
                 <CardContent className="flex items-center gap-4 p-4">
                   <div className="cursor-move text-muted-foreground">
                     <GripVertical className="h-5 w-5" />
@@ -451,10 +462,10 @@ export default function ExperienceAdminPage() {
                     <img
                       src={exp.logo_url}
                       alt={exp.logo_alt || exp.company}
-                      className="h-12 w-12 rounded object-contain bg-muted"
+                      className="h-12 w-12 rounded-[4px] border-2 border-stone-900 object-contain bg-muted"
                     />
                   ) : (
-                    <div className="h-12 w-12 rounded bg-muted flex items-center justify-center">
+                    <div className="h-12 w-12 rounded-[4px] border-2 border-stone-900 bg-muted flex items-center justify-center">
                       <Building className="h-6 w-6 text-muted-foreground" />
                     </div>
                   )}
@@ -470,7 +481,7 @@ export default function ExperienceAdminPage() {
                   </div>
                   
                   {exp.is_current && (
-                    <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+                    <span className="admin-chip bg-green-100 text-green-700">
                       Ongoing
                     </span>
                   )}

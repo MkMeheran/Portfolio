@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
+import dynamic from "next/dynamic";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { IconPicker } from "@/components/ui/icon-picker-optimized";
 import {
   Dialog,
   DialogContent,
@@ -29,6 +29,16 @@ import {
 import { Save, Loader2, Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import type { HeroCarousel } from "@/types/database.types";
+
+const IconPicker = dynamic(
+  () => import("@/components/ui/icon-picker-optimized").then((mod) => mod.IconPicker),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="text-xs text-muted-foreground">Loading icons...</div>
+    ),
+  }
+);
 
 export default function HeroAdminPage() {
   // Memoize supabase client
@@ -171,11 +181,11 @@ export default function HeroAdminPage() {
   return (
     <div className="container mx-auto py-8 px-4 max-w-6xl">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-black mb-2 tracking-tight border-b-4 border-black inline-block pb-1">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 tracking-tight text-stone-900">
           Hero Carousel
         </h1>
-        <p className="text-muted-foreground mt-4">
+        <p className="text-stone-600 mt-2">
           Manage hero section text animations (2 lines, multiple items per line)
         </p>
       </div>
@@ -185,7 +195,7 @@ export default function HeroAdminPage() {
         <DialogTrigger asChild>
           <Button
             onClick={() => setEditingItem({ line_number: 1, order_index: 0, is_active: true })}
-            className="mb-6 bg-black text-white border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+            className="mb-6 admin-btn admin-btn-primary"
           >
             <Plus className="h-4 w-4 mr-2" />
             Add Item
@@ -205,7 +215,7 @@ export default function HeroAdminPage() {
           {line1Items.map((item) => (
             <Card
               key={item.id}
-              className="border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.25)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
+              className="admin-card"
             >
               <CardContent className="p-4">
                 <div className="flex items-start justify-between gap-2">
@@ -262,7 +272,7 @@ export default function HeroAdminPage() {
           {line2Items.map((item) => (
             <Card
               key={item.id}
-              className="border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.25)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
+              className="admin-card"
             >
               <CardContent className="p-4">
                 <div className="flex items-start justify-between gap-2">
@@ -381,7 +391,7 @@ export default function HeroAdminPage() {
             <Button
               onClick={handleSave}
               disabled={isSaving}
-              className="bg-black text-white border-2 border-black shadow-[1px_1px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[1px_1px_0px_0px_rgba(0,0,0,0.2)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+              className="admin-btn admin-btn-primary"
             >
               {isSaving ? (
                 <>

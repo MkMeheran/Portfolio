@@ -24,52 +24,52 @@ import { toast } from "sonner";
 
 const sidebarLinks = [
   {
-    title: "ড্যাশবোর্ড",
+    title: "Dashboard",
     href: "/admin",
     icon: LayoutDashboard,
   },
   {
-    title: "প্রোফাইল",
+    title: "Profile",
     href: "/admin/profile",
     icon: User,
   },
   {
-    title: "এবাউট",
+    title: "About",
     href: "/admin/about",
     icon: FileText,
   },
   {
-    title: "শিক্ষা",
+    title: "Education",
     href: "/admin/education",
     icon: GraduationCap,
   },
   {
-    title: "অভিজ্ঞতা",
+    title: "Experience",
     href: "/admin/experience",
     icon: Briefcase,
   },
   {
-    title: "প্রজেক্টস",
+    title: "Projects",
     href: "/admin/projects",
     icon: FolderKanban,
   },
   {
-    title: "দক্ষতা",
+    title: "Skills",
     href: "/admin/skills",
     icon: Wrench,
   },
   {
-    title: "টুলস",
+    title: "Tools",
     href: "/admin/tools",
     icon: Settings,
   },
   {
-    title: "হিরো স্লাইডার",
+    title: "Hero Slider",
     href: "/admin/hero",
     icon: Sparkles,
   },
   {
-    title: "গ্যালারি",
+    title: "Gallery",
     href: "/admin/gallery",
     icon: Image,
   },
@@ -131,7 +131,7 @@ export function AdminSidebar() {
           <Button variant="outline" className="w-full justify-start" asChild>
             <Link href="/">
               <Home className="mr-2 h-4 w-4" />
-              সাইট দেখুন
+              View Site
             </Link>
           </Button>
           <Button
@@ -140,7 +140,7 @@ export function AdminSidebar() {
             onClick={handleSignOut}
           >
             <LogOut className="mr-2 h-4 w-4" />
-            লগ আউট
+            Log Out
           </Button>
         </div>
       </div>
@@ -159,15 +159,15 @@ export function AdminHeader({
 }) {
   return (
     <div className="mb-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">{title}</h1>
           {description && (
-            <p className="text-muted-foreground mt-1">{description}</p>
+            <p className="text-stone-600 mt-1">{description}</p>
           )}
         </div>
         {actions && (
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {actions}
           </div>
         )}
