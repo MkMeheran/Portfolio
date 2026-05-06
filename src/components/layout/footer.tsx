@@ -36,6 +36,12 @@ export function Footer() {
     }
   }
 
+  function isSvgUrl(url?: string | null): boolean {
+    if (!url) return false;
+    const normalized = url.toLowerCase();
+    return normalized.endsWith('.svg') || normalized.includes('.svg?');
+  }
+
   useEffect(() => {
     const supabase = createClient();
     let mounted = true;
@@ -58,6 +64,7 @@ export function Footer() {
   ];
 
   const avatarUrl = normalizeImageUrl(profile?.avatar_url) || placeholderProfile.avatar;
+  const avatarIsSvg = isSvgUrl(avatarUrl);
   return (
     <footer className="relative overflow-hidden border-t-2 border-stone-900 bg-stone-900 text-stone-100">
       {/* Animated background pattern */}
@@ -78,6 +85,8 @@ export function Footer() {
                   alt="Meheran"
                   fill
                   className="object-cover"
+                  sizes="48px"
+                  unoptimized={avatarIsSvg}
                 />
               </div>
               <div>

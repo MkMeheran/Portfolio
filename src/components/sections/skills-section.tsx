@@ -112,6 +112,33 @@ function ensureUrlProtocol(url: string): string {
   return `https://${trimmedUrl}`;
 }
 
+function isSvgUrl(url?: string | null): boolean {
+  if (!url) return false;
+  const normalized = url.toLowerCase();
+  return normalized.endsWith('.svg') || normalized.includes('.svg?');
+}
+
+// Helper to determine text color based on background class
+function getTextColorForBg(bgClass: string): string {
+  const lightBgs = [
+    'bg-white', 'bg-stone-50', 'bg-stone-100', 'bg-stone-200',
+    'bg-gray-50', 'bg-gray-100', 'bg-gray-200',
+    'bg-slate-50', 'bg-slate-100',
+    'bg-amber-50', 'bg-amber-100', 'bg-amber-200',
+    'bg-yellow-50', 'bg-yellow-100', 'bg-yellow-200',
+    'bg-orange-50', 'bg-orange-100',
+    'bg-pink-50', 'bg-pink-100',
+    'bg-rose-50', 'bg-rose-100',
+    'bg-purple-50', 'bg-purple-100',
+    'bg-violet-50', 'bg-violet-100',
+    'bg-blue-50', 'bg-blue-100', 'bg-blue-200',
+    'bg-green-50', 'bg-green-100',
+    'bg-emerald-50', 'bg-emerald-100',
+    'bg-cyan-50', 'bg-cyan-100'
+  ];
+  return lightBgs.includes(bgClass) ? 'text-stone-900' : 'text-white';
+}
+
 interface SkillsSectionProps {
   initialSkills?: SkillWithCertificates[];
 }
@@ -288,7 +315,7 @@ export function SkillsSection({ initialSkills }: SkillsSectionProps) {
                             <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/20 via-transparent to-fuchsia-400/20" />
                           </div>
                           <div className={`relative z-10 p-1.5 ${bgColor} border-2 border-stone-900 rounded-sm shrink-0`}>
-                            <SkillIcon className="h-5 w-5 text-white" />
+                            <SkillIcon className={`h-5 w-5 ${getTextColorForBg(bgColor)}`} />
                           </div>
                           <span className="relative z-10 text-base min-[480px]:text-lg font-bold flex-1 text-stone-800 font-[family-name:var(--font-space)]">{skill.name}</span>
                           {skill.has_certificates && (
@@ -368,6 +395,8 @@ export function SkillsSection({ initialSkills }: SkillsSectionProps) {
                               width={sizeClass === "lg" ? 56 : sizeClass === "md" ? 32 : 24}
                               height={sizeClass === "lg" ? 56 : sizeClass === "md" ? 32 : 24}
                               className="group-hover:scale-110 transition-transform"
+                              unoptimized={isSvgUrl(tool.icon_url)}
+                              sizes={sizeClass === "lg" ? "56px" : sizeClass === "md" ? "32px" : "24px"}
                             />
                           ) : (
                             <ToolIcon className={`${toolColor} group-hover:scale-110 transition-transform
@@ -439,7 +468,7 @@ export function SkillsSection({ initialSkills }: SkillsSectionProps) {
                           border: '3px solid #000',
                           boxShadow: 'inset -2px -2px 0px rgba(0,0,0,0.3), inset 2px 2px 0px rgba(255,255,255,0.5)'
                         }}>
-                          <SkillIcon className="h-6 w-6 text-white" />
+                          <SkillIcon className={`h-6 w-6 ${getTextColorForBg(bgColor)}`} />
                         </div>
                       );
                     })()}
@@ -466,7 +495,7 @@ export function SkillsSection({ initialSkills }: SkillsSectionProps) {
                           return (
                             <span
                               key={idx}
-                              className={`text-[10px] sm:text-xs md:text-sm font-bold px-2 py-1 border-2 border-stone-900 ${bgColor} text-white rounded-[4px]`}
+                              className={`text-[10px] sm:text-xs md:text-sm font-bold px-2 py-1 border-2 border-stone-900 ${bgColor} ${getTextColorForBg(bgColor)} rounded-[4px]`}
                             >
                               {sub}
                             </span>
@@ -511,6 +540,8 @@ export function SkillsSection({ initialSkills }: SkillsSectionProps) {
                                   alt={cert.image_alt || `${cert.title} Certificate`}
                                   fill
                                   className="object-contain p-2"
+                                  sizes="(max-width: 640px) 90vw, (max-width: 1024px) 70vw, 640px"
+                                  unoptimized={isSvgUrl(cert.image_url)}
                                 />
                               </div>
                             )}

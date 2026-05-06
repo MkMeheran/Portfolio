@@ -42,6 +42,12 @@ function normalizeImageUrl(url?: string | null): string | null {
   }
 }
 
+function isSvgUrl(url?: string | null): boolean {
+  if (!url) return false;
+  const normalized = url.toLowerCase();
+  return normalized.endsWith(".svg") || normalized.includes(".svg?");
+}
+
 // Hero Section - Facebook/LinkedIn style with proper sizing
 function HeroSection({ profile, heroCarousel }: { profile: Profile; heroCarousel: HeroCarousel[] }) {
   const githubUrl = profile.github_url?.trim() || "https://github.com/MkMeheran";
@@ -49,6 +55,8 @@ function HeroSection({ profile, heroCarousel }: { profile: Profile; heroCarousel
   const facebookUrl = profile.facebook_url?.trim() || "https://facebook.com/Meheran216/";
   const coverUrl = normalizeImageUrl(profile.cover_url);
   const avatarUrl = normalizeImageUrl(profile.avatar_url) || "/placeholder-avatar.jpg";
+  const coverIsSvg = isSvgUrl(coverUrl);
+  const avatarIsSvg = isSvgUrl(avatarUrl);
 
   // Group carousel items by line_number
   const carouselLine1 = heroCarousel
@@ -73,6 +81,7 @@ function HeroSection({ profile, heroCarousel }: { profile: Profile; heroCarousel
               fill
               sizes="100vw"
               className="object-cover"
+              unoptimized={coverIsSvg}
               priority
             />
           ) : (
@@ -100,6 +109,7 @@ function HeroSection({ profile, heroCarousel }: { profile: Profile; heroCarousel
                 fill
                 sizes="(max-width: 768px) 210px, (max-width: 1024px) 232px, 256px"
                 className="object-cover"
+                unoptimized={avatarIsSvg}
                 priority
               />
             </div>
@@ -261,6 +271,7 @@ function FeaturedProjects({ projects }: { projects: Project[] }) {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4  gap-2 sm:gap-2.5 md:gap-3">
           {featuredProjects.map((project, index) => {
             const thumbnailUrl = normalizeImageUrl(project.thumbnail_url);
+            const thumbnailIsSvg = isSvgUrl(thumbnailUrl);
             return (
               <Card 
                 key={project.id} 
@@ -280,8 +291,9 @@ function FeaturedProjects({ projects }: { projects: Project[] }) {
                       src={thumbnailUrl}
                       alt={project.title}
                       fill
-                      sizes="(max-width: 768px) 280px, 220px"
+                      sizes="(max-width: 640px) 48vw, (max-width: 768px) 30vw, (max-width: 1024px) 23vw, 20vw"
                       className="object-cover group-hover:scale-110 transition-transform duration-300"
+                      unoptimized={thumbnailIsSvg}
                     />
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center">
@@ -358,6 +370,7 @@ function EducationSection({ education }: { education: Education[] }) {
           {education.map((edu) => {
             const isCurrent = !edu.end_date;
             const logoUrl = normalizeImageUrl(edu.logo_url);
+            const logoIsSvg = isSvgUrl(logoUrl);
             return (
             <Card key={edu.id} className="group bg-card overflow-hidden border-2 border-stone-900 rounded-lg p-4 sm:p-5" style={{ border: "3px solid #000", boxShadow: "inset -3px -3px 0px #808080, inset 3px 3px 0px #dfdfdf" }}>
               <div className="flex flex-col gap-3">
@@ -370,8 +383,9 @@ function EducationSection({ education }: { education: Education[] }) {
                         src={logoUrl}
                         alt={edu.logo_alt || edu.institution}
                         fill
-                        sizes="60px"
+                        sizes="(max-width: 640px) 48px, 56px"
                         className="object-contain p-1"
+                        unoptimized={logoIsSvg}
                       />
                     </div>
                   ) : (
@@ -462,6 +476,7 @@ function ExperienceSection({ experiences }: { experiences: Experience[] }) {
           {experiences.map((exp) => {
             const isCurrent = !exp.end_date;
             const logoUrl = normalizeImageUrl(exp.logo_url);
+            const logoIsSvg = isSvgUrl(logoUrl);
             return (
             <Card key={exp.id} className="group bg-card overflow-hidden border-2 border-stone-900 rounded-lg p-4 sm:p-5" style={{ border: "3px solid #000", boxShadow: "inset -3px -3px 0px #808080, inset 3px 3px 0px #dfdfdf" }}>
               <div className="flex items-start gap-3 sm:gap-4">
@@ -472,8 +487,9 @@ function ExperienceSection({ experiences }: { experiences: Experience[] }) {
                       src={logoUrl}
                       alt={exp.logo_alt || exp.company}
                       fill
-                      sizes="60px"
+                      sizes="(max-width: 640px) 48px, 56px"
                         className="object-contain p-1"
+                        unoptimized={logoIsSvg}
                       />
                   </div>
                 ) : (

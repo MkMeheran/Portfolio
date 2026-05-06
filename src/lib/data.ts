@@ -208,7 +208,7 @@ export async function getSkillsSectionData() {
       } as { skills: (Skill & { certificates?: Certificate[] })[]; certificates: Certificate[] };
     },
     ["skills-section-data"],
-    { revalidate: 60 }
+    { revalidate: 300 }
   );
 
   return getSkillsSectionDataCached();
@@ -366,7 +366,7 @@ export async function getHomePageData() {
       };
     },
     ["home-page-data"],
-    { revalidate: 60 }
+    { revalidate: 300 }
   );
 
   return getHomePageDataCached();

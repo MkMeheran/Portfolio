@@ -47,12 +47,15 @@ const ImageUploader = dynamic(
 );
 
 export default function GalleryAdminPage() {
+  const PAGE_SIZE = 24;
   const router = useRouter();
   const supabase = createClient();
   
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [items, setItems] = useState<Gallery[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [editingItem, setEditingItem] = useState<Partial<Gallery> | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
@@ -60,18 +63,20 @@ export default function GalleryAdminPage() {
   // Fetch all gallery items
   useEffect(() => {
     async function fetchItems() {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("gallery")
         .select("*")
-        .order("display_order", { ascending: true });
-      
+        .order("display_order", { ascending: true })
+        .range(0, page * PAGE_SIZE - 1);
+
       if (data) {
         setItems(data);
+        setHasMore(data.length >= page * PAGE_SIZE);
       }
       setIsLoading(false);
     }
     fetchItems();
-  }, [supabase]);
+  }, [supabase, page]);
 
   const handleSave = async () => {
     if (!editingItem) return;
@@ -337,6 +342,17 @@ export default function GalleryAdminPage() {
                   </CardContent>
                 </Card>
               ))}
+            </div>
+          )}
+          {hasMore && (
+            <div className="flex justify-center">
+              <Button
+                variant="outline"
+                className="admin-btn admin-btn-ghost"
+                onClick={() => setPage((prev) => prev + 1)}
+              >
+                Load More
+              </Button>
             </div>
           )}
         </div>

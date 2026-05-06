@@ -1,6 +1,6 @@
 import { Navbar, Footer } from "@/components/layout";
 
-export const revalidate = 60;
+export const revalidate = 300;
 
 export default function PublicLayout({
   children,

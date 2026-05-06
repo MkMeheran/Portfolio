@@ -78,12 +78,15 @@ const BG_COLORS = [
 ];
 
 export default function SkillsAdminPage() {
+  const PAGE_SIZE = 20;
   const router = useRouter();
   const supabase = createClient();
   
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [skills, setSkills] = useState<(Skill & { certificates?: Certificate[] })[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [editingItem, setEditingItem] = useState<Partial<Skill> | null>(null);
   const [editingCert, setEditingCert] = useState<Partial<Certificate> & { skill_id?: string } | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -94,21 +97,23 @@ export default function SkillsAdminPage() {
   // Fetch all skills with certificates
   useEffect(() => {
     async function fetchSkills() {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("skills")
         .select(`
           *,
           certificates (*)
         `)
-        .order("display_order", { ascending: true });
-      
+        .order("display_order", { ascending: true })
+        .range(0, page * PAGE_SIZE - 1);
+
       if (data) {
         setSkills(data);
+        setHasMore(data.length >= page * PAGE_SIZE);
       }
       setIsLoading(false);
     }
     fetchSkills();
-  }, [supabase]);
+  }, [supabase, page]);
 
   const handleSaveSkill = async () => {
     if (!editingItem) return;
@@ -746,6 +751,17 @@ export default function SkillsAdminPage() {
                 </Card>
               </Collapsible>
             ))
+          )}
+          {hasMore && (
+            <div className="flex justify-center">
+              <Button
+                variant="outline"
+                className="admin-btn admin-btn-ghost"
+                onClick={() => setPage((prev) => prev + 1)}
+              >
+                Load More
+              </Button>
+            </div>
           )}
         </div>
       )}

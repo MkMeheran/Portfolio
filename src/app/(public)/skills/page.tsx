@@ -201,7 +201,7 @@ function SkillCard({ skill, index }: { skill: SkillWithCertificates; index: numb
                 <h3 className="font-black text-white text-base sm:text-lg">
                   {skill.name}
                 </h3>
-                <p className="text-white/80 text-xs">{subSkills.length} capabilities</p>
+                <p className="text-black/80 text-xs">{subSkills.length} capabilities</p>
               </div>
             </div>
             {skill.has_certificates && (

@@ -58,6 +58,8 @@ export function Navbar() {
               alt="Meheran logo"
               fill
               className="object-contain p-1"
+              unoptimized
+              sizes="40px"
             />
           </div>
           <div>

@@ -77,12 +77,15 @@ const BG_COLORS = [
 ];
 
 export default function ToolsAdminPage() {
+  const PAGE_SIZE = 24;
   const router = useRouter();
   const supabase = createClient();
   
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [tools, setTools] = useState<Tool[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [editingItem, setEditingItem] = useState<Partial<Tool> | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
@@ -90,18 +93,20 @@ export default function ToolsAdminPage() {
   // Fetch all tools
   useEffect(() => {
     async function fetchTools() {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("tools")
         .select("*")
-        .order("display_order", { ascending: true });
-      
+        .order("display_order", { ascending: true })
+        .range(0, page * PAGE_SIZE - 1);
+
       if (data) {
         setTools(data);
+        setHasMore(data.length >= page * PAGE_SIZE);
       }
       setIsLoading(false);
     }
     fetchTools();
-  }, [supabase]);
+  }, [supabase, page]);
 
   const handleSave = async () => {
     // Validation
@@ -557,6 +562,17 @@ export default function ToolsAdminPage() {
                 </CardContent>
               </Card>
             ))
+          )}
+          {hasMore && (
+            <div className="flex justify-center">
+              <Button
+                variant="outline"
+                className="admin-btn admin-btn-ghost"
+                onClick={() => setPage((prev) => prev + 1)}
+              >
+                Load More
+              </Button>
+            </div>
           )}
         </div>
       )}

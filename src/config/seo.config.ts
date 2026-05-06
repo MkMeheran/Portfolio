@@ -378,7 +378,7 @@ export async function getProfileImage() {
       }
     },
     ["seo-profile-image"],
-    { revalidate: 60 }
+    { revalidate: 300 }
   );
 
   return getProfileImageCached();

@@ -49,12 +49,15 @@ const ImageUploader = dynamic(
 );
 
 export default function ProjectsAdminPage() {
+  const PAGE_SIZE = 20;
   const router = useRouter();
   const supabase = createClient();
   
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [editingItem, setEditingItem] = useState<Partial<Project> | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
@@ -62,18 +65,20 @@ export default function ProjectsAdminPage() {
   // Fetch all projects
   useEffect(() => {
     async function fetchProjects() {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("projects")
         .select("*")
-        .order("display_order", { ascending: true });
-      
+        .order("display_order", { ascending: true })
+        .range(0, page * PAGE_SIZE - 1);
+
       if (data) {
         setProjects(data);
+        setHasMore(data.length >= page * PAGE_SIZE);
       }
       setIsLoading(false);
     }
     fetchProjects();
-  }, [supabase]);
+  }, [supabase, page]);
 
   const handleSave = async () => {
     if (!editingItem) return;
@@ -497,6 +502,17 @@ export default function ProjectsAdminPage() {
                 </CardContent>
               </Card>
             ))
+          )}
+          {hasMore && (
+            <div className="flex justify-center">
+              <Button
+                variant="outline"
+                className="admin-btn admin-btn-ghost"
+                onClick={() => setPage((prev) => prev + 1)}
+              >
+                Load More
+              </Button>
+            </div>
           )}
         </div>
       )}

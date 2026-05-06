@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk, JetBrains_Mono, Space_Mono } from "next/font/google";
+import Script from "next/script";
 import { createClient as createServerSupabase } from "@/lib/supabase/server";
 import { Toaster } from "@/components/ui/sonner";
 import { seoConfig, getAllKeywords, getDynamicStructuredData, getProfileImage } from "@/config/seo.config";
@@ -124,18 +125,21 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning className="scroll-smooth">
       <head>
         {/* Favicon is handled by metadata.icons dynamically */}
-        {/* Google tag (gtag.js) */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-K9KSZZ240J" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: [
-              "window.dataLayer = window.dataLayer || [];",
-              "function gtag(){dataLayer.push(arguments);}",
-              "gtag('js', new Date());",
-              "gtag('config', 'G-K9KSZZ240J');",
-            ].join("\n"),
-          }}
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        {/* Defer analytics script to reduce impact on first render */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-K9KSZZ240J"
+          strategy="lazyOnload"
         />
+        <Script id="ga-init" strategy="lazyOnload">
+          {[
+            "window.dataLayer = window.dataLayer || [];",
+            "function gtag(){dataLayer.push(arguments);}",
+            "gtag('js', new Date());",
+            "gtag('config', 'G-K9KSZZ240J');",
+          ].join("\n")}
+        </Script>
         <meta name="google-site-verification" content="yPE4By05HKPLCJixD1j0XOaJac_s8bd2QzyFsspipEA" />
         {/* JSON-LD Structured Data for Google (with dynamic profile image) */}
         <script

@@ -44,12 +44,15 @@ const ImageUploader = dynamic(
 );
 
 export default function ExperienceAdminPage() {
+  const PAGE_SIZE = 20;
   const router = useRouter();
   const supabase = createClient();
   
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [experiences, setExperiences] = useState<Experience[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [editingItem, setEditingItem] = useState<Partial<Experience> | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
@@ -57,18 +60,20 @@ export default function ExperienceAdminPage() {
   // Fetch all experiences
   useEffect(() => {
     async function fetchExperiences() {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("experience")
         .select("*")
-        .order("display_order", { ascending: true });
-      
+        .order("display_order", { ascending: true })
+        .range(0, page * PAGE_SIZE - 1);
+
       if (data) {
         setExperiences(data);
+        setHasMore(data.length >= page * PAGE_SIZE);
       }
       setIsLoading(false);
     }
     fetchExperiences();
-  }, [supabase]);
+  }, [supabase, page]);
 
   const handleSave = async () => {
     if (!editingItem) return;
@@ -506,6 +511,17 @@ export default function ExperienceAdminPage() {
                 </CardContent>
               </Card>
             ))
+          )}
+          {hasMore && (
+            <div className="flex justify-center">
+              <Button
+                variant="outline"
+                className="admin-btn admin-btn-ghost"
+                onClick={() => setPage((prev) => prev + 1)}
+              >
+                Load More
+              </Button>
+            </div>
           )}
         </div>
       )}
