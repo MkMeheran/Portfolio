@@ -120,23 +120,56 @@ function isSvgUrl(url?: string | null): boolean {
 
 // Helper to determine text color based on background class
 function getTextColorForBg(bgClass: string): string {
-  const lightBgs = [
-    'bg-white', 'bg-stone-50', 'bg-stone-100', 'bg-stone-200',
-    'bg-gray-50', 'bg-gray-100', 'bg-gray-200',
-    'bg-slate-50', 'bg-slate-100',
-    'bg-amber-50', 'bg-amber-100', 'bg-amber-200',
-    'bg-yellow-50', 'bg-yellow-100', 'bg-yellow-200',
-    'bg-orange-50', 'bg-orange-100',
-    'bg-pink-50', 'bg-pink-100',
-    'bg-rose-50', 'bg-rose-100',
-    'bg-purple-50', 'bg-purple-100',
-    'bg-violet-50', 'bg-violet-100',
-    'bg-blue-50', 'bg-blue-100', 'bg-blue-200',
-    'bg-green-50', 'bg-green-100',
-    'bg-emerald-50', 'bg-emerald-100',
-    'bg-cyan-50', 'bg-cyan-100'
-  ];
-  return lightBgs.includes(bgClass) ? 'text-stone-900' : 'text-white';
+  const normalized = bgClass.toLowerCase();
+
+  // Handle explicit black/dark classes first
+  if (
+    normalized.includes("black") ||
+    normalized.includes("stone-900") ||
+    normalized.includes("gray-900") ||
+    normalized.includes("slate-900") ||
+    normalized.includes("zinc-900")
+  ) {
+    return "text-white";
+  }
+
+  // White or very light backgrounds should always get dark icon/text
+  if (normalized.includes("white")) {
+    return "text-stone-900";
+  }
+
+  // Parse Tailwind color shade, including opacity suffixes like bg-sky-200/80
+  const shadeMatch = normalized.match(/bg-[a-z]+-(\d{2,3})(?:\/\d+)?/);
+  if (shadeMatch) {
+    const shade = Number(shadeMatch[1]);
+    // 50-400: light background => dark icon, 500+: dark background => white icon
+    return shade <= 400 ? "text-stone-900" : "text-white";
+  }
+
+  // Fallback: prefer dark icon so it stays visible on unknown/light backgrounds
+  return "text-stone-900";
+}
+
+function getBgClass(bgColor?: string | null): string {
+  const value = bgColor?.trim();
+  if (!value) return "bg-emerald-500";
+  return value.startsWith("bg-") ? value : `bg-${value}`;
+}
+
+function getIconBgClass(bgColor?: string | null): string {
+  const bgClass = getBgClass(bgColor);
+  const normalized = bgClass.toLowerCase();
+
+  // Never allow white/light backgrounds for icon tiles.
+  if (normalized.includes("white")) return "bg-emerald-600";
+
+  const shadeMatch = normalized.match(/bg-[a-z]+-(\d{2,3})(?:\/\d+)?/);
+  if (shadeMatch) {
+    const shade = Number(shadeMatch[1]);
+    if (shade <= 400) return "bg-emerald-600";
+  }
+
+  return bgClass;
 }
 
 interface SkillsSectionProps {
@@ -298,7 +331,8 @@ export function SkillsSection({ initialSkills }: SkillsSectionProps) {
                   ) : (
                     displaySkills.map((skill) => {
                       const SkillIcon = getSkillIcon(skill.name);
-                      const bgColor = skill.bg_color ? `bg-${skill.bg_color}` : "bg-emerald-500";
+                      const bgColor = getBgClass(skill.bg_color);
+                      const iconBgColor = getIconBgClass(skill.bg_color);
                       return (
                         <div
                           key={skill.id}
@@ -314,8 +348,8 @@ export function SkillsSection({ initialSkills }: SkillsSectionProps) {
                           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/20 via-transparent to-fuchsia-400/20" />
                           </div>
-                          <div className={`relative z-10 p-1.5 ${bgColor} border-2 border-stone-900 rounded-sm shrink-0`}>
-                            <SkillIcon className={`h-5 w-5 ${getTextColorForBg(bgColor)}`} />
+                          <div className={`relative z-10 p-1.5 ${iconBgColor} border-2 border-stone-900 rounded-sm shrink-0`}>
+                            <SkillIcon className={`h-5 w-5 ${getTextColorForBg(iconBgColor)}`} />
                           </div>
                           <span className="relative z-10 text-base min-[480px]:text-lg font-bold flex-1 text-stone-800 font-[family-name:var(--font-space)]">{skill.name}</span>
                           {skill.has_certificates && (
@@ -462,13 +496,14 @@ export function SkillsSection({ initialSkills }: SkillsSectionProps) {
                   <div className="flex items-center gap-3">
                     {(() => {
                       const SkillIcon = getSkillIcon(selectedSkill.name);
-                      const bgColor = selectedSkill.bg_color ? `bg-${selectedSkill.bg_color}` : "bg-emerald-500";
+                      const bgColor = getBgClass(selectedSkill.bg_color);
+                      const iconBgColor = getIconBgClass(selectedSkill.bg_color);
                       return (
-                        <div className={`p-2 ${bgColor} border-2 border-stone-900 rounded-[4px]`} style={{
+                        <div className={`p-2 ${iconBgColor} border-2 border-stone-900 rounded-[4px]`} style={{
                           border: '3px solid #000',
                           boxShadow: 'inset -2px -2px 0px rgba(0,0,0,0.3), inset 2px 2px 0px rgba(255,255,255,0.5)'
                         }}>
-                          <SkillIcon className={`h-6 w-6 ${getTextColorForBg(bgColor)}`} />
+                          <SkillIcon className={`h-6 w-6 ${getTextColorForBg(iconBgColor)}`} />
                         </div>
                       );
                     })()}
@@ -491,7 +526,7 @@ export function SkillsSection({ initialSkills }: SkillsSectionProps) {
                       </h5>
                       <div className="flex flex-wrap gap-1.5">
                         {selectedSkill.sub_skills.map((sub, idx) => {
-                          const bgColor = selectedSkill.bg_color ? `bg-${selectedSkill.bg_color}` : "bg-emerald-500";
+                          const bgColor = getBgClass(selectedSkill.bg_color);
                           return (
                             <span
                               key={idx}
@@ -514,7 +549,7 @@ export function SkillsSection({ initialSkills }: SkillsSectionProps) {
                       </h5>
                       <div className="space-y-3">
                         {selectedSkill.certificates.map((cert, idx) => (
-                          <div key={cert.id} className="relative bg-gradient-to-br from-amber-100 to-purple-100 border-2 border-stone-900 p-3 w-full rounded-[4px]">
+                          <div key={cert.id} className="relative bg-gradient-to-br from-amber-100 to-violet-100 border-2 border-stone-900 p-3 w-full rounded-[4px]">
                             
                             {/* Certificate Title - Center */}
                             <h6 className="text-sm sm:text-base md:text-lg font-bold text-stone-900 font-[family-name:var(--font-space-mono)] mb-1 tracking-tight text-center">
@@ -530,7 +565,7 @@ export function SkillsSection({ initialSkills }: SkillsSectionProps) {
 
                             {/* Certificate Image */}
                             {cert.image_url && (
-                              <div className="relative bg-white border border-stone-900 mb-2 overflow-hidden rounded-[4px] z-0"
+                              <div className="relative bg-stone-100 border border-stone-900 mb-2 overflow-hidden rounded-[4px] z-0"
                                 style={{
                                   aspectRatio: '16/9',
                                 }}
@@ -559,7 +594,7 @@ export function SkillsSection({ initialSkills }: SkillsSectionProps) {
                                   </div>
                                 )}
                                 {cert.credential_id && (
-                                  <span className="text-[10px] sm:text-xs md:text-sm text-stone-600 font-medium">
+                                  <span className="text-[10px] sm:text-xs md:text-sm text-stone-800 font-semibold">
                                     ID: {cert.credential_id}
                                   </span>
                                 )}
@@ -632,7 +667,8 @@ export function SkillsSection({ initialSkills }: SkillsSectionProps) {
                   ) : (
                     displaySkills.map((skill) => {
                       const SkillIcon = getSkillIcon(skill.name);
-                      const bgColor = skill.bg_color ? `bg-${skill.bg_color}` : "bg-emerald-500";
+                      const bgColor = getBgClass(skill.bg_color);
+                      const iconBgColor = getIconBgClass(skill.bg_color);
                       return (
                         <div
                           key={skill.id}
@@ -644,8 +680,8 @@ export function SkillsSection({ initialSkills }: SkillsSectionProps) {
                             cursor: 'pointer'
                           }}
                         >
-                          <div className={`p-2 min-[480px]:p-2.5 ${bgColor} border-2 border-stone-900 rounded-sm shrink-0`}>
-                            <SkillIcon className="h-5 w-5 min-[480px]:h-6 min-[480px]:w-6 text-white" />
+                          <div className={`p-2 min-[480px]:p-2.5 ${iconBgColor} border-2 border-stone-900 rounded-sm shrink-0`}>
+                            <SkillIcon className={`h-5 w-5 min-[480px]:h-6 min-[480px]:w-6 ${getTextColorForBg(iconBgColor)}`} />
                           </div>
                           <div className="flex-1 min-w-0">
                             <h4 className="font-bold text-base min-[480px]:text-lg font-[family-name:var(--font-space)]">{skill.name}</h4>

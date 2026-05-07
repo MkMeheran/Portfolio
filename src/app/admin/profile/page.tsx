@@ -4,29 +4,44 @@ import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { AdminHeader } from "@/components/admin";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
-import { Save, Loader2, Eye, User, Link as LinkIcon, Globe, Search } from "lucide-react";
+import { Save, Loader2, Eye, User, Link as LinkIcon, Globe, Search, Settings } from "lucide-react";
 import { toast } from "sonner";
 import Image from "next/image";
 import type { Profile } from "@/types/database.types";
 
+// ─── dynamic imports ─────────────────────────────────────────────────────────
 const ImageUploader = dynamic(
   () => import("@/components/admin/image-uploader").then((mod) => mod.ImageUploader),
   {
     ssr: false,
-    loading: () => (
-      <div className="text-xs text-muted-foreground">Loading uploader...</div>
-    ),
+    loading: () => <div className="text-sm font-black text-stone-500 font-[family-name:var(--font-space-mono)]">Loading uploader...</div>,
   }
 );
 
+// ─── NES shadow tokens ────────────────────────────────────────────────────────
+const nesRaised  = "inset -3px -3px 0px #6b6b6b, inset 3px 3px 0px #e0d8cc";
+const nesPressed = "inset 2px 2px 0px #6b6b6b, inset -1px -1px 0px #e0d8cc";
+
+// ─── Reusable NES-style input wrapper ─────────────────────────────────────────
+const nesInputCls =
+  "w-full px-3 py-2.5 text-base font-medium text-stone-900 bg-stone-50 " +
+  "border-2 border-stone-900 rounded focus:outline-none focus:border-amber-600 " +
+  "placeholder:text-stone-400 font-[family-name:var(--font-space)]";
+
+// ─── Field label ──────────────────────────────────────────────────────────────
+function FieldLabel({ htmlFor, children }: { htmlFor?: string; children: React.ReactNode }) {
+  return (
+    <label
+      htmlFor={htmlFor}
+      className="block text-sm font-black text-stone-800 mb-1 font-[family-name:var(--font-space-mono)]"
+    >
+      {children}
+    </label>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 export default function ProfileAdminPage() {
   const router = useRouter();
   const supabase = createClient();
@@ -92,363 +107,478 @@ export default function ProfileAdminPage() {
           })
           .eq("id", existing.id);
 
-        if (error) {
-          console.error("Update error:", error);
-          throw error;
-        }
+        if (error) throw error;
       } else {
         // Insert
         const { error } = await supabase
           .from("profile")
           .insert([formData]);
 
-        if (error) {
-          console.error("Insert error:", error);
-          throw error;
-        }
+        if (error) throw error;
       }
 
       toast.success("Profile saved!");
       router.refresh();
     } catch (error) {
       console.error("Save error:", error);
-      const errorMessage = error instanceof Error ? error.message : "Failed to save";
-      toast.error(errorMessage);
+      toast.error(error instanceof Error ? error.message : "Failed to save");
     } finally {
       setIsSaving(false);
     }
   };
 
+  // ── Loading screen ────────────────────────────────────────────────────────
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      <div className="flex flex-col items-center justify-center min-h-[40vh] gap-3">
+        <div
+          className="flex items-center justify-center h-14 w-14 bg-amber-100 border-2 border-stone-900 rounded"
+          style={{ boxShadow: nesRaised }}
+        >
+          <Loader2 className="h-7 w-7 animate-spin text-stone-700" />
+        </div>
+        <p className="text-sm font-black text-stone-600 font-[family-name:var(--font-space-mono)]">Loading profile...</p>
       </div>
     );
   }
 
   return (
-    <div>
-      <AdminHeader
-        title="Profile"
-        description="Edit your personal information"
-        actions={
-          <div className="flex flex-wrap gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setShowPreview(!showPreview)}
-              className="admin-btn admin-btn-ghost"
-            >
-              <Eye className="h-4 w-4 mr-2" />
-              {showPreview ? "Edit" : "Preview"}
-            </Button>
-            <Button onClick={handleSave} disabled={isSaving} className="admin-btn admin-btn-primary">
-              {isSaving ? (
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              ) : (
-                <Save className="h-4 w-4 mr-2" />
-              )}
-              Save
-            </Button>
-          </div>
-        }
-      />
+    <div className="min-h-screen bg-stone-300 pb-8">
+      <div className="max-w-3xl mx-auto px-2 sm:px-4 pt-4 space-y-6">
 
-      {showPreview ? (
-        // Preview Mode
-        <Card className="admin-card">
-          <CardContent className="pt-6">
+        {/* ── Page header ── */}
+        <div
+          className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between
+                     bg-amber-200 border-2 border-stone-900 rounded px-3 py-3"
+          style={{ boxShadow: nesRaised }}
+        >
+          <div className="flex items-center gap-3">
+            <div
+              className="flex items-center justify-center h-11 w-11 bg-amber-400 border-2 border-stone-900 rounded shrink-0"
+              style={{ boxShadow: nesRaised }}
+            >
+              <Settings className="h-6 w-6 text-stone-900" />
+            </div>
+            <div>
+              <h1 className="text-xl font-black text-stone-900 font-[family-name:var(--font-space-mono)] leading-tight">
+                Profile Settings
+              </h1>
+              <p className="text-sm font-medium text-stone-600 font-[family-name:var(--font-space)]">
+                Edit your personal information
+              </p>
+            </div>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex gap-2 flex-wrap">
+            <button
+              onClick={() => setShowPreview(!showPreview)}
+              className="flex items-center gap-2 px-3 py-2 bg-stone-100 text-stone-900
+                         text-sm font-black border-2 border-stone-900 rounded
+                         font-[family-name:var(--font-space-mono)] transition-transform active:scale-95"
+              style={{ boxShadow: nesRaised }}
+            >
+              <Eye className="h-4 w-4" />
+              {showPreview ? "Edit" : "Preview"}
+            </button>
+            <button
+              onClick={handleSave}
+              disabled={isSaving}
+              className="flex items-center gap-2 px-4 py-2 bg-lime-400 text-stone-900
+                         text-sm font-black border-2 border-stone-900 rounded
+                         font-[family-name:var(--font-space-mono)] transition-transform active:scale-95 disabled:opacity-60"
+              style={{ boxShadow: nesRaised }}
+            >
+              {isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+              Save
+            </button>
+          </div>
+        </div>
+
+        {/* ════════════════════ PREVIEW MODE ════════════════════ */}
+        {showPreview ? (
+          <div
+            className="border-2 border-stone-900 rounded bg-stone-100 overflow-hidden"
+            style={{ boxShadow: nesRaised }}
+          >
             <div className="relative">
               {/* Cover */}
-              {formData.cover_url ? (
-                <div className="relative h-32 rounded-[4px] overflow-hidden border-2 border-stone-900">
+              <div className="h-32 sm:h-48 border-b-2 border-stone-900 bg-stone-200">
+                {formData.cover_url ? (
                   <Image
                     src={formData.cover_url}
                     alt={formData.name || "Cover"}
-                    fill
-                    className="object-cover"
+                    width={1200}
+                    height={320}
+                    className="object-cover w-full h-full"
                   />
-                </div>
-              ) : (
-                <div className="h-32 bg-gradient-to-r from-amber-200 to-orange-100 rounded-[4px] border-2 border-stone-900" />
-              )}
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-r from-amber-300 to-orange-300" />
+                )}
+              </div>
               
               {/* Avatar */}
               <div className="absolute left-6 -bottom-12">
-                <div className="relative h-24 w-24 rounded-[4px] border-2 border-stone-900 overflow-hidden bg-muted">
+                <div 
+                  className="h-24 w-24 sm:h-28 sm:w-28 bg-stone-100 border-2 border-stone-900 rounded flex items-center justify-center overflow-hidden"
+                  style={{ boxShadow: nesRaised }}
+                >
                   {formData.avatar_url ? (
                     <Image
                       src={formData.avatar_url}
                       alt={formData.name || "Avatar"}
-                      fill
-                      className="object-cover"
+                      width={112}
+                      height={112}
+                      className="object-cover w-full h-full"
                     />
                   ) : (
-                    <div className="flex items-center justify-center h-full">
-                      <User className="h-8 w-8 text-muted-foreground" />
-                    </div>
+                    <User className="h-10 w-10 text-stone-400" />
                   )}
                 </div>
               </div>
             </div>
             
-            <div className="mt-16 space-y-2">
-              <h2 className="text-2xl font-bold">{formData.name || "Name"}</h2>
-              <p className="text-lg text-muted-foreground">{formData.title || "Title"}</p>
-              <p className="text-sm text-muted-foreground">{formData.subtitle}</p>
-              <p className="text-sm">{formData.location}</p>
-              <p className="mt-4 text-sm whitespace-pre-wrap">{formData.bio}</p>
+            <div className="pt-16 px-6 pb-6 space-y-3">
+              <div>
+                <h2 className="text-2xl font-black text-stone-900 font-[family-name:var(--font-space-mono)]">
+                  {formData.name || "YOUR NAME"}
+                </h2>
+                <p className="text-lg font-bold text-amber-700 font-[family-name:var(--font-space-mono)]">
+                  {formData.title || "YOUR TITLE"}
+                </p>
+                <p className="text-sm font-medium text-stone-600 font-[family-name:var(--font-space)] mt-1">
+                  {formData.subtitle}
+                </p>
+              </div>
+              
+              <div className="flex items-center gap-2 text-stone-700">
+                <Globe className="h-4 w-4" />
+                <span className="text-sm font-bold font-[family-name:var(--font-space-mono)]">
+                  {formData.location || "Location not set"}
+                </span>
+              </div>
+              
+              <div className="pt-4 border-t-2 border-stone-300">
+                <p className="text-base font-medium text-stone-800 whitespace-pre-wrap font-[family-name:var(--font-space)] leading-relaxed">
+                  {formData.bio || "No bio available."}
+                </p>
+              </div>
             </div>
-          </CardContent>
-        </Card>
-      ) : (
-        // Edit Mode
-        <Tabs defaultValue="basic" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
-            <TabsTrigger value="basic">
-              <User className="h-4 w-4 mr-2" />
-              Basic
-            </TabsTrigger>
-            <TabsTrigger value="images">
-              <LinkIcon className="h-4 w-4 mr-2" />
-              Images
-            </TabsTrigger>
-            <TabsTrigger value="social">
-              <Globe className="h-4 w-4 mr-2" />
-              Social
-            </TabsTrigger>
-            <TabsTrigger value="seo">
-              <Search className="h-4 w-4 mr-2" />
-              SEO
-            </TabsTrigger>
-          </TabsList>
+          </div>
+        ) : (
+          /* ════════════════════ EDIT MODE ════════════════════ */
+          <Tabs defaultValue="basic" className="space-y-6">
+            
+            {/* Custom styled Retro Tabs */}
+            <TabsList className="flex flex-wrap gap-2 h-auto bg-transparent p-0 w-full justify-start">
+              <TabsTrigger
+                value="basic"
+                className="data-[state=active]:bg-amber-400 data-[state=active]:text-stone-900 data-[state=active]:border-stone-900 
+                           data-[state=inactive]:bg-stone-200 data-[state=inactive]:text-stone-600 data-[state=inactive]:border-stone-400
+                           border-2 rounded px-4 py-2 text-sm font-black font-[family-name:var(--font-space-mono)] transition-all"
+                style={{ boxShadow: nesRaised }}
+              >
+                <User className="h-4 w-4 mr-2" /> Basic
+              </TabsTrigger>
+              <TabsTrigger
+                value="images"
+                className="data-[state=active]:bg-fuchsia-400 data-[state=active]:text-stone-900 data-[state=active]:border-stone-900 
+                           data-[state=inactive]:bg-stone-200 data-[state=inactive]:text-stone-600 data-[state=inactive]:border-stone-400
+                           border-2 rounded px-4 py-2 text-sm font-black font-[family-name:var(--font-space-mono)] transition-all"
+                style={{ boxShadow: nesRaised }}
+              >
+                <LinkIcon className="h-4 w-4 mr-2" /> Images
+              </TabsTrigger>
+              <TabsTrigger
+                value="social"
+                className="data-[state=active]:bg-cyan-400 data-[state=active]:text-stone-900 data-[state=active]:border-stone-900 
+                           data-[state=inactive]:bg-stone-200 data-[state=inactive]:text-stone-600 data-[state=inactive]:border-stone-400
+                           border-2 rounded px-4 py-2 text-sm font-black font-[family-name:var(--font-space-mono)] transition-all"
+                style={{ boxShadow: nesRaised }}
+              >
+                <Globe className="h-4 w-4 mr-2" /> Social
+              </TabsTrigger>
+              <TabsTrigger
+                value="seo"
+                className="data-[state=active]:bg-lime-400 data-[state=active]:text-stone-900 data-[state=active]:border-stone-900 
+                           data-[state=inactive]:bg-stone-200 data-[state=inactive]:text-stone-600 data-[state=inactive]:border-stone-400
+                           border-2 rounded px-4 py-2 text-sm font-black font-[family-name:var(--font-space-mono)] transition-all"
+                style={{ boxShadow: nesRaised }}
+              >
+                <Search className="h-4 w-4 mr-2" /> SEO
+              </TabsTrigger>
+            </TabsList>
 
-          {/* Basic Info */}
-          <TabsContent value="basic">
-            <Card className="admin-card">
-              <CardHeader>
-                <CardTitle>Basic Information</CardTitle>
-                <CardDescription>Your name, title and bio</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Name *</Label>
-                    <Input
-                      id="name"
-                      value={formData.name || ""}
-                      onChange={(e) => handleChange("name", e.target.value)}
-                      placeholder="Your name"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="title">Title *</Label>
-                    <Input
-                      id="title"
-                      value={formData.title || ""}
-                      onChange={(e) => handleChange("title", e.target.value)}
-                      placeholder="e.g.: Web Developer"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="subtitle">Subtitle</Label>
-                  <Input
-                    id="subtitle"
-                    value={formData.subtitle || ""}
-                    onChange={(e) => handleChange("subtitle", e.target.value)}
-                    placeholder="e.g.: KUET | Student ID: 2417012"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="bio">Bio</Label>
-                  <Textarea
-                    id="bio"
-                    value={formData.bio || ""}
-                    onChange={(e) => handleChange("bio", e.target.value)}
-                    placeholder="Write something about yourself..."
-                    rows={6}
-                  />
-                </div>
-
-                <Separator />
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="location">Location</Label>
-                    <Input
-                      id="location"
-                      value={formData.location || ""}
-                      onChange={(e) => handleChange("location", e.target.value)}
-                      placeholder="e.g.: Dhaka, Bangladesh"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={formData.email || ""}
-                      onChange={(e) => handleChange("email", e.target.value)}
-                      placeholder="your@email.com"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone</Label>
-                  <Input
-                    id="phone"
-                    value={formData.phone || ""}
-                    onChange={(e) => handleChange("phone", e.target.value)}
-                    placeholder="+880 1XXX XXXXXX"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Images */}
-          <TabsContent value="images">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card className="admin-card">
-                <CardHeader>
-                  <CardTitle>Profile Picture</CardTitle>
-                  <CardDescription>Your avatar image</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ImageUploader
-                    value={formData.avatar_url || ""}
-                    onChange={(url) => handleChange("avatar_url", url)}
-                    preset="avatar"
-                    folder="profile"
-                  />
-                </CardContent>
-              </Card>
-
-              <Card className="admin-card">
-                <CardHeader>
-                  <CardTitle>Cover Image</CardTitle>
-                  <CardDescription>Profile background image</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ImageUploader
-                    value={formData.cover_url || ""}
-                    onChange={(url) => handleChange("cover_url", url)}
-                    preset="cover"
-                    folder="profile"
-                  />
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          {/* Social Links */}
-          <TabsContent value="social">
-            <Card className="admin-card">
-              <CardHeader>
-                <CardTitle>Social Media Links</CardTitle>
-                <CardDescription>Your social profile links</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="github">GitHub</Label>
-                    <Input
-                      id="github"
-                      value={formData.github_url || ""}
-                      onChange={(e) => handleChange("github_url", e.target.value)}
-                      placeholder="https://github.com/username"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="linkedin">LinkedIn</Label>
-                    <Input
-                      id="linkedin"
-                      value={formData.linkedin_url || ""}
-                      onChange={(e) => handleChange("linkedin_url", e.target.value)}
-                      placeholder="https://linkedin.com/in/username"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="facebook">Facebook</Label>
-                    <Input
-                      id="facebook"
-                      value={formData.facebook_url || ""}
-                      onChange={(e) => handleChange("facebook_url", e.target.value)}
-                      placeholder="https://facebook.com/username"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="twitter">Twitter / X</Label>
-                    <Input
-                      id="twitter"
-                      value={formData.twitter_url || ""}
-                      onChange={(e) => handleChange("twitter_url", e.target.value)}
-                      placeholder="https://twitter.com/username"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="whatsapp">WhatsApp</Label>
-                  <Input
-                    id="whatsapp"
-                    value={formData.whatsapp_url || ""}
-                    onChange={(e) => handleChange("whatsapp_url", e.target.value)}
-                    placeholder="https://wa.link/xxxxx"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* SEO */}
-          <TabsContent value="seo">
-            <Card className="admin-card">
-              <CardHeader>
-                <CardTitle>SEO Settings</CardTitle>
-                <CardDescription>Search engine optimization</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="meta_title">Meta Title</Label>
-                  <Input
-                    id="meta_title"
-                    value={formData.meta_title || ""}
-                    onChange={(e) => handleChange("meta_title", e.target.value)}
-                    placeholder="Page title (up to 60 characters)"
-                    maxLength={60}
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    {(formData.meta_title || "").length}/60 characters
+            {/* ── Basic Info Tab ── */}
+            <TabsContent value="basic" className="mt-0 outline-none">
+              <div className="border-2 border-stone-900 rounded bg-stone-100" style={{ boxShadow: nesRaised }}>
+                <div className="bg-amber-400 px-4 py-3 border-b-2 border-stone-900 rounded-t">
+                  <h2 className="text-base font-black text-stone-900 font-[family-name:var(--font-space-mono)]">
+                    📝 Basic Information
+                  </h2>
+                  <p className="text-xs font-bold text-stone-800 font-[family-name:var(--font-space)] mt-0.5">
+                    Your name, title and bio
                   </p>
                 </div>
+                <div className="p-4 space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <FieldLabel htmlFor="name">Name *</FieldLabel>
+                      <input
+                        id="name"
+                        className={nesInputCls}
+                        style={{ boxShadow: nesPressed }}
+                        value={formData.name || ""}
+                        onChange={(e) => handleChange("name", e.target.value)}
+                        placeholder="Your name"
+                      />
+                    </div>
+                    <div>
+                      <FieldLabel htmlFor="title">Title *</FieldLabel>
+                      <input
+                        id="title"
+                        className={nesInputCls}
+                        style={{ boxShadow: nesPressed }}
+                        value={formData.title || ""}
+                        onChange={(e) => handleChange("title", e.target.value)}
+                        placeholder="e.g.: Web Developer"
+                      />
+                    </div>
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="meta_description">Meta Description</Label>
-                  <Textarea
-                    id="meta_description"
-                    value={formData.meta_description || ""}
-                    onChange={(e) => handleChange("meta_description", e.target.value)}
-                    placeholder="Brief description (up to 160 characters)"
-                    maxLength={160}
-                    rows={3}
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    {(formData.meta_description || "").length}/160 characters
+                  <div>
+                    <FieldLabel htmlFor="subtitle">Subtitle</FieldLabel>
+                    <input
+                      id="subtitle"
+                      className={nesInputCls}
+                      style={{ boxShadow: nesPressed }}
+                      value={formData.subtitle || ""}
+                      onChange={(e) => handleChange("subtitle", e.target.value)}
+                      placeholder="e.g.: KUET | Student ID: 2417012"
+                    />
+                  </div>
+
+                  <div>
+                    <FieldLabel htmlFor="bio">Bio</FieldLabel>
+                    <textarea
+                      id="bio"
+                      className={nesInputCls}
+                      style={{ boxShadow: nesPressed }}
+                      value={formData.bio || ""}
+                      onChange={(e) => handleChange("bio", e.target.value)}
+                      placeholder="Write something about yourself..."
+                      rows={5}
+                    />
+                  </div>
+
+                  <div className="h-0.5 w-full bg-stone-900 my-4 opacity-20"></div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <FieldLabel htmlFor="location">Location</FieldLabel>
+                      <input
+                        id="location"
+                        className={nesInputCls}
+                        style={{ boxShadow: nesPressed }}
+                        value={formData.location || ""}
+                        onChange={(e) => handleChange("location", e.target.value)}
+                        placeholder="e.g.: Dhaka, Bangladesh"
+                      />
+                    </div>
+                    <div>
+                      <FieldLabel htmlFor="email">Email</FieldLabel>
+                      <input
+                        id="email"
+                        type="email"
+                        className={nesInputCls}
+                        style={{ boxShadow: nesPressed }}
+                        value={formData.email || ""}
+                        onChange={(e) => handleChange("email", e.target.value)}
+                        placeholder="your@email.com"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <FieldLabel htmlFor="phone">Phone</FieldLabel>
+                    <input
+                      id="phone"
+                      className={nesInputCls}
+                      style={{ boxShadow: nesPressed }}
+                      value={formData.phone || ""}
+                      onChange={(e) => handleChange("phone", e.target.value)}
+                      placeholder="+880 1XXX XXXXXX"
+                    />
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* ── Images Tab ── */}
+            <TabsContent value="images" className="mt-0 outline-none">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="border-2 border-stone-900 rounded bg-stone-100" style={{ boxShadow: nesRaised }}>
+                  <div className="bg-fuchsia-400 px-4 py-3 border-b-2 border-stone-900 rounded-t">
+                    <h2 className="text-base font-black text-stone-900 font-[family-name:var(--font-space-mono)]">
+                      📸 Profile Picture
+                    </h2>
+                  </div>
+                  <div className="p-4">
+                    <ImageUploader
+                      value={formData.avatar_url || ""}
+                      onChange={(url) => handleChange("avatar_url", url)}
+                      preset="avatar"
+                      folder="profile"
+                    />
+                  </div>
+                </div>
+
+                <div className="border-2 border-stone-900 rounded bg-stone-100" style={{ boxShadow: nesRaised }}>
+                  <div className="bg-fuchsia-400 px-4 py-3 border-b-2 border-stone-900 rounded-t">
+                    <h2 className="text-base font-black text-stone-900 font-[family-name:var(--font-space-mono)]">
+                      🖼️ Cover Image
+                    </h2>
+                  </div>
+                  <div className="p-4">
+                    <ImageUploader
+                      value={formData.cover_url || ""}
+                      onChange={(url) => handleChange("cover_url", url)}
+                      preset="cover"
+                      folder="profile"
+                    />
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* ── Social Links Tab ── */}
+            <TabsContent value="social" className="mt-0 outline-none">
+              <div className="border-2 border-stone-900 rounded bg-stone-100" style={{ boxShadow: nesRaised }}>
+                <div className="bg-cyan-400 px-4 py-3 border-b-2 border-stone-900 rounded-t">
+                  <h2 className="text-base font-black text-stone-900 font-[family-name:var(--font-space-mono)]">
+                    🔗 Social Media Links
+                  </h2>
+                  <p className="text-xs font-bold text-stone-800 font-[family-name:var(--font-space)] mt-0.5">
+                    Your social profile links
                   </p>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      )}
+                <div className="p-4 space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <FieldLabel htmlFor="github">GitHub</FieldLabel>
+                      <input
+                        id="github"
+                        className={nesInputCls}
+                        style={{ boxShadow: nesPressed }}
+                        value={formData.github_url || ""}
+                        onChange={(e) => handleChange("github_url", e.target.value)}
+                        placeholder="https://github.com/username"
+                      />
+                    </div>
+                    <div>
+                      <FieldLabel htmlFor="linkedin">LinkedIn</FieldLabel>
+                      <input
+                        id="linkedin"
+                        className={nesInputCls}
+                        style={{ boxShadow: nesPressed }}
+                        value={formData.linkedin_url || ""}
+                        onChange={(e) => handleChange("linkedin_url", e.target.value)}
+                        placeholder="https://linkedin.com/in/username"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <FieldLabel htmlFor="facebook">Facebook</FieldLabel>
+                      <input
+                        id="facebook"
+                        className={nesInputCls}
+                        style={{ boxShadow: nesPressed }}
+                        value={formData.facebook_url || ""}
+                        onChange={(e) => handleChange("facebook_url", e.target.value)}
+                        placeholder="https://facebook.com/username"
+                      />
+                    </div>
+                    <div>
+                      <FieldLabel htmlFor="twitter">Twitter / X</FieldLabel>
+                      <input
+                        id="twitter"
+                        className={nesInputCls}
+                        style={{ boxShadow: nesPressed }}
+                        value={formData.twitter_url || ""}
+                        onChange={(e) => handleChange("twitter_url", e.target.value)}
+                        placeholder="https://twitter.com/username"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <FieldLabel htmlFor="whatsapp">WhatsApp</FieldLabel>
+                    <input
+                      id="whatsapp"
+                      className={nesInputCls}
+                      style={{ boxShadow: nesPressed }}
+                      value={formData.whatsapp_url || ""}
+                      onChange={(e) => handleChange("whatsapp_url", e.target.value)}
+                      placeholder="https://wa.link/xxxxx"
+                    />
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* ── SEO Tab ── */}
+            <TabsContent value="seo" className="mt-0 outline-none">
+              <div className="border-2 border-stone-900 rounded bg-stone-100" style={{ boxShadow: nesRaised }}>
+                <div className="bg-lime-400 px-4 py-3 border-b-2 border-stone-900 rounded-t">
+                  <h2 className="text-base font-black text-stone-900 font-[family-name:var(--font-space-mono)]">
+                    🔍 SEO Settings
+                  </h2>
+                  <p className="text-xs font-bold text-stone-800 font-[family-name:var(--font-space)] mt-0.5">
+                    Search engine optimization
+                  </p>
+                </div>
+                <div className="p-4 space-y-4">
+                  <div>
+                    <FieldLabel htmlFor="meta_title">Meta Title</FieldLabel>
+                    <input
+                      id="meta_title"
+                      className={nesInputCls}
+                      style={{ boxShadow: nesPressed }}
+                      value={formData.meta_title || ""}
+                      onChange={(e) => handleChange("meta_title", e.target.value)}
+                      placeholder="Page title (up to 60 characters)"
+                      maxLength={60}
+                    />
+                    <p className="text-xs font-bold text-stone-500 mt-1.5 font-[family-name:var(--font-space-mono)]">
+                      {(formData.meta_title || "").length}/60 characters
+                    </p>
+                  </div>
+
+                  <div>
+                    <FieldLabel htmlFor="meta_description">Meta Description</FieldLabel>
+                    <textarea
+                      id="meta_description"
+                      className={nesInputCls}
+                      style={{ boxShadow: nesPressed }}
+                      value={formData.meta_description || ""}
+                      onChange={(e) => handleChange("meta_description", e.target.value)}
+                      placeholder="Brief description (up to 160 characters)"
+                      maxLength={160}
+                      rows={3}
+                    />
+                    <p className="text-xs font-bold text-stone-500 mt-1.5 font-[family-name:var(--font-space-mono)]">
+                      {(formData.meta_description || "").length}/160 characters
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+
+          </Tabs>
+        )}
+      </div>
     </div>
   );
 }

@@ -158,16 +158,16 @@ export function AdminHeader({
   actions?: React.ReactNode;
 }) {
   return (
-    <div className="mb-8">
+    <div className="mb-3 sm:mb-8 px-1 sm:px-0">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">{title}</h1>
+          <h1 className="text-xl sm:text-3xl font-bold tracking-tight text-stone-900">{title}</h1>
           {description && (
             <p className="text-stone-600 mt-1">{description}</p>
           )}
         </div>
         {actions && (
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
             {actions}
           </div>
         )}

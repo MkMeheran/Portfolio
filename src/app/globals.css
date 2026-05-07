@@ -185,6 +185,125 @@
   .admin-chip {
     @apply border-2 border-stone-900 rounded-[4px] bg-amber-100 text-stone-900 font-bold text-xs px-2 py-1;
   }
+
+  /* Global NES-style form controls across admin pages */
+  .admin-shell input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+  .admin-shell textarea,
+  .admin-shell select,
+  .admin-shell [role="combobox"],
+  .admin-shell [data-slot="input"],
+  .admin-shell [data-slot="textarea"],
+  .admin-shell [data-slot="select-trigger"] {
+    border: 2px solid #000 !important;
+    border-radius: 4px !important;
+    background: #ffffff !important;
+    color: #111827 !important;
+    box-shadow: inset -2px -2px 0px #808080, inset 2px 2px 0px #dfdfdf;
+  }
+
+  .admin-shell input::placeholder,
+  .admin-shell textarea::placeholder {
+    color: #6b7280 !important;
+    opacity: 1;
+  }
+
+  .admin-shell button[type="submit"],
+  .admin-shell input[type="submit"] {
+    border: 2px solid #000 !important;
+    border-radius: 4px !important;
+    background: #d97706 !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    box-shadow: inset -2px -2px 0px rgba(0, 0, 0, 0.25), inset 2px 2px 0px rgba(255, 255, 255, 0.35);
+  }
+
+  .admin-shell button[type="submit"]:hover,
+  .admin-shell input[type="submit"]:hover {
+    background: #b45309 !important;
+  }
+
+  .admin-shell button[type="submit"]:active,
+  .admin-shell input[type="submit"]:active {
+    transform: translateY(1px);
+  }
+
+  /* Mobile-first admin spacing: keep x-axis within 2-5px */
+  @media (max-width: 640px) {
+    .admin-shell {
+      overflow-x: hidden;
+    }
+
+    .admin-shell .admin-main {
+      padding-left: 4px !important;
+      padding-right: 4px !important;
+    }
+
+    /* Clamp common Tailwind x-spacing utilities inside admin on mobile */
+    .admin-shell .px-3,
+    .admin-shell .px-4,
+    .admin-shell .px-5,
+    .admin-shell .px-6,
+    .admin-shell .px-8,
+    .admin-shell .sm\:px-4,
+    .admin-shell .sm\:px-6,
+    .admin-shell .md\:px-6,
+    .admin-shell .lg\:px-8 {
+      padding-left: 4px !important;
+      padding-right: 4px !important;
+    }
+
+    .admin-shell .mx-3,
+    .admin-shell .mx-4,
+    .admin-shell .mx-5,
+    .admin-shell .mx-6,
+    .admin-shell .sm\:mx-4,
+    .admin-shell .md\:mx-6 {
+      margin-left: 4px !important;
+      margin-right: 4px !important;
+    }
+
+    /* Keep admin forms usable on mobile */
+    .admin-shell .grid-cols-2,
+    .admin-shell .sm\:grid-cols-2,
+    .admin-shell .md\:grid-cols-2 {
+      grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .admin-shell [role="dialog"] {
+      width: calc(100vw - 8px) !important;
+      max-width: calc(100vw - 8px) !important;
+      margin-left: 4px !important;
+      margin-right: 4px !important;
+    }
+
+    .admin-shell .admin-main > * {
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+    }
+
+    .admin-shell .admin-card,
+    .admin-shell .admin-card-soft,
+    .admin-shell [class*="card"],
+    .admin-shell [class*="Card"] {
+      max-width: 100%;
+    }
+
+    /* Profile page: center avatar and reduce cover height on small screens */
+    .admin-page .cover {
+      height: 6rem !important;
+    }
+
+    .admin-page .avatar-wrapper {
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      bottom: -3.25rem !important;
+    }
+
+    .admin-page .avatar-wrapper .relative {
+      height: 5.25rem !important;
+      width: 5.25rem !important;
+    }
+  }
 }
 
 /* Infinite Carousel Animation */
