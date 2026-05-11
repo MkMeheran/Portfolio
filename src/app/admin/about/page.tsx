@@ -10,8 +10,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Save, Loader2, Eye, FileText } from "lucide-react";
 import { toast } from "sonner";
-import type { Profile } from "@/types/database.types";
-
 export default function AboutAdminPage() {
   const router = useRouter();
   const supabase = createClient();
@@ -156,20 +154,6 @@ export default function AboutAdminPage() {
                 placeholder="Tell people about yourself, your journey, expertise, and what drives you..."
                 className="min-h-[400px] resize-y font-mono text-sm"
               />
-              <p className="text-xs text-muted-foreground">
-                Tip: Press Enter for new lines. Keep it concise yet informative.
-              </p>
-            </div>
-
-            {/* Quick formatting tips */}
-            <div className="admin-card-soft p-4 space-y-2">
-              <h4 className="font-semibold text-sm">Formatting Tips:</h4>
-              <ul className="text-xs text-muted-foreground space-y-1">
-                <li>• Use line breaks to separate paragraphs</li>
-                <li>• Keep paragraphs short for better readability</li>
-                <li>• Mention your key skills and experiences</li>
-                <li>• Add personality - what makes you unique?</li>
-              </ul>
             </div>
           </CardContent>
         </Card>

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Project } from "@/types/database.types";
 import { cn } from "@/lib/utils";
+import { ensureUrlProtocol } from "@/lib/url";
 
 interface ProjectCardProps {
   project: Project;
@@ -93,21 +94,21 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
           </Link>
         </Button>
         
-        {project.live_url && (
+        {ensureUrlProtocol(project.live_url) && (
           <Button variant="outline" size="icon" asChild>
-            <Link href={project.live_url} target="_blank" rel="noopener noreferrer">
+            <a href={ensureUrlProtocol(project.live_url) || undefined} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="h-4 w-4" />
               <span className="sr-only">Live Demo</span>
-            </Link>
+            </a>
           </Button>
         )}
-        
-        {project.github_url && (
+
+        {ensureUrlProtocol(project.github_url) && (
           <Button variant="outline" size="icon" asChild>
-            <Link href={project.github_url} target="_blank" rel="noopener noreferrer">
+            <a href={ensureUrlProtocol(project.github_url) || undefined} target="_blank" rel="noopener noreferrer">
               <Github className="h-4 w-4" />
               <span className="sr-only">Source Code</span>
-            </Link>
+            </a>
           </Button>
         )}
       </CardFooter>

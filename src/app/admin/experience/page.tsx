@@ -16,6 +16,7 @@ import {
   AlertDialogContent,
 } from "@/components/ui/alert-dialog";
 import { Save, Loader2, Plus, Pencil, Trash2, GripVertical, Eye, Briefcase, Building, MapPin, ExternalLink, Terminal } from "lucide-react";
+import { ensureUrlProtocol } from "@/lib/url";
 import { toast } from "sonner";
 import type { Experience } from "@/types/database.types";
 
@@ -486,8 +487,8 @@ export default function ExperienceAdminPage() {
                             </div>
                             
                             <p className="text-base font-black text-stone-700 mt-2 font-[family-name:var(--font-space-mono)] flex items-center gap-1">
-                              {exp.company_url ? (
-                                <a href={exp.company_url} target="_blank" rel="noopener noreferrer" className="hover:text-amber-600 underline decoration-2 decoration-stone-900 underline-offset-4 flex items-center gap-1">
+                              {exp.company_url && ensureUrlProtocol(exp.company_url) ? (
+                                <a href={ensureUrlProtocol(exp.company_url) || undefined} target="_blank" rel="noopener noreferrer" className="hover:text-amber-600 underline decoration-2 decoration-stone-900 underline-offset-4 flex items-center gap-1">
                                   {exp.company}
                                   <ExternalLink className="h-3.5 w-3.5" />
                                 </a>

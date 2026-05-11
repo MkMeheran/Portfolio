@@ -169,48 +169,127 @@ export default function SkillsAdminPage() {
 
   const handleSaveSkill = async () => {
     if (!editingItem) return;
+    if (!editingItem.name?.trim()) {
+      toast.error("Skill name is required");
+      return;
+    }
     setIsSaving(true);
     try {
       if (editingItem.id) {
-        const { error } = await supabase.from("skills").update({ ...editingItem, updated_at: new Date().toISOString() }).eq("id", editingItem.id);
-        if (error) throw error;
-        setSkills(prev => prev.map(s => s.id === editingItem.id ? { ...s, ...editingItem } as typeof s : s));
+        const updateData = {
+          name: editingItem.name,
+          category: editingItem.category || null,
+          icon: editingItem.icon || null,
+          bg_color: editingItem.bg_color || null,
+          description: editingItem.description || null,
+          sub_skills: editingItem.sub_skills || [],
+          has_certificates: editingItem.has_certificates || false,
+          display_order: editingItem.display_order ?? 0,
+          updated_at: new Date().toISOString(),
+        };
+        const { error } = await supabase.from("skills").update(updateData).eq("id", editingItem.id);
+        if (error) {
+          console.error("Update error:", error);
+          throw new Error(error.message || "Failed to update skill");
+        }
+        // fetch updated row to ensure fields are exactly what DB stored
+        const { data: refreshed, error: fetchError } = await supabase.from("skills").select("*").eq("id", editingItem.id).single();
+        if (fetchError) throw new Error(fetchError.message || "Failed to fetch updated skill");
+        if (refreshed) setSkills(prev => prev.map(s => s.id === editingItem.id ? { ...s, ...refreshed, certificates: s.certificates } : s));
       } else {
         const newOrder = skills.length > 0 ? Math.max(...skills.map(s => s.display_order)) + 1 : 0;
-        const { data, error } = await supabase.from("skills").insert([{ ...editingItem, display_order: newOrder }]).select().single();
-        if (error) throw error;
+        const insertOrder = editingItem.display_order ?? newOrder;
+        const insertData = {
+          name: editingItem.name,
+          category: editingItem.category || null,
+          icon: editingItem.icon || null,
+          bg_color: editingItem.bg_color || null,
+          description: editingItem.description || null,
+          sub_skills: editingItem.sub_skills || [],
+          has_certificates: editingItem.has_certificates || false,
+          display_order: insertOrder,
+        };
+        const { data, error } = await supabase.from("skills").insert([insertData]).select().single();
+        if (error) {
+          console.error("Insert error:", error);
+          throw new Error(error.message || "Failed to create skill");
+        }
         if (data) setSkills(prev => [...prev, { ...data, certificates: [] }]);
       }
       toast.success(editingItem.id ? "Updated!" : "Added!");
       setEditingItem(null);
       router.refresh();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to save");
+      const errMsg = error instanceof Error ? error.message : "Failed to save";
+      console.error("Full error:", error);
+      toast.error(errMsg);
     } finally { setIsSaving(false); }
   };
 
   const handleSaveCertificate = async () => {
-    if (!editingCert || !editingCert.skill_id) return;
+    if (!editingCert || !editingCert.skill_id) {
+      toast.error("Skill and certificate title are required");
+      return;
+    }
+    if (!editingCert.title?.trim()) {
+      toast.error("Certificate title is required");
+      return;
+    }
     setIsSaving(true);
     try {
       if (editingCert.id) {
-        const { error } = await supabase.from("certificates").update({ ...editingCert, updated_at: new Date().toISOString() }).eq("id", editingCert.id);
-        if (error) throw error;
-        setSkills(prev => prev.map(s => s.id === editingCert.skill_id
-          ? { ...s, certificates: s.certificates?.map(c => c.id === editingCert.id ? { ...c, ...editingCert } as Certificate : c) }
+        const updateData = {
+          title: editingCert.title,
+          issuer: editingCert.issuer || null,
+          credential_id: editingCert.credential_id || null,
+          credential_url: editingCert.credential_url || null,
+          image_url: editingCert.image_url || null,
+          image_alt: editingCert.image_alt || null,
+          issue_date: editingCert.issue_date || null,
+          expiry_date: editingCert.expiry_date || null,
+          display_order: editingCert.display_order ?? 0,
+          updated_at: new Date().toISOString(),
+        };
+        const { error } = await supabase.from("certificates").update(updateData).eq("id", editingCert.id);
+        if (error) {
+          console.error("Update error:", error);
+          throw new Error(error.message || "Failed to update certificate");
+        }
+        const { data: refreshed, error: fetchError } = await supabase.from("certificates").select("*").eq("id", editingCert.id).single();
+        if (fetchError) throw new Error(fetchError.message || "Failed to fetch updated certificate");
+        if (refreshed) setSkills(prev => prev.map(s => s.id === editingCert.skill_id
+          ? { ...s, certificates: s.certificates?.map(c => c.id === editingCert.id ? { ...c, ...refreshed } as Certificate : c) }
           : s));
       } else {
         const skill = skills.find(s => s.id === editingCert.skill_id);
-        const newOrder = skill?.certificates?.length ? Math.max(...skill.certificates.map(c => c.display_order)) + 1 : 0;
-        const { data, error } = await supabase.from("certificates").insert([{ ...editingCert, display_order: newOrder }]).select().single();
-        if (error) throw error;
+        const computedOrder = skill?.certificates?.length ? Math.max(...skill.certificates.map(c => c.display_order)) + 1 : 0;
+        const insertOrder = editingCert.display_order ?? computedOrder;
+        const insertData = {
+          skill_id: editingCert.skill_id,
+          title: editingCert.title,
+          issuer: editingCert.issuer || null,
+          credential_id: editingCert.credential_id || null,
+          credential_url: editingCert.credential_url || null,
+          image_url: editingCert.image_url || null,
+          image_alt: editingCert.image_alt || null,
+          issue_date: editingCert.issue_date || null,
+          expiry_date: editingCert.expiry_date || null,
+          display_order: insertOrder,
+        };
+        const { data, error } = await supabase.from("certificates").insert([insertData]).select().single();
+        if (error) {
+          console.error("Insert error:", error);
+          throw new Error(error.message || "Failed to create certificate");
+        }
         if (data) setSkills(prev => prev.map(s => s.id === editingCert.skill_id ? { ...s, certificates: [...(s.certificates || []), data] } : s));
       }
       toast.success(editingCert.id ? "Certificate updated!" : "Certificate added!");
       setEditingCert(null);
       router.refresh();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to save");
+      const errMsg = error instanceof Error ? error.message : "Failed to save";
+      console.error("Full error:", error);
+      toast.error(errMsg);
     } finally { setIsSaving(false); }
   };
 
@@ -347,6 +426,15 @@ export default function SkillsAdminPage() {
           Has Certificates
         </label>
       </div>
+
+      {/* Display Order */}
+      <div>
+        <FieldLabel htmlFor="display_order">Display Order</FieldLabel>
+        <input id="display_order" type="number" className={nesInputCls} style={{ boxShadow: nesPressed }}
+          value={editingItem?.display_order ?? ""}
+          onChange={(e) => setEditingItem(p => ({ ...p, display_order: e.target.value ? Number(e.target.value) : undefined }))}
+          placeholder="0" />
+      </div>
     </div>
   );
 
@@ -408,6 +496,17 @@ export default function SkillsAdminPage() {
           folder="certificates"
           alt={editingCert?.image_alt || ""}
           onAltChange={alt => setEditingCert(p => ({ ...p, image_alt: alt }))}
+        />
+      </div>
+      <div>
+        <FieldLabel htmlFor="cert_display_order">Display Order</FieldLabel>
+        <input
+          id="cert_display_order"
+          type="number"
+          className={nesInputCls}
+          value={editingCert?.display_order ?? ""}
+          onChange={e => setEditingCert(p => ({ ...p, display_order: e.target.value ? Number(e.target.value) : undefined }))}
+          placeholder="0"
         />
       </div>
     </div>

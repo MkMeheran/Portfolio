@@ -385,8 +385,6 @@ export default function NewProjectPage() {
                     }))
                   }
                   preset="project"
-                  alt=""
-                  onAltChange={(alt) => setFormData(prev => ({ ...prev, image_alt: alt }))}
                   folder="projects"
                 />
               </CardContent>

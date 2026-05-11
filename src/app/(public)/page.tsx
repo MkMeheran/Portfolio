@@ -26,6 +26,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { getHomePageData, getSkillsSectionData } from "@/lib/data";
+import { ensureUrlProtocol } from "@/lib/url";
 import { InfiniteCarousel } from "@/components/ui/infinite-carousel";
 import { SkillsSection } from "@/components/sections/skills-section";
 import type { Profile, Education, Experience, Project, HeroCarousel } from "@/types/database.types";
@@ -247,14 +248,14 @@ const categoryBadges: Record<string, { label: string; class: string }> = {
 };
 
 // Featured Projects - Small cards, limited rows by screen size
-function FeaturedProjects({ projects }: { projects: Project[] }) {
+function FeaturedProjects({ projects, certificates }: { projects: Project[]; certificates?: any[] }) {
   const allFeaturedProjects = projects.filter((p) => p.is_featured);
   // Desktop/tablet: 2 rows max (10 projects for 5-col, 8 for 4-col, 6 for 3-col)
   // Mobile: 3 rows max (6 projects for 2-col)
   const featuredProjects = allFeaturedProjects.slice(0, 10);
 
   return (
-    <section id="projects" className="px-1 md:px-2 py-10 sm:py-12 md:py-14 lg:py-16">
+    <section id="projects" className="px-1 md:px-2 py-10 sm:py-12 md:py-14 lg:py-16 section-fade" data-delay="1">
       <div className="container mx-auto px-2 min-[480px]:px- sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex items-center gap-3 min-[480px]:gap-4 mb-6 min-[480px]:mb-8">
@@ -309,17 +310,17 @@ function FeaturedProjects({ projects }: { projects: Project[] }) {
                     {categoryBadges[project.category]?.label || project.category}
                   </div>
                   )}
-                  {/* Links on hover */}
-                  <div className="absolute top-1.5 right-1.5 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    {project.live_url && (
-                      <Link href={project.live_url} target="_blank" aria-label="View project" className="p-1 bg-white border border-stone-900 text-stone-700 hover:bg-stone-100 rounded">
+                  {/* Links (always visible) */}
+                  <div className="absolute top-1.5 right-1.5 flex gap-1">
+                    {ensureUrlProtocol(project.live_url) && (
+                      <a href={ensureUrlProtocol(project.live_url) || undefined} target="_blank" rel="noopener noreferrer" aria-label="View project" className="p-1 bg-white border border-stone-900 text-stone-700 hover:bg-stone-100 rounded">
                         <ExternalLink className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                      </Link>
+                      </a>
                     )}
-                    {project.github_url && (
-                      <Link href={project.github_url} target="_blank" aria-label="View source code" className="p-1 bg-white border border-stone-900 text-stone-700 hover:bg-stone-100 rounded">
+                    {ensureUrlProtocol(project.github_url) && (
+                      <a href={ensureUrlProtocol(project.github_url) || undefined} target="_blank" rel="noopener noreferrer" aria-label="View source code" className="p-1 bg-white border border-stone-900 text-stone-700 hover:bg-stone-100 rounded">
                         <Github className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                      </Link>
+                      </a>
                     )}
                   </div>
                 </div>
@@ -350,9 +351,9 @@ function FeaturedProjects({ projects }: { projects: Project[] }) {
 }
 
 // Education Section - Compact Neu-brutalism Style
-function EducationSection({ education }: { education: Education[] }) {
+function EducationSection({ education, certificates }: { education: Education[]; certificates?: any[] }) {
   return (
-    <section id="education" className="py-10 sm:py-12 md:py-14 lg:py-16 bg-amber-50/30">
+    <section id="education" className="py-10 sm:py-12 md:py-14 lg:py-16 bg-amber-50/30 section-fade" data-delay="2">
       <div className="container mx-auto px-4 min-[480px]:px-5 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex items-center gap-3 min-[480px]:gap-4 mb-6 min-[480px]:mb-8">
@@ -438,12 +439,25 @@ function EducationSection({ education }: { education: Education[] }) {
                   )}
                 </div>
                 
-                {/* Certificate button */}
-                {!isCurrent && (
-                  <button className="mt-2 flex items-center justify-center gap-1.5 text-xs sm:text-sm font-bold text-violet-700 bg-violet-100 px-2 py-1.5 border border-violet-300 rounded hover:bg-violet-200 transition-colors w-full">
-                    <FileText className="h-4 w-4 sm:h-4.5 sm:w-4.5 shrink-0" />
-                    View Certificate
-                  </button>
+                {/* Certificate button (if matching certificate exists) */}
+                {!isCurrent && certificates && (
+                  (() => {
+                    const match = certificates.find((c: any) => {
+                      const t = (c.title || "").toLowerCase();
+                      const issuer = (c.issuer || "").toLowerCase();
+                      const inst = (edu.institution || "").toLowerCase();
+                      return t.includes(inst) || issuer.includes(inst);
+                    });
+                    if (!match) return null;
+                    const href = ensureUrlProtocol(match.credential_url) || match.image_url || null;
+                    if (!href) return null;
+                    return (
+                      <a href={href} target="_blank" rel="noopener noreferrer" className="mt-2 flex items-center justify-center gap-1.5 text-xs sm:text-sm font-bold text-violet-700 bg-violet-100 px-2 py-1.5 border border-violet-300 rounded hover:bg-violet-200 transition-colors w-full">
+                        <FileText className="h-4 w-4 sm:h-4.5 sm:w-4.5 shrink-0" />
+                        View Certificate
+                      </a>
+                    );
+                  })()
                 )}
               </div>
             </Card>
@@ -456,9 +470,9 @@ function EducationSection({ education }: { education: Education[] }) {
 }
 
 // Experience Section - Compact Neu-brutalism Style
-function ExperienceSection({ experiences }: { experiences: Experience[] }) {
+function ExperienceSection({ experiences, certificates }: { experiences: Experience[]; certificates?: any[] }) {
   return (
-    <section id="experience" className="py-10 sm:py-12 md:py-14 lg:py-16">
+    <section id="experience" className="py-10 sm:py-12 md:py-14 lg:py-16 section-fade" data-delay="3">
       <div className="container mx-auto px-4 min-[480px]:px-5 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex items-center gap-3 min-[480px]:gap-4 mb-6 min-[480px]:mb-8">
@@ -509,7 +523,12 @@ function ExperienceSection({ experiences }: { experiences: Experience[] }) {
                       <span className="text-[10px] sm:text-xs font-bold bg-emerald-600 text-white px-2 py-0.5 border border-stone-900 rounded shrink-0">ACTIVE</span>
                     )}
                   </div>
-                  <p className="text-sm sm:text-base text-sky-700 font-semibold truncate font-[family-name:var(--font-space)]">{exp.company}</p>
+                  <p className="text-sm sm:text-base text-sky-700 font-semibold truncate font-[family-name:var(--font-space)]">
+                    {exp.company}
+                    {exp.company_url && ensureUrlProtocol(exp.company_url) && (
+                      <a href={ensureUrlProtocol(exp.company_url) || undefined} target="_blank" rel="noopener noreferrer" className="ml-2 text-xs text-muted-foreground hover:text-amber-600 underline">Visit</a>
+                    )}
+                  </p>
                   <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 mt-2 font-[family-name:var(--font-space)]">{exp.description}</p>
                   
                   <div className="flex flex-wrap items-center gap-2 mt-2.5 text-xs sm:text-sm text-muted-foreground">
@@ -528,6 +547,26 @@ function ExperienceSection({ experiences }: { experiences: Experience[] }) {
                     )}
                   </div>
                 </div>
+                {/* Certificate button for experience (if matching certificate exists) */}
+                {certificates && (
+                  (() => {
+                    const match = certificates.find((c: any) => {
+                      const t = (c.title || "").toLowerCase();
+                      const issuer = (c.issuer || "").toLowerCase();
+                      const comp = (exp.company || "").toLowerCase();
+                      return t.includes(comp) || issuer.includes(comp);
+                    });
+                    if (!match) return null;
+                    const href = ensureUrlProtocol(match.credential_url) || match.image_url || null;
+                    if (!href) return null;
+                    return (
+                      <a href={href} target="_blank" rel="noopener noreferrer" className="mt-2 block text-xs sm:text-sm font-bold text-violet-700 bg-violet-100 px-2 py-1.5 border border-violet-300 rounded hover:bg-violet-200 w-full text-center">
+                        <FileText className="inline-block h-4 w-4 mr-2 align-middle" />
+                        View Certificate
+                      </a>
+                    );
+                  })()
+                )}
               </div>
             </Card>
             );
@@ -584,16 +623,16 @@ function ContactSection({ profile }: { profile: Profile }) {
 // Main Page Component
 export default async function HomePage() {
   // Fetch all data from Supabase
-  const { profile, projects, education, experiences, heroCarousel } = await getHomePageData();
+  const { profile, projects, education, experiences, heroCarousel, certificates } = await getHomePageData();
   const { skills } = await getSkillsSectionData();
 
   return (
     <>
         <HeroSection profile={profile} heroCarousel={heroCarousel} />
         <SkillsSection initialSkills={skills} />
-      <FeaturedProjects projects={projects} />
-      <EducationSection education={education} />
-      <ExperienceSection experiences={experiences} />
+      <FeaturedProjects projects={projects} certificates={certificates} />
+      <EducationSection education={education} certificates={certificates} />
+      <ExperienceSection experiences={experiences} certificates={certificates} />
       <ContactSection profile={profile} />
     </>
   );

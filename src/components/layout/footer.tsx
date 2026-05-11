@@ -23,6 +23,7 @@ export function Footer() {
     linkedin_url?: string | null;
     facebook_url?: string | null;
   } | null>(null);
+  const [footerHtml, setFooterHtml] = useState<string | null>(null);
 
   function normalizeImageUrl(url?: string | null): string | null {
     if (!url) return null;
@@ -47,11 +48,18 @@ export function Footer() {
     let mounted = true;
     (async () => {
       try {
-        const { data } = await supabase
+        const { data: profileData } = await supabase
           .from('profile')
           .select('avatar_url, location, email, github_url, linkedin_url, facebook_url')
           .single();
-        if (mounted && data) setProfile(data as any);
+        if (mounted && profileData) setProfile(profileData as any);
+
+        const { data: settingsData } = await supabase
+          .from('site_settings')
+          .select('value')
+          .eq('key', 'footer_html')
+          .single();
+        if (mounted && settingsData?.value) setFooterHtml(settingsData.value);
       } catch {}
     })();
     return () => { mounted = false };
@@ -65,6 +73,19 @@ export function Footer() {
 
   const avatarUrl = normalizeImageUrl(profile?.avatar_url) || placeholderProfile.avatar;
   const avatarIsSvg = isSvgUrl(avatarUrl);
+
+  // If custom footer HTML is set, use it
+  if (footerHtml) {
+    return (
+      <footer className="relative overflow-hidden border-t-2 border-stone-900 bg-stone-900 text-stone-100">
+        <div
+          className="container mx-auto px-4 sm:px-6 py-8 sm:py-10 prose prose-invert max-w-none"
+          dangerouslySetInnerHTML={{ __html: footerHtml }}
+        />
+      </footer>
+    );
+  }
+
   return (
     <footer className="relative overflow-hidden border-t-2 border-stone-900 bg-stone-900 text-stone-100">
       {/* Animated background pattern */}

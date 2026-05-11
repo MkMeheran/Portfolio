@@ -18,6 +18,8 @@ import {
   Sparkles,
   Image,
   FileText,
+  Heart,
+  Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -64,6 +66,11 @@ const sidebarLinks = [
     icon: Settings,
   },
   {
+    title: "Interests",
+    href: "/admin/interests",
+    icon: Heart,
+  },
+  {
     title: "Hero Slider",
     href: "/admin/hero",
     icon: Sparkles,
@@ -72,6 +79,11 @@ const sidebarLinks = [
     title: "Gallery",
     href: "/admin/gallery",
     icon: Image,
+  },
+  {
+    title: "Header & Footer",
+    href: "/admin/header-footer",
+    icon: Globe,
   },
 ];
 

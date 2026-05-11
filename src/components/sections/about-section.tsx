@@ -72,14 +72,14 @@ export function AboutSection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [hoveredInterest, setHoveredInterest] = useState<number | null>(null);
-  const [profile, setProfile] = useState<{ avatar_url?: string | null } | null>(null);
+  const [profile, setProfile] = useState<{ avatar_url?: string | null; bio?: string | null } | null>(null);
 
   useEffect(() => {
     const supabase = createClient();
     let mounted = true;
     (async () => {
       try {
-        const { data } = await supabase.from('profile').select('avatar_url').single();
+        const { data } = await supabase.from('profile').select('avatar_url, bio').single();
         if (mounted && data) setProfile(data as any);
       } catch {}
     })();
@@ -140,10 +140,10 @@ export function AboutSection() {
                     lineHeight: 1.8,
                     marginBottom: '1.5rem',
                     fontWeight: 500,
-                    cursor: 'auto'
+                    cursor: 'auto',
+                    whiteSpace: 'pre-wrap',
                   }}>
-                    I'm an <strong>Urban & Regional Planning</strong> student at KUET, passionate about bridging urban planning with cutting-edge technology. 
-                    I combine spatial thinking with AI, GIS, and Web Development to create innovative solutions for real-world challenges.
+                    {profile?.bio || "I'm an Urban & Regional Planning student at KUET, passionate about bridging urban planning with cutting-edge technology. I combine spatial thinking with AI, GIS, and Web Development to create innovative solutions for real-world challenges."}
                   </p>
                   <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
                     <button style={{ ...nesButtonStyle, color: '#000' }}>Planner</button>

@@ -19,6 +19,7 @@ import {
   Calendar,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { iconRegistry, type IconName } from "@/lib/icons";
 import type { Skill, Certificate, Tool } from "@/types/database.types";
 
 // react-icons imports (fallback icons)
@@ -59,7 +60,22 @@ const skillIconMap: Record<string, React.ComponentType<{ className?: string }>> 
   "power bi": FaChartBar,
   "powerbi": FaChartBar,
   "databricks": SiDatabricks,
-  "spark": SiApachespark
+  "spark": SiApachespark,
+  "ai": FaBrain,
+  "artificial": FaBrain,
+  "intelligence": FaBrain,
+  "artificial intelligence": FaBrain,
+  "machine learning": FaBrain,
+  "learning": FaBrain,
+  "neural": FaBrain,
+  "data science": BiData,
+  "analytics": MdAnalytics,
+  "robot": FaRobot,
+  "react": SiJavascript,
+  "nextjs": FaCode,
+  "next.js": FaCode,
+  "typescript": SiJavascript,
+  "default": FaBrain,
 };
 
 // Icon mapping for tools  
@@ -85,13 +101,27 @@ interface SkillWithCertificates extends Skill {
 }
 
 
-// Helper to get icon from name
-function getSkillIcon(name: string): React.ComponentType<{ className?: string }> {
-  const lowerName = name.toLowerCase();
+// Helper to get icon from database icon name (from iconRegistry) or fall back to skill name
+function getSkillIcon(
+  skillName: string,
+  dbIconName?: string | null
+): React.ComponentType<{ className?: string }> {
+  // First priority: Use the icon name from database (user selected in admin)
+  if (dbIconName) {
+    const normalizedIconName = dbIconName.toLowerCase() as IconName;
+    if (iconRegistry[normalizedIconName]) {
+      return iconRegistry[normalizedIconName];
+    }
+  }
+
+  // Second priority: Look up by skill name in skillIconMap
+  const lowerName = skillName.toLowerCase();
   for (const key of Object.keys(skillIconMap)) {
     if (lowerName.includes(key)) return skillIconMap[key];
   }
-  return skillIconMap.default;
+
+  // Fallback to default
+  return iconRegistry.brain || skillIconMap.default;
 }
 
 function getToolIcon(name: string): React.ComponentType<{ className?: string }> {
@@ -330,7 +360,7 @@ export function SkillsSection({ initialSkills }: SkillsSectionProps) {
                     </div>
                   ) : (
                     displaySkills.map((skill) => {
-                      const SkillIcon = getSkillIcon(skill.name);
+                      const SkillIcon = getSkillIcon(skill.name, skill.icon);
                       const bgColor = getBgClass(skill.bg_color);
                       const iconBgColor = getIconBgClass(skill.bg_color);
                       return (
@@ -495,8 +525,7 @@ export function SkillsSection({ initialSkills }: SkillsSectionProps) {
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
                     {(() => {
-                      const SkillIcon = getSkillIcon(selectedSkill.name);
-                      const bgColor = getBgClass(selectedSkill.bg_color);
+                      const SkillIcon = getSkillIcon(selectedSkill.name, selectedSkill.icon);
                       const iconBgColor = getIconBgClass(selectedSkill.bg_color);
                       return (
                         <div className={`p-2 ${iconBgColor} border-2 border-stone-900 rounded-[4px]`} style={{
@@ -574,7 +603,7 @@ export function SkillsSection({ initialSkills }: SkillsSectionProps) {
                                   src={cert.image_url}
                                   alt={cert.image_alt || `${cert.title} Certificate`}
                                   fill
-                                  className="object-contain p-2"
+                                  className="object-contain p-1"
                                   sizes="(max-width: 640px) 90vw, (max-width: 1024px) 70vw, 640px"
                                   unoptimized={isSvgUrl(cert.image_url)}
                                 />
@@ -666,7 +695,7 @@ export function SkillsSection({ initialSkills }: SkillsSectionProps) {
                     </div>
                   ) : (
                     displaySkills.map((skill) => {
-                      const SkillIcon = getSkillIcon(skill.name);
+                      const SkillIcon = getSkillIcon(skill.name, skill.icon);
                       const bgColor = getBgClass(skill.bg_color);
                       const iconBgColor = getIconBgClass(skill.bg_color);
                       return (

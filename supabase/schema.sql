@@ -125,13 +125,13 @@ CREATE TABLE IF NOT EXISTS skill_categories (
 CREATE TABLE IF NOT EXISTS skills (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name VARCHAR(100) NOT NULL,
-  category_id UUID REFERENCES skill_categories(id) ON DELETE SET NULL,
-  proficiency INTEGER DEFAULT 50 CHECK (proficiency >= 0 AND proficiency <= 100),
+  category VARCHAR(255),
   icon VARCHAR(50),
-  color VARCHAR(50),
+  bg_color VARCHAR(50),
   description TEXT,
-  is_featured BOOLEAN DEFAULT FALSE,
-  order_index INTEGER DEFAULT 0,
+  sub_skills TEXT[] DEFAULT '{}',
+  has_certificates BOOLEAN DEFAULT FALSE,
+  display_order INTEGER DEFAULT 0,
   
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()

@@ -208,7 +208,7 @@ export async function getSkillsSectionData() {
       } as { skills: (Skill & { certificates?: Certificate[] })[]; certificates: Certificate[] };
     },
     ["skills-section-data"],
-    { revalidate: 300 }
+    { revalidate: 60 }
   );
 
   return getSkillsSectionDataCached();
@@ -334,6 +334,8 @@ export async function getHomePageData() {
           .eq("is_active", true)
           .order("order_index", { ascending: true }),
       ]);
+      // Also fetch public certificates so we can display them near related items
+      const certificatesRes = await supabase.from("certificates").select("*").order("display_order", { ascending: true });
 
       const defaultProfile: Profile = {
         id: "",
@@ -363,10 +365,11 @@ export async function getHomePageData() {
         experiences: experiencesRes.data || [],
         projects: projectsRes.data || [],
         heroCarousel: heroCarouselRes.data || [],
+        certificates: certificatesRes.data || [],
       };
     },
     ["home-page-data"],
-    { revalidate: 300 }
+    { revalidate: 60 }
   );
 
   return getHomePageDataCached();
